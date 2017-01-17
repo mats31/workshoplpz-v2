@@ -13,23 +13,26 @@ class Cube extends THREE.Object3D {
     // map.needsUpdate = true;
     // map.LinearFilter = THREE.LinearFilter;
 
-    this.geometry = new THREE.PlaneGeometry( 100, 100, 40, 40 );
+    this.geometry = new THREE.PlaneGeometry( 100, 100, 30, 30 );
 
     this.material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
-      uniforms: THREE.UniformsUtils.merge([
-        THREE.UniformsLib.common,
-        THREE.UniformsLib.aomap,
-        THREE.UniformsLib.lightmap,
-        THREE.UniformsLib.emissivemap,
-        THREE.UniformsLib.fog,
-        THREE.UniformsLib.lights,
-        {
-          emissive: { value: new THREE.Color( 0x000000 ) },
-          u_time: { type: 'f', value: new THREE.Texture() },
-        },
-      ]),
+      // uniforms: THREE.UniformsUtils.merge([
+      //   THREE.UniformsLib.common,
+      //   THREE.UniformsLib.aomap,
+      //   THREE.UniformsLib.lightmap,
+      //   THREE.UniformsLib.emissivemap,
+      //   THREE.UniformsLib.fog,
+      //   THREE.UniformsLib.lights,
+      //   {
+      //     emissive: { value: new THREE.Color( 0x000000 ) },
+      //     u_time: { type: 'f', value: new THREE.Texture() },
+      //   },
+      // ]),
+      uniforms: {
+        u_time: { type: 'f', value: new THREE.Texture() },
+      },
       wireframe: false,
       // side: THREE.DoubleSide,
     });
