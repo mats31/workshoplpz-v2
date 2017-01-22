@@ -2,6 +2,7 @@ import States from 'core/States';
 
 import vertexShader from './shaders/ground.vs';
 import fragmentShader from './shaders/ground.fs';
+import vertexDepthShader from './shaders/groundDepth.vs';
 
 class Ground extends THREE.Object3D {
 
@@ -13,7 +14,7 @@ class Ground extends THREE.Object3D {
     // map.needsUpdate = true;
     // map.LinearFilter = THREE.LinearFilter;
 
-    this.geometry = new THREE.PlaneGeometry( 100, 100, 30, 30 );
+    this.geometry = new THREE.PlaneGeometry( 300, 300, 100, 100 );
 
 
     const baseShader = THREE.ShaderLib.phong;
@@ -21,6 +22,8 @@ class Ground extends THREE.Object3D {
     this.uniforms = {
       ...baseUniforms,
       u_time: { type: 'f', value: 0 },
+      emissive: { value: new THREE.Color( 0x000000 ) },
+      specular: { value: new THREE.Color( 0x111111 ) },
     };
 
     this.material = new THREE.ShaderMaterial({
@@ -34,7 +37,12 @@ class Ground extends THREE.Object3D {
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     // this.mesh.castShadow = true;
-    // this.mesh.receiveShadow = true;
+    this.mesh.receiveShadow = true;
+    this.mesh.customDepthMaterial = new THREE.ShaderMaterial({
+      vertexShader: vertexDepthShader,
+      fragmentShader: THREE.ShaderLib.depth.fragmentShader,
+      uniforms: this.material.uniforms,
+    });
     this.add(this.mesh);
 
     // Signals.onAssetsLoaded.add(this.onAssetsLoaded.bind(this));

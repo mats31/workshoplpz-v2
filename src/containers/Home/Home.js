@@ -17,8 +17,28 @@ export default Vue.extend({
 
   },
 
+  mounted() {
+
+    this.setupEvent();
+  },
+
   methods: {
 
+    setupEvent() {
+
+      this.$refs.webgl.addEventListener('mousemove', this.onMousemove.bind(this));
+      this.$refs.webgl.addEventListener('mouseleave', this.onMouseleave.bind(this));
+    },
+
+    onMousemove(e) {
+
+      Signals.onWeblGLMousemove.dispatch(e);
+    },
+
+    onMouseleave(e) {
+
+      Signals.onWeblGLMouseleave.dispatch(e);
+    },
   },
 
   components: {

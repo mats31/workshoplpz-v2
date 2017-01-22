@@ -6,6 +6,8 @@ class Signals {
 
     this.onAssetLoaded = new Signal();
     this.onAssetsLoaded = new Signal();
+    this.onWeblGLMousemove = new Signal();
+    this.onWeblGLMouseleave = new Signal();
   }
 }
 
