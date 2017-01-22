@@ -1,3 +1,27 @@
+#define PHONG
+
+varying vec3 vViewPosition;
+
+#ifndef FLAT_SHADED
+
+	varying vec3 vNormal;
+
+#endif
+
+#include <common>
+#include <uv_pars_vertex>
+#include <uv2_pars_vertex>
+#include <displacementmap_pars_vertex>
+#include <envmap_pars_vertex>
+#include <color_pars_vertex>
+#include <morphtarget_pars_vertex>
+#include <skinning_pars_vertex>
+#include <shadowmap_pars_vertex>
+#include <logdepthbuf_pars_vertex>
+#include <clipping_planes_pars_vertex>
+
+
+
 //
 // Description : Array and textureless GLSL 2D simplex noise function.
 //      Author : Ian McEwan, Ashima Arts.
@@ -72,26 +96,64 @@ float snoise(vec2 v)
 
 uniform float u_time;
 
-varying vec2 vUv;
-varying vec3 vNormal;
+// varying vec2 vUV;
+// varying vec3 vNormal;
 varying vec3 vWorldPosition;
 
 void main() {
 
-  vUv = uv;
+	#include <uv_vertex>
+	#include <uv2_vertex>
+	#include <color_vertex>
 
-  float offset = snoise(position.xy * 0.015 + u_time * 0.05) * 10.;
+	#include <beginnormal_vertex>
+	#include <morphnormal_vertex>
+	#include <skinbase_vertex>
+	#include <skinnormal_vertex>
+	#include <defaultnormal_vertex>
 
-  vec3 newPosition = position;
-  newPosition.z += abs( offset );
+#ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
 
-  vec3 newNormal = normal;
-  newNormal.z += normalize(offset);
+	vNormal = normalize( transformedNormal );
 
-  vNormal = normalMatrix * newNormal;
+#endif
 
-  vec4 worldPosition = modelMatrix * vec4(newPosition, 1.);
-  vWorldPosition = worldPosition.xyz;
+	#include <begin_vertex>
 
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+  float offset = snoise(transformed.xy * 0.015 + u_time * 0.05) * 10.;
+  transformed.z += abs( offset );
+
+	#include <displacementmap_vertex>
+	#include <morphtarget_vertex>
+	#include <skinning_vertex>
+	#include <project_vertex>
+	#include <logdepthbuf_vertex>
+	#include <clipping_planes_vertex>
+
+	vViewPosition = - mvPosition.xyz;
+
+	#include <worldpos_vertex>
+	#include <envmap_vertex>
+	#include <shadowmap_vertex>
+
 }
+
+// void main() {
+//
+//   vUv = uv;
+//
+//   float offset = snoise(position.xy * 0.015 + u_time * 0.05) * 10.;
+//
+//   vec3 newPosition = position;
+//   newPosition.z += abs( offset );
+//
+//   vec3 newNormal = normal;
+//   newNormal.z += normalize(offset);
+//
+//   vNormal = normalMatrix * newNormal;
+//
+//   vec4 worldPosition = modelMatrix * vec4(newPosition, 1.);
+//   vWorldPosition = worldPosition.xyz;
+//
+//   gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+// }

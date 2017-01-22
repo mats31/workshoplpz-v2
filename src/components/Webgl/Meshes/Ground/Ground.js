@@ -3,7 +3,7 @@ import States from 'core/States';
 import vertexShader from './shaders/ground.vs';
 import fragmentShader from './shaders/ground.fs';
 
-class Cube extends THREE.Object3D {
+class Ground extends THREE.Object3D {
 
   constructor() {
 
@@ -15,31 +15,26 @@ class Cube extends THREE.Object3D {
 
     this.geometry = new THREE.PlaneGeometry( 100, 100, 30, 30 );
 
+
+    const baseShader = THREE.ShaderLib.phong;
+    const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
+    this.uniforms = {
+      ...baseUniforms,
+      u_time: { type: 'f', value: 0 },
+    };
+
     this.material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
-      // uniforms: THREE.UniformsUtils.merge([
-      //   THREE.UniformsLib.common,
-      //   THREE.UniformsLib.aomap,
-      //   THREE.UniformsLib.lightmap,
-      //   THREE.UniformsLib.emissivemap,
-      //   THREE.UniformsLib.fog,
-      //   THREE.UniformsLib.lights,
-      //   {
-      //     emissive: { value: new THREE.Color( 0x000000 ) },
-      //     u_time: { type: 'f', value: new THREE.Texture() },
-      //   },
-      // ]),
-      uniforms: {
-        u_time: { type: 'f', value: new THREE.Texture() },
-      },
+      uniforms: this.uniforms,
       wireframe: false,
+      lights: true,
       // side: THREE.DoubleSide,
     });
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.castShadow = true;
-    this.mesh.receiveShadow = true;
+    // this.mesh.castShadow = true;
+    // this.mesh.receiveShadow = true;
     this.add(this.mesh);
 
     // Signals.onAssetsLoaded.add(this.onAssetsLoaded.bind(this));
@@ -81,4 +76,4 @@ class Cube extends THREE.Object3D {
   // }
 }
 
-export default Cube;
+export default Ground;

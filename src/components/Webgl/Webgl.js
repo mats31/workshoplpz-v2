@@ -89,8 +89,8 @@ export default Vue.extend({
 
       this.clock = new Clock();
 
-      this.setupGround();
       this.setupLight();
+      this.setupGround();
       this.animate();
     },
 
