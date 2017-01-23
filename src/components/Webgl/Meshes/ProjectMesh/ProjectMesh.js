@@ -64,6 +64,7 @@ class ProjectMesh extends THREE.Object3D {
       uniforms: this.planeUniforms,
       wireframe: false,
       side: THREE.DoubleSide,
+      transparent: true,
     });
 
     this.planeMesh = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
