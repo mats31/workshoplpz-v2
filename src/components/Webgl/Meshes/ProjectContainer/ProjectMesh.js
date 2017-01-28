@@ -44,9 +44,14 @@ class ProjectMesh extends THREE.Object3D {
     // this.maskMesh.receiveShadow = true;
     this.add(this.maskMesh);
     // this.addGUI()
+    console.log(new THREE.Box3().setFromObject(this.maskMesh));
   }
 
   createProjectPlane() {
+
+    this.createRenderTarget();
+
+    const maskBox = new THREE.Box3().setFromObject(this.maskMesh);
 
     const texture = States.resources.getTexture('uv').media;
     texture.needsUpdate = true;
@@ -56,6 +61,10 @@ class ProjectMesh extends THREE.Object3D {
     this.planeUniforms = {
       // u_map: { type: 't', value: new THREE.Texture() },
       u_map: { type: 't', value: texture },
+      u_maskMaxPos: { type: 'v3', value: maskBox.max },
+      u_maskMinPos: { type: 'v3', value: maskBox.min },
+      u_resolution: { type: 'v2', value: new THREE.Vector2( Math.abs( maskBox.min.x ) + Math.abs( maskBox.max.x ), Math.abs( maskBox.min.y ) + Math.abs( maskBox.max.y ) ) },
+      u_maskMap: { type: 't', value: this.renderTarget.texture },
     };
 
     this.planeMaterial = new THREE.ShaderMaterial({
@@ -69,7 +78,45 @@ class ProjectMesh extends THREE.Object3D {
 
     this.planeMesh = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
 
+    const planeBox = new THREE.Box3().setFromObject(this.planeMesh);
+    console.log(planeBox);
+
     this.add(this.planeMesh);
+  }
+
+  createRenderTarget() {
+
+    const width = 256;
+    const height = 256;
+    const options = {
+      minFilter: THREE.LinearFilter,
+      stencilBuffer: false,
+      depthBuffer: false,
+    };
+
+    this.renderScene = new THREE.Scene();
+    // this.renderCamera = new THREE.OrthographicCamera(
+    //   window.innerWidth / -2,
+    //   window.innerWidth / 2,
+    //   window.innerHeight / 2,
+    //   window.innerHeight / -2,
+    //   -10000,
+    //   10000,
+    // );
+    this.renderCamera = new THREE.OrthographicCamera(
+      64 / -2,
+      64 / 2,
+      64 / 2,
+      64 / -2,
+      -10000,
+      10000,
+    );
+
+    this.renderScene.add(this.maskMesh);
+
+    this.renderTarget = new THREE.WebGLRenderTarget( width, height, options);
+
+    window.renderer.render( this.renderScene, this.renderCamera, this.renderTarget, true );
   }
 
 

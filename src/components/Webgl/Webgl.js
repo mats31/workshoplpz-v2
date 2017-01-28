@@ -5,7 +5,7 @@ import raf from 'raf';
 import Clock from 'helpers/Clock';
 
 import Ground from './Meshes/Ground/Ground';
-import ProjectMesh from './Meshes/ProjectMesh/ProjectMesh';
+import ProjectContainer from './Meshes/ProjectContainer/ProjectContainer';
 
 import './webgl.styl';
 
@@ -58,12 +58,25 @@ export default Vue.extend({
       this.camera.position.copy(cameraPos);
       this.camera.lookAt(cameraTarget);
 
-      this.renderer = new THREE.WebGLRenderer();
+      this.renderer = window.renderer = new THREE.WebGLRenderer();
       this.renderer.setSize(width, height);
       this.renderer.setClearColor(0x1a1a1a);
       // this.renderer.shadowMap.enabled = true;
       // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       // this.renderer.antialias = true;
+
+      this.orthographicScene = new THREE.Scene();
+
+      this.orthographicCamera = new THREE.OrthographicCamera(
+        window.innerWidth / -2,
+        window.innerWidth / 2,
+        window.innerHeight / 2,
+        window.innerHeight / -2,
+        -10000,
+        10000,
+      );
+      this.orthographicCamera.position.copy(cameraPos);
+      this.orthographicCamera.lookAt(cameraTarget);
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       // this.camera.lookAt(cameraTarget);
@@ -120,10 +133,16 @@ export default Vue.extend({
 
     setupProject() {
 
-      const projectMesh = new ProjectMesh();
-      projectMesh.position.set( 0, 20, 15 );
+      const projectContainer = new ProjectContainer();
 
-      this.scene.add(projectMesh);
+      const mask = projectContainer.getMask();
+      mask.position.set( 0, 20, 15 );
+
+      const projectPlane = projectContainer.getProjectPlane();
+      projectPlane.position.set( 0, 20, 15 );
+
+      this.scene.add(mask);
+      this.orthographicScene.add(projectPlane);
     },
 
     setupGround() {
@@ -172,6 +191,7 @@ export default Vue.extend({
       this.ground.update( this.clock.time );
 
       this.renderer.render(this.scene, this.camera);
+      this.renderer.render(this.orthographicScene, this.orthographicCamera);
     },
 
     updateCamera() {
