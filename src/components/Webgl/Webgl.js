@@ -7,6 +7,8 @@ import Clock from 'helpers/Clock';
 import Ground from './Meshes/Ground/Ground';
 import ProjectContainer from './Meshes/ProjectContainer/ProjectContainer';
 
+import projects from 'config/projects';
+
 import './webgl.styl';
 
 
@@ -134,16 +136,26 @@ export default Vue.extend({
 
     setupProject() {
 
-      this.projectContainer = new ProjectContainer();
+      const projectList = projects.projectList;
 
-      const mask = this.projectContainer.getMask();
-      mask.position.set( 0, 20, 15 );
+      for (let i = 0; i < projectList.length; i += 1) {
 
-      const projectPlane = this.projectContainer.getProjectPlane();
-      projectPlane.position.set( 0, 20, 15 );
+        const previewId = projectList[i].previewId;
+        const texture = States.resources.getTexture(previewId).media;
+        texture.minFilter = THREE.LinearFilter;
+        texture.needsUpdate = true;
 
-      this.scene.add(mask);
-      this.orthographicScene.add(projectPlane);
+        this.projectContainer = new ProjectContainer(texture);
+
+        const mask = this.projectContainer.getMask();
+        mask.position.set( 0, 20, 15 );
+
+        const projectPlane = this.projectContainer.getProjectPlane();
+        projectPlane.position.set( 0, 20, 15 );
+
+        this.scene.add(mask);
+        this.orthographicScene.add(projectPlane);
+      }
     },
 
     setupGround() {
@@ -190,10 +202,9 @@ export default Vue.extend({
       this.updateCamera();
 
       this.ground.update( this.clock.time );
-      this.projectContainer.update( this.clock.time );
-
       this.renderer.clear();
       this.renderer.render(this.scene, this.camera);
+      this.projectContainer.update( this.clock.time, this.rotationEase );
       this.renderer.clearDepth();
       this.renderer.render(this.orthographicScene, this.orthographicCamera);
     },

@@ -21,7 +21,7 @@ class Mask extends THREE.Object3D {
 
   createMask() {
 
-    this.maskGeometry = new THREE.IcosahedronGeometry( 1, 0 );
+    this.maskGeometry = new THREE.IcosahedronGeometry( 2.5, 0 );
 
     const baseShader = THREE.ShaderLib.phong;
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);

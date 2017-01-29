@@ -3,12 +3,14 @@ import ProjectPlane from './ProjectPlane';
 
 export default class ProjectContainer {
 
-  constructor() {
+  constructor(texture) {
 
-    this.setup();
+    this.setup(texture);
   }
 
-  setup() {
+  setup(texture) {
+
+    this.texture = texture;
 
     this.createMask();
     this.createProjectPlane();
@@ -23,7 +25,10 @@ export default class ProjectContainer {
 
     const maskMesh = this.mask.getMaskMesh();
 
-    this.projectPlane = new ProjectPlane(maskMesh);
+    this.projectPlane = new ProjectPlane({
+      geometry: maskMesh.geometry,
+      texture: this.texture,
+    });
   }
 
   getMask() {
@@ -36,8 +41,8 @@ export default class ProjectContainer {
     return this.projectPlane;
   }
 
-  update( time ) {
+  update( time, rotationEase ) {
 
-    this.projectPlane.update( time );
+    this.projectPlane.update( time, rotationEase );
   }
 }

@@ -10,6 +10,8 @@ const ressources = {
 
   textures: [
     { id: 'uv', url: 'textures/uv.jpg', description: '' },
+    { id: 'project-preview', url: 'textures/project-preview.jpg', description: '' },
+    { id: 'project-preview-noise', url: 'textures/project-preview-noise.jpg', description: '' },
   ],
 };
 
