@@ -16,7 +16,7 @@ class ProjectPlane extends THREE.Object3D {
 
   setup(maskMesh) {
 
-    this.maskMesh = maskMesh;
+    this.maskMesh = maskMesh.clone();
 
     this.createProjectPlane();
   }
@@ -31,7 +31,7 @@ class ProjectPlane extends THREE.Object3D {
     texture.needsUpdate = true;
     texture.minFilter = THREE.LinearFilter;
 
-    this.planeGeometry = new THREE.PlaneGeometry( 10, 10, 10, 10 );
+    this.planeGeometry = new THREE.PlaneGeometry( window.innerWidth, window.innerHeight, 10, 10 );
     this.planeUniforms = {
       // u_map: { type: 't', value: new THREE.Texture() },
       u_map: { type: 't', value: texture },
@@ -41,13 +41,20 @@ class ProjectPlane extends THREE.Object3D {
       u_maskMap: { type: 't', value: this.renderTarget.texture },
     };
 
-    this.planeMaterial = new THREE.ShaderMaterial({
-      vertexShader: vertexProjectShader,
-      fragmentShader: fragmentProjectShader,
-      uniforms: this.planeUniforms,
-      wireframe: false,
+    // this.planeMaterial = new THREE.ShaderMaterial({
+    //   vertexShader: vertexProjectShader,
+    //   fragmentShader: fragmentProjectShader,
+    //   uniforms: this.planeUniforms,
+    //   wireframe: false,
+    //   side: THREE.DoubleSide,
+    //   transparent: true,
+    // });
+
+    // this.renderTarget.texture.needsUpdate = true;
+    this.planeMaterial = new THREE.MeshBasicMaterial({
+      color: new THREE.Color('red'),
+      map: this.renderTarget.texture,
       side: THREE.DoubleSide,
-      transparent: true,
     });
 
     this.planeMesh = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
@@ -60,12 +67,14 @@ class ProjectPlane extends THREE.Object3D {
 
   createRenderTarget() {
 
-    const width = 256;
-    const height = 256;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
     const options = {
       minFilter: THREE.LinearFilter,
-      stencilBuffer: false,
-      depthBuffer: false,
+      // magFilter: THREE.NearestFilter,
+      stencilBuffer: true,
+      depthBuffer: true,
+      format: THREE.RGBAFormat,
     };
 
     this.renderScene = new THREE.Scene();
@@ -77,20 +86,35 @@ class ProjectPlane extends THREE.Object3D {
     //   -10000,
     //   10000,
     // );
-    this.renderCamera = new THREE.OrthographicCamera(
-      64 / -2,
-      64 / 2,
-      64 / 2,
-      64 / -2,
-      -10000,
-      10000,
-    );
+    const cameraTarget = new THREE.Vector3(0, 20, 100);
+    const cameraPos = new THREE.Vector3(0, 20, -1);
+    this.renderCamera = new THREE.PerspectiveCamera(50, width / height, 1, 10000);
+    this.renderCamera.position.copy(cameraPos);
+    this.renderCamera.lookAt(cameraTarget);
 
-    this.renderScene.add(this.maskMesh);
+    this.planeTest = new THREE.Mesh(new THREE.PlaneGeometry(400, 400, 50, 50), new THREE.MeshBasicMaterial({ color: new THREE.Color('yellow'), side: THREE.DoubleSide, wireframe: false }));
+    // planeTest.position.set(0, 20, 10);
+    this.planeTest.position.set(window.camera.position.x, window.camera.position.y, 50);
+    this.planeTest2 = this.planeTest.clone();
+    this.planeTest2.position.set(window.camera.position.x, window.camera.position.y, -50);
+    this.renderCamera.lookAt(this.planeTest.position);
+    console.log(this.planeTest.position);
+    console.log(this.planeTest2.position);
+
+    // this.renderScene.add(this.maskMesh);
+    this.renderScene.add(this.planeTest);
+    this.renderScene.add(this.planeTest2);
 
     this.renderTarget = new THREE.WebGLRenderTarget( width, height, options);
 
+    // this.renderer = new THREE.WebGLRenderer();
+    // this.renderer.setSize(width, height);
+    // this.renderer.setClearColor(0x1a1a1a);
+    // this.renderer.autoClear = false;
+
     window.renderer.render( this.renderScene, this.renderCamera, this.renderTarget, true );
+    // window.renderer.render( window.scene, this.renderCamera, this.renderTarget, true );
+    setTimeout( () => { console.log(this.renderTarget); }, 5000 );
   }
 
 
@@ -109,11 +133,11 @@ class ProjectPlane extends THREE.Object3D {
 
   /* ****************** RENDER ****************** */
 
-  update(time) {
+  update( time ) {
 
-    this.maskMaterial.uniforms.u_time.value = time;
-    this.planeMesh.rotation.x += 0.1;
-    this.planeMesh.rotation.y += 0.1;
+    this.planeTest.rotation.x += 0.1;
+    this.planeTest.rotation.y += 0.1;
+    window.renderer.render( this.renderScene, this.renderCamera, this.renderTarget, true );
   }
 
   // addGUI() {

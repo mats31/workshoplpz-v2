@@ -35,4 +35,9 @@ export default class ProjectContainer {
 
     return this.projectPlane;
   }
+
+  update( time ) {
+
+    this.projectPlane.update( time );
+  }
 }

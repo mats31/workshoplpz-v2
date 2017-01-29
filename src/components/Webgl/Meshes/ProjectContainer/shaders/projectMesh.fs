@@ -27,5 +27,5 @@ void main() {
 
   gl_FragColor = vec4(color, alpha);
   gl_FragColor = texture2D(u_maskMap, vUV);
-  gl_FragColor = vec4(1.,0.,0.,1.);
+  // gl_FragColor = vec4(1.,0.,0.,0.1);
 }

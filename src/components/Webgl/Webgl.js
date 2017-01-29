@@ -52,15 +52,16 @@ export default Vue.extend({
       const cameraTarget = new THREE.Vector3(0, 20, 100);
       const cameraPos = new THREE.Vector3(0, 20, -1);
 
-      this.scene = new THREE.Scene();
+      this.scene = window.scene = new THREE.Scene();
 
-      this.camera = new THREE.PerspectiveCamera(50, width / height, 1, 10000);
+      this.camera = window.camera = new THREE.PerspectiveCamera(50, width / height, 1, 10000);
       this.camera.position.copy(cameraPos);
       this.camera.lookAt(cameraTarget);
 
       this.renderer = window.renderer = new THREE.WebGLRenderer();
       this.renderer.setSize(width, height);
       this.renderer.setClearColor(0x1a1a1a);
+      this.renderer.autoClear = false;
       // this.renderer.shadowMap.enabled = true;
       // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       // this.renderer.antialias = true;
@@ -133,12 +134,12 @@ export default Vue.extend({
 
     setupProject() {
 
-      const projectContainer = new ProjectContainer();
+      this.projectContainer = new ProjectContainer();
 
-      const mask = projectContainer.getMask();
+      const mask = this.projectContainer.getMask();
       mask.position.set( 0, 20, 15 );
 
-      const projectPlane = projectContainer.getProjectPlane();
+      const projectPlane = this.projectContainer.getProjectPlane();
       projectPlane.position.set( 0, 20, 15 );
 
       this.scene.add(mask);
@@ -189,14 +190,18 @@ export default Vue.extend({
       this.updateCamera();
 
       this.ground.update( this.clock.time );
+      this.projectContainer.update( this.clock.time );
 
+      this.renderer.clear();
       this.renderer.render(this.scene, this.camera);
+      this.renderer.clearDepth();
       this.renderer.render(this.orthographicScene, this.orthographicCamera);
     },
 
     updateCamera() {
 
       this.camera.rotation.y += 0.01 * this.rotationEase;
+      // this.orthographicCamera.rotation.y += 0.01 * this.rotationEase;
     },
   },
 
