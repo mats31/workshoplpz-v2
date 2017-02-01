@@ -81,23 +81,32 @@ float snoise(vec2 v)
   return 130.0 * dot(m, g);
 }
 
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
 void main() {
 
   vec4 noiseTexture = texture2D(u_mapNoise, vUV + u_time * 0.1);
   vec4 noiseTexture2 = texture2D(u_mapNoise, vUV - u_time * 0.1);
   vec4 maskTexture = texture2D(u_maskMap, vUV);
 
-  vec4 texture = texture2D( u_map, vec2( vUV.x - noiseTexture.r * 0.015, vUV.y + noiseTexture.r * 0.015 ) );
+  float randomValue = sign( rand(gl_FragCoord.xy) - 0.5 );
+  float noise = max( snoise(u_time + gl_FragCoord.xy * 0.012 * randomValue), 0. );
+
+  float alpha = step(1., maskTexture.r) * noise * 1.;
+
+  vec4 texture = texture2D( u_map, vec2( vUV.x, vUV.y ) );
 
   vec3 color = texture.rgb;
   // float noise = max( snoise(u_time + gl_FragCoord.xy * 0.05), 0. ) + 0.1;
   // float noise = clamp( snoise(u_time + gl_FragCoord.xy * 0.03), 0., 0.01 ) + 0.1;
 
-  float alpha = step(1., maskTexture.r) * ( noiseTexture.r - 0.1 ) * ( noiseTexture2.r - 0.1 );
+  // float alpha = step(1., maskTexture.r) * ( noiseTexture.r - 0.1 ) * ( noiseTexture2.r - 0.1 );
 
-  if( alpha < 0.01) {
-    discard;
-  }
+  // if( alpha < 0.0000001) {
+  //   discard;
+  // }
 
   gl_FragColor = vec4(color, alpha);
   // gl_FragColor = texture2D(u_mapNoise, vUV + u_time);

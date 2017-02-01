@@ -111,6 +111,7 @@ class ProjectPlane extends THREE.Object3D {
     const maskMesh = new THREE.Mesh( this.maskGeometry, maskMaterial );
     // maskMesh.scale.set( 0.8, 0.8, 0.8 );
     maskMesh.position.set( 0, 20, 15 );
+    maskMesh.rotation.x = 0.8;
     this.renderScene.add(maskMesh);
     // this.renderScene.add(this.planeTest);
     // this.renderScene.add(this.planeTest2);

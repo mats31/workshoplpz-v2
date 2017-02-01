@@ -44,6 +44,8 @@ class Mask extends THREE.Object3D {
     this.maskMesh = new THREE.Mesh(this.maskGeometry, this.maskMaterial);
     this.maskMesh.castShadow = true;
     // this.maskMesh.receiveShadow = true;
+    this.maskMesh.rotation.x = 0.8;
+    // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
     this.add(this.maskMesh);
     // this.addGUI()
     console.log(new THREE.Box3().setFromObject(this.maskMesh));
