@@ -70,29 +70,40 @@ class ProjectPlane extends THREE.Object3D {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const options = {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
+      type: THREE.FloatType,
+      // minFilter: THREE.NearestFilter,
+      // wrapS: THREE.RepeatWrapping,
+      // wrapT: THREE.RepeatWrapping,
+      // magFilter: THREE.LinearFilter,
       // magFilter: THREE.NearestFilter,
-      stencilBuffer: true,
-      depthBuffer: true,
-      format: THREE.RGBAFormat,
+      // stencilBuffer: true,
+      // depthBuffer: true,
+      // format: THREE.RGBFormat,
     };
 
     this.renderScene = new THREE.Scene();
-    // this.renderCamera = new THREE.OrthographicCamera(
-    //   window.innerWidth / -2,
-    //   window.innerWidth / 2,
-    //   window.innerHeight / 2,
-    //   window.innerHeight / -2,
-    //   -10000,
-    //   10000,
-    // );
-    // const cameraTarget = new THREE.Vector3(0, 20, 100);
-    // const cameraPos = new THREE.Vector3(0, 20, -1);
+    this.renderCamera = new THREE.OrthographicCamera(
+      window.innerWidth / -2,
+      window.innerWidth / 2,
+      window.innerHeight / 2,
+      window.innerHeight / -2,
+      -10000,
+      10000,
+    );
+    const cameraTarget = new THREE.Vector3(0, 20, 100);
+    const cameraPos = new THREE.Vector3(0, 20, -1);
     // this.renderCamera = new THREE.PerspectiveCamera(50, width / height, 1, 10000);
     // this.renderCamera.position.copy(cameraPos);
     // this.renderCamera.lookAt(cameraTarget);
-    this.renderCamera = window.camera.clone();
+    // const cameraTarget = new THREE.Vector3(0, 20,   100);
+    // const cameraPos = new THREE.Vector3(0, 20, -1);
+    // this.renderCamera = window.orthographicCamera.clone();
+    // this.renderCamera.rotation.x = Math.PI / 2;
+    // this.renderCamera.rotation.y = Math.PI / 2;
+    // this.renderCamera.rotation.z = Math.PI / 2;
+    // console.log(this.renderCamera.rotation.z);
+    this.renderCamera.position.copy(cameraPos);
+    this.renderCamera.lookAt(cameraTarget);
 
     // this.planeTest = new THREE.Mesh(new THREE.PlaneGeometry(400, 400, 50, 50), new THREE.MeshBasicMaterial({ color: new THREE.Color('yellow'), side: THREE.DoubleSide, wireframe: false }));
     // // planeTest.position.set(0, 20, 10);
@@ -105,27 +116,38 @@ class ProjectPlane extends THREE.Object3D {
 
     // this.maskMesh.position.set( 0, 20, 15 );
     // console.log(this.maskMesh);
+    this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
     const maskMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color('white'),
+      color: new THREE.Color('red'),
     });
-    const maskMesh = new THREE.Mesh( this.maskGeometry, maskMaterial );
-    // maskMesh.scale.set( 0.8, 0.8, 0.8 );
-    maskMesh.position.set( 0, 20, 15 );
-    maskMesh.rotation.x = 0.8;
-    this.renderScene.add(maskMesh);
+    this.maskMesh = new THREE.Mesh( this.maskGeometry, maskMaterial );
+    // this.maskMesh.scale.set( -1, -1, 1 );
+    this.maskMesh.position.set( 0, 20, 15 );
+    this.maskMesh.rotation.x = 0.5;
+    this.maskMesh.rotation.y = 0.5;
+    this.renderScene.add(this.maskMesh);
     // this.renderScene.add(this.planeTest);
     // this.renderScene.add(this.planeTest2);
 
     this.renderTarget = new THREE.WebGLRenderTarget( width, height, options);
+    // this.renderTarget.texture.flipY = false;
+    // this.renderTarget.texture.wrapS = THREE.RepeatWrapping;
+    // this.renderTarget.texture.repeat.x = - 1;
 
     // this.renderer = new THREE.WebGLRenderer();
     // this.renderer.setSize(width, height);
     // this.renderer.setClearColor(0x1a1a1a);
     // this.renderer.autoClear = false;
 
+    // this.renderCamera.rotation
+    // this.renderTarget.texture.needsUpdate = true;
     window.renderer.render( this.renderScene, this.renderCamera, this.renderTarget, true );
     // window.renderer.render( window.scene, this.renderCamera, this.renderTarget, true );
-    setTimeout( () => { console.log(this.renderTarget); }, 5000 );
+
+    // console.log(window.orthographicCamera);
+    // console.log(this.renderCamera);
+    console.log(this.texture);
+    console.log(this.renderTarget);
   }
 
 
@@ -149,7 +171,15 @@ class ProjectPlane extends THREE.Object3D {
     // this.planeTest.rotation.x += 0.1;
     // this.planeTest.rotation.y += 0.1;
     this.planeUniforms.u_time.value = time;
-    this.renderCamera.rotation.y -= 0.01 * rotationEase;
+    // this.renderCamera.rotation.y -= 0.01 * rotationEase;
+    // console.log(this.renderCamera.rotation.z);
+    // this.renderCamera.rotation.z += 0.01;
+    // this.renderCamera.rotation.x += 0.01;
+    // this.renderCamera.rotation.z += 0.01;
+    // console.log(this.renderCamera.rotation.z);
+    // this.renderTarget.texture.flipY = false;
+    // this.maskMesh.rotation.x -= 0.01;
+    // this.maskMesh.rotation.y -= 0.01;
     window.renderer.render( this.renderScene, this.renderCamera, this.renderTarget, true );
   }
 

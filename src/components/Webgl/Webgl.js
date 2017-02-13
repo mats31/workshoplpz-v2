@@ -70,7 +70,7 @@ export default Vue.extend({
 
       this.orthographicScene = new THREE.Scene();
 
-      this.orthographicCamera = new THREE.OrthographicCamera(
+      this.orthographicCamera = window.orthographicCamera = new THREE.OrthographicCamera(
         window.innerWidth / -2,
         window.innerWidth / 2,
         window.innerHeight / 2,
@@ -101,8 +101,15 @@ export default Vue.extend({
           light.shadow.mapSize.height = 2048;
           light.shadow.bias = 0;
 
+          const cloneLight = light.clone();
+          cloneLight.position.set( 0, 20, 15 );
+
+          const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.01 );
+          directionalLight.position.set(-20, 100, -100);
+          this.orthographicScene.add( directionalLight );
 
           this.scene.add( light );
+          // this.orthographicScene.add( cloneLight );
 
           const sphereSize = 1;
           const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
@@ -149,12 +156,22 @@ export default Vue.extend({
 
         const mask = this.projectContainer.getMask();
         mask.position.set( 0, 20, 15 );
+        mask.rotation.x = 0.5;
+        mask.rotation.y = 0.5;
+
 
         const projectPlane = this.projectContainer.getProjectPlane();
-        projectPlane.position.set( 0, 20, 15 );
+        // projectPlane.rotation.x = Math.PI;
+        // projectPlane.rotation.y = Math.PI;
+        // projectPlane.rotation.z = Math.PI;
+        projectPlane.position.set( 0, 20, 16 );
 
-        this.scene.add(mask);
+        // this.scene.add(mask);
+        this.orthographicScene.add(mask);
         this.orthographicScene.add(projectPlane);
+
+        console.log(mask.maskMesh);
+        console.log(mask);
       }
     },
 
@@ -207,6 +224,9 @@ export default Vue.extend({
       this.projectContainer.update( this.clock.time, this.rotationEase );
       this.renderer.clearDepth();
       this.renderer.render(this.orthographicScene, this.orthographicCamera);
+      // this.renderer.clear();
+      // this.projectContainer.update( this.clock.time, this.rotationEase );
+
     },
 
     updateCamera() {

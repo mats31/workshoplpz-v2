@@ -96,7 +96,7 @@ float snoise(vec2 v)
 
 uniform float u_time;
 
-// varying vec2 vUV;
+varying vec2 vUV;
 // varying vec3 vNormal;
 varying vec3 vWorldPosition;
 
@@ -136,6 +136,7 @@ void main() {
 	#include <envmap_vertex>
 	#include <shadowmap_vertex>
 
+  vUV = uv;
 }
 
 // void main() {

@@ -21,7 +21,16 @@ class Mask extends THREE.Object3D {
 
   createMask() {
 
-    this.maskGeometry = new THREE.IcosahedronGeometry( 2.5, 0 );
+    // this.maskGeometry = new THREE.IcosahedronGeometry( 2.5, 0 );
+    // this.maskGeometry = new THREE.IcosahedronGeometry( 200, 0 );
+    // this.maskGeometry = new THREE.BoxGeometry( 2.5, 2.5, 2.5 );
+    this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
+
+    const noise = States.resources.getTexture('project-preview-noise').media;
+    noise.needsUpdate = true;
+    noise.minFilter = THREE.LinearFilter;
+    noise.wrapS = THREE.RepeatWrapping;
+    noise.wrapT = THREE.RepeatWrapping;
 
     const baseShader = THREE.ShaderLib.phong;
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
@@ -30,6 +39,7 @@ class Mask extends THREE.Object3D {
       u_time: { type: 'f', value: 0 },
       emissive: { value: new THREE.Color( 0x000000 ) },
       specular: { value: new THREE.Color( 0x111111 ) },
+      u_mapNoise: { type: 't', value: noise },
     };
 
     this.maskMaterial = new THREE.ShaderMaterial({
@@ -38,13 +48,14 @@ class Mask extends THREE.Object3D {
       uniforms: this.maskUniforms,
       wireframe: false,
       lights: true,
+      transparent: true,
       // side: THREE.DoubleSide,
     });
 
     this.maskMesh = new THREE.Mesh(this.maskGeometry, this.maskMaterial);
     this.maskMesh.castShadow = true;
     // this.maskMesh.receiveShadow = true;
-    this.maskMesh.rotation.x = 0.8;
+    // this.maskMesh.rotation.x = 0.8;
     // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
     this.add(this.maskMesh);
     // this.addGUI()
@@ -75,8 +86,11 @@ class Mask extends THREE.Object3D {
   update(time) {
 
     this.maskMaterial.uniforms.u_time.value = time;
-    this.planeMesh.rotation.x += 0.1;
-    this.planeMesh.rotation.y += 0.1;
+    // this.maskMesh.rotation.x += 0.01;
+    // this.maskMesh.rotation.y += 0.01;
+
+
+    // this.maskMesh.rotation.x += 0.1;
   }
 
   // addGUI() {

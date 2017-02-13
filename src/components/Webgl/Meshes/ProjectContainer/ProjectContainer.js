@@ -43,6 +43,7 @@ export default class ProjectContainer {
 
   update( time, rotationEase ) {
 
+    this.mask.update( time, rotationEase );
     this.projectPlane.update( time, rotationEase );
   }
 }
