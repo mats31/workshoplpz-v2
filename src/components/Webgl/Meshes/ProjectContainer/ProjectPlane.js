@@ -48,6 +48,7 @@ class ProjectPlane extends THREE.Object3D {
       wireframe: false,
       side: THREE.DoubleSide,
       transparent: true,
+      depthWrite: false,
     });
 
     // this.renderTarget.texture.needsUpdate = true;
@@ -70,12 +71,11 @@ class ProjectPlane extends THREE.Object3D {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const options = {
-      type: THREE.FloatType,
-      // minFilter: THREE.NearestFilter,
+      minFilter: THREE.LinearFilter,
       // wrapS: THREE.RepeatWrapping,
       // wrapT: THREE.RepeatWrapping,
       // magFilter: THREE.LinearFilter,
-      // magFilter: THREE.NearestFilter,
+      magFilter: THREE.NearestFilter,
       // stencilBuffer: true,
       // depthBuffer: true,
       // format: THREE.RGBFormat,
@@ -124,13 +124,12 @@ class ProjectPlane extends THREE.Object3D {
     // this.maskMesh.scale.set( -1, -1, 1 );
     this.maskMesh.position.set( 0, 20, 15 );
     this.maskMesh.rotation.x = 0.5;
-    this.maskMesh.rotation.y = 0.5;
+    this.maskMesh.rotation.y = -0.5;
     this.renderScene.add(this.maskMesh);
     // this.renderScene.add(this.planeTest);
     // this.renderScene.add(this.planeTest2);
 
     this.renderTarget = new THREE.WebGLRenderTarget( width, height, options);
-    // this.renderTarget.texture.flipY = false;
     // this.renderTarget.texture.wrapS = THREE.RepeatWrapping;
     // this.renderTarget.texture.repeat.x = - 1;
 
@@ -175,10 +174,11 @@ class ProjectPlane extends THREE.Object3D {
     // console.log(this.renderCamera.rotation.z);
     // this.renderCamera.rotation.z += 0.01;
     // this.renderCamera.rotation.x += 0.01;
+    // this.renderCamera.rotation.y += 0.01;
     // this.renderCamera.rotation.z += 0.01;
     // console.log(this.renderCamera.rotation.z);
     // this.renderTarget.texture.flipY = false;
-    // this.maskMesh.rotation.x -= 0.01;
+    // this.maskMesh.rotation.x += 0.01;
     // this.maskMesh.rotation.y -= 0.01;
     window.renderer.render( this.renderScene, this.renderCamera, this.renderTarget, true );
   }

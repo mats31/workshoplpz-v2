@@ -148,7 +148,8 @@ void main() {
   // float alpha = 1.;
   float alpha = 1.;
 
-	gl_FragColor = vec4( outgoingLight, alpha );
+  // gl_FragColor = vec4( outgoingLight, alpha );
+	gl_FragColor = vec4( vec3(1.,1.,1.), alpha );
 
 	#include <premultiplied_alpha_fragment>
 	#include <tonemapping_fragment>
