@@ -95,7 +95,7 @@ void main() {
   float noise = max( snoise(u_time + gl_FragCoord.xy * 0.012 * randomValue), 0. );
 
   // float alpha = step(1., maskTexture.r) * noise;
-  float alpha = step(1., maskTexture.r) * 0.5;
+  // float alpha = step(1., maskTexture.r) * 0.5;
 
   vec4 texture = texture2D( u_map, vec2( vUV.x, vUV.y ) );
 
@@ -104,13 +104,14 @@ void main() {
   // float noise = clamp( snoise(u_time + gl_FragCoord.xy * 0.03), 0., 0.01 ) + 0.1;
 
   // float alpha = step(1., maskTexture.r) * ( noiseTexture.r - 0.1 ) * ( noiseTexture2.r - 0.1 );
+  float alpha = step(1., maskTexture.r);
 
-  // if( alpha < 0.0000001) {
-  //   discard;
-  // }
+  if( alpha < 0.1) {
+    discard;
+  }
 
-  // gl_FragColor = vec4(color, alpha);
-  gl_FragColor = maskTexture;
+  gl_FragColor = vec4(color, alpha);
+  // gl_FragColor = maskTexture;
   // gl_FragColor = texture;
   // gl_FragColor = texture2D(u_mapNoise, vUV + u_time);
   // gl_FragColor.a = 1.;

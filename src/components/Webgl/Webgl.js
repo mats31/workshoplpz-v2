@@ -42,7 +42,17 @@ export default Vue.extend({
 
     setup() {
 
+      this.cameraTarget = new THREE.Vector3(0, 20, 100);
+      this.cameraPos = new THREE.Vector3(0, 20, -1);
+
+      this.stepPosition = window.innerWidth * 0.3;
+
       this.rotationEase = 0;
+      this.mainAngle = 0;
+
+      this.projectMeshes = [];
+      this.widthProjects = null;
+
       this.mouse = new THREE.Vector2();
 
       this.createWebgl(window.innerWidth, window.innerHeight);
@@ -51,14 +61,11 @@ export default Vue.extend({
 
     createWebgl(width, height) {
 
-      const cameraTarget = new THREE.Vector3(0, 20, 100);
-      const cameraPos = new THREE.Vector3(0, 20, -1);
-
       this.scene = window.scene = new THREE.Scene();
 
       this.camera = window.camera = new THREE.PerspectiveCamera(50, width / height, 1, 10000);
-      this.camera.position.copy(cameraPos);
-      this.camera.lookAt(cameraTarget);
+      this.camera.position.copy(this.cameraPos);
+      this.camera.lookAt(this.cameraTarget);
 
       this.renderer = window.renderer = new THREE.WebGLRenderer();
       this.renderer.setSize(width, height);
@@ -78,8 +85,8 @@ export default Vue.extend({
         -10000,
         10000,
       );
-      this.orthographicCamera.position.copy(cameraPos);
-      this.orthographicCamera.lookAt(cameraTarget);
+      this.orthographicCamera.position.copy(this.cameraPos);
+      this.orthographicCamera.lookAt(this.cameraTarget);
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       // this.camera.lookAt(cameraTarget);
@@ -116,34 +123,12 @@ export default Vue.extend({
           this.scene.add( pointLightHelper );
         }
       }
-
-      // const light = new THREE.PointLight( 0x303030, 10, 0 );
-      // light.position.set( 0, 40, 0);
-      // light.castShadow = true;
-      // light.shadow.camera.fov = 50;
-      // light.shadow.mapSize.width = 2048;
-      // light.shadow.mapSize.height = 2048;
-      // light.shadow.bias = 0;
-
-
-      // this.scene.add( light );
-
-      // const sphereSize = 1;
-      // const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
-      // this.scene.add( pointLightHelper );
-
-      // const light = new THREE.PointLight( 0x303030, 1, 0 );
-      // light.position.set( 0, 20, 0 );
-      // this.scene.add( light );
-
-      // const sphereSize = 1;
-      // const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
-      // this.scene.add( pointLightHelper );
     },
 
     setupProject() {
 
       const projectList = projects.projectList;
+      let previousX = window.innerWidth * 0.5;
 
       for (let i = 0; i < projectList.length; i += 1) {
 
@@ -152,27 +137,25 @@ export default Vue.extend({
         texture.minFilter = THREE.LinearFilter;
         texture.needsUpdate = true;
 
-        this.projectContainer = new ProjectContainer(texture);
+        const projectContainer = new ProjectContainer(texture);
+        const width = projectContainer.getMaskWidth();
 
-        const mask = this.projectContainer.getMask();
-        mask.position.set( 0, 20, 15 );
-        mask.rotation.x = 0.5;
-        mask.rotation.y = 0.5;
+        const x = previousX - this.stepPosition;
+        const y = 20 + ( Math.random() * 260 - 130 );
+        const z = 100;
+        previousX = x - width;
 
+        projectContainer.position.set( x, y, z );
 
-        const projectPlane = this.projectContainer.getProjectPlane();
-        // projectPlane.rotation.x = Math.PI;
-        // projectPlane.rotation.y = Math.PI;
-        // projectPlane.rotation.z = Math.PI;
-        projectPlane.position.set( 0, 20, 16 );
+        this.orthographicScene.add(projectContainer);
+        this.projectMeshes.push(projectContainer);
 
-        // this.scene.add(mask);
-        this.orthographicScene.add(mask);
-        this.orthographicScene.add(projectPlane);
-
-        console.log(mask.maskMesh);
-        console.log(mask);
+        if ( i === 0 ) { this.startProject = projectContainer; }
+        if ( i === projectList.length - 1 ) { this.endProject = projectContainer; }
       }
+
+      this.widthProjects = previousX;
+      console.log(this.widthProjects);
     },
 
     setupGround() {
@@ -221,7 +204,9 @@ export default Vue.extend({
       this.ground.update( this.clock.time );
       this.renderer.clear();
       this.renderer.render(this.scene, this.camera);
-      this.projectContainer.update( this.clock.time, this.rotationEase );
+
+      this.updateProjectContainers();
+
       this.renderer.clearDepth();
       this.renderer.render(this.orthographicScene, this.orthographicCamera);
       // this.renderer.clear();
@@ -232,8 +217,60 @@ export default Vue.extend({
     updateCamera() {
 
       this.camera.rotation.y += 0.01 * this.rotationEase;
-      // this.orthographicCamera.rotation.y += 0.01 * this.rotationEase;
+      // this.orthographicCamera.rotation.y += 0.01;
     },
+
+    updateProjectContainers() {
+
+      let start = null;
+      let last = null;
+
+      for ( let i = 0; i < this.projectMeshes.length; i++ ) {
+
+        const project = this.projectMeshes[i];
+
+        let x = project.position.x + 10 * this.rotationEase;
+        const width = project.getMaskWidth();
+
+        if ( x >= window.innerWidth * 0.5 + width ) {
+
+          x = this.projectMeshes[ this.projectMeshes.length - 1 ].position.x - this.projectMeshes[ this.projectMeshes.length - 1 ].getMaskWidth() - this.stepPosition;
+
+          console.log('BOUH');
+
+          last = project;
+
+          project.position.setX( x );
+        }
+        else if ( x <= this.widthProjects ) {
+
+          x = this.projectMeshes[ 0 ].position.x + this.projectMeshes[ 0 ].getMaskWidth() + this.stepPosition;
+
+          start = project;
+
+          project.position.setX( x );
+        }
+        else {
+
+          project.position.setX( x );
+        }
+
+        project.update( this.clock.time, this.rotationEase );
+      }
+
+      if (start) {
+
+        this.projectMeshes.splice( this.projectMeshes.length - 1, 1 );
+        this.projectMeshes.splice( 0, 0, start );
+      }
+
+      if (last) {
+
+        this.projectMeshes.splice( 0, 1 );
+        this.projectMeshes.push( last );
+      }
+    },
+
   },
 
   components: {},

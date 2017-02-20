@@ -1,9 +1,11 @@
 import Mask from './Mask';
 import ProjectPlane from './ProjectPlane';
 
-export default class ProjectContainer {
+class ProjectContainer extends THREE.Object3D {
 
   constructor(texture) {
+
+    super();
 
     this.setup(texture);
   }
@@ -19,6 +21,11 @@ export default class ProjectContainer {
   createMask() {
 
     this.mask = new Mask();
+
+    this.mask.rotation.x = 0.5;
+    this.mask.rotation.y = 0.5;
+
+    this.add(this.mask);
   }
 
   createProjectPlane() {
@@ -29,11 +36,20 @@ export default class ProjectContainer {
       geometry: maskMesh.geometry,
       texture: this.texture,
     });
+    this.projectPlane.position.setZ( 1 );
+    this.add(this.projectPlane);
   }
 
   getMask() {
 
     return this.mask;
+  }
+
+  getMaskWidth() {
+
+    const box3 = new THREE.Box3().setFromObject( this.mask );
+
+    return Math.abs( box3.max.x - box3.min.x );
   }
 
   getProjectPlane() {
@@ -47,3 +63,5 @@ export default class ProjectContainer {
     this.projectPlane.update( time, rotationEase );
   }
 }
+
+export default ProjectContainer;

@@ -136,20 +136,22 @@ void main() {
 
 	#include <envmap_fragment>
 
-  vec4 noiseTexture = texture2D(u_mapNoise, ( vUV + u_time * 0.1 ) * 0.4 );
-  vec4 noiseTexture2 = texture2D(u_mapNoise, ( vUV - u_time * 0.1 ) * 0.4 );
+  vec4 noiseTexture = texture2D(u_mapNoise, vUV );
+  // vec4 noiseTexture = texture2D(u_mapNoise, ( vUV + u_time * 0.1 ) * 0.4 );
+  // vec4 noiseTexture2 = texture2D(u_mapNoise, ( vUV - u_time * 0.1 ) * 0.4 );
 
   // float randomValue = sign( rand(gl_FragCoord.xy) - 0.5 );
   // float noise = max( snoise(u_time + gl_FragCoord.xy * 0.012 * randomValue), 0. );
-  float noise = snoise( fract( u_time) * gl_FragCoord.xy * 0.001);
+  // float noise = snoise( fract( u_time) * gl_FragCoord.xy * 0.001);
 
   // float alpha = diffuseColor.a * noise;
   // float alpha = diffuseColor.a * ( noiseTexture.r * noiseTexture2.r * 3. );
-  // float alpha = 1.;
+  // float alpha = diffuseColor.a * noiseTexture.a + smoothstep( 0., 0.1, noiseTexture.a);
   float alpha = 1.;
+  // float alpha = 0.;
 
-  // gl_FragColor = vec4( outgoingLight, alpha );
-	gl_FragColor = vec4( vec3(1.,1.,1.), alpha );
+  gl_FragColor = vec4( outgoingLight, alpha );
+	// gl_FragColor = vec4( vec3(1.,1.,1.), alpha );
 
 	#include <premultiplied_alpha_fragment>
 	#include <tonemapping_fragment>

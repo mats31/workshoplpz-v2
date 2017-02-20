@@ -1,4 +1,5 @@
 import States from 'core/States';
+import MaskTexture from './MaskTexture';
 
 import vertexMaskShader from './shaders/maskMesh.vs';
 import fragmentMaskShader from './shaders/maskMesh.fs';
@@ -26,6 +27,14 @@ class Mask extends THREE.Object3D {
     // this.maskGeometry = new THREE.BoxGeometry( 2.5, 2.5, 2.5 );
     this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
 
+    this.maskTexture = new MaskTexture();
+
+    this.maskTextuteCanvas = new THREE.Texture( this.maskTexture.getCanvas() );
+    this.maskTextuteCanvas.needsUpdate = true;
+    this.maskTextuteCanvas.minFilter = THREE.LinearFilter;
+    // this.maskTextuteCanvas.wrapS = THREE.RepeatWrapping;
+    // this.maskTextuteCanvas.wrapT = THREE.RepeatWrapping;
+
     const noise = States.resources.getTexture('project-preview-noise').media;
     noise.needsUpdate = true;
     noise.minFilter = THREE.LinearFilter;
@@ -39,7 +48,7 @@ class Mask extends THREE.Object3D {
       u_time: { type: 'f', value: 0 },
       emissive: { value: new THREE.Color( 0x000000 ) },
       specular: { value: new THREE.Color( 0x111111 ) },
-      u_mapNoise: { type: 't', value: noise },
+      u_mapNoise: { type: 't', value: this.maskTextuteCanvas },
     };
 
     this.maskMaterial = new THREE.ShaderMaterial({
@@ -59,7 +68,6 @@ class Mask extends THREE.Object3D {
     // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
     this.add(this.maskMesh);
     // this.addGUI()
-    console.log(new THREE.Box3().setFromObject(this.maskMesh));
   }
 
   getMaskMesh() {
@@ -72,8 +80,6 @@ class Mask extends THREE.Object3D {
 
   onAssetsLoaded() {
 
-    console.log('test');
-
     const texture = States.resources.getTexture('uv').media;
     texture.needsUpdate = true;
     texture.minFilter = THREE.LinearFilter;
@@ -85,8 +91,9 @@ class Mask extends THREE.Object3D {
 
   update(time) {
 
+    // this.maskTexture.update();
+    // this.maskTextuteCanvas.needsUpdate = true;
     this.maskMaterial.uniforms.u_time.value = time;
-    // this.maskMesh.rotation.x += 0.01;
     // this.maskMesh.rotation.y += 0.01;
 
 

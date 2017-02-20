@@ -5,6 +5,14 @@ const projects = {
       id: 'project',
       previewId: 'project-preview',
     },
+    {
+      id: 'project',
+      previewId: 'project-preview',
+    },
+    {
+      id: 'project',
+      previewId: 'project-preview',
+    },
   ],
 };
 

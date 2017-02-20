@@ -60,9 +60,6 @@ class ProjectPlane extends THREE.Object3D {
 
     this.planeMesh = new THREE.Mesh(this.planeGeometry, this.planeMaterial);
 
-    const planeBox = new THREE.Box3().setFromObject(this.planeMesh);
-    console.log(planeBox);
-
     this.add(this.planeMesh);
   }
 
@@ -121,7 +118,7 @@ class ProjectPlane extends THREE.Object3D {
       color: new THREE.Color('red'),
     });
     this.maskMesh = new THREE.Mesh( this.maskGeometry, maskMaterial );
-    // this.maskMesh.scale.set( -1, -1, 1 );
+    this.maskMesh.scale.set( 0.9, 0.9, 0.9 );
     this.maskMesh.position.set( 0, 20, 15 );
     this.maskMesh.rotation.x = 0.5;
     this.maskMesh.rotation.y = -0.5;
@@ -145,16 +142,12 @@ class ProjectPlane extends THREE.Object3D {
 
     // console.log(window.orthographicCamera);
     // console.log(this.renderCamera);
-    console.log(this.texture);
-    console.log(this.renderTarget);
   }
 
 
   /* ****************** UPDATE ****************** */
 
   onAssetsLoaded() {
-
-    console.log('test');
 
     const texture = States.resources.getTexture('uv').media;
     texture.needsUpdate = true;
