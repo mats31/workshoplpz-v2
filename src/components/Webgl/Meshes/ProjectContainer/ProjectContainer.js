@@ -45,6 +45,18 @@ class ProjectContainer extends THREE.Object3D {
     return this.mask;
   }
 
+  getMaskPosition() {
+
+    const box3 = new THREE.Box3().setFromObject( this.mask );
+
+    return {
+      left: box3.max.x * -1,
+      top: box3.max.y,
+      right: box3.min.x * -1,
+      bottom: box3.min.y,
+    };
+  }
+
   getMaskWidth() {
 
     const box3 = new THREE.Box3().setFromObject( this.mask );
@@ -57,9 +69,28 @@ class ProjectContainer extends THREE.Object3D {
     return this.projectPlane;
   }
 
-  update( time, rotationEase ) {
+  checkFocus( mousePoint ) {
 
-    this.mask.update( time, rotationEase );
+    const point = {
+      x: ( window.innerWidth * 0.5 ) * mousePoint.x,
+      y: ( window.innerWidth * 0.5 ) * mousePoint.y * -1,
+    };
+
+    const box = this.getMaskPosition();
+
+    if ( point.x >= box.left && point.x <= box.right && point.y >= box.bottom && point.y <= box.top ) {
+
+      this.mask.activateMask();
+    } else {
+
+      this.mask.deactivateMask();
+    }
+  }
+
+  update( time, rotationEase, point ) {
+
+    this.checkFocus(point);
+    this.mask.update( time );
     this.projectPlane.update( time, rotationEase );
   }
 }

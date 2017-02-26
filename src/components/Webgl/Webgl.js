@@ -140,6 +140,8 @@ export default Vue.extend({
         const projectContainer = new ProjectContainer(texture);
         const width = projectContainer.getMaskWidth();
 
+        if ( i === 0) { previousX += width; }
+
         const x = previousX - this.stepPosition;
         const y = 20 + ( Math.random() * 260 - 130 );
         const z = 100;
@@ -155,7 +157,6 @@ export default Vue.extend({
       }
 
       this.widthProjects = previousX;
-      console.log(this.widthProjects);
     },
 
     setupGround() {
@@ -182,11 +183,29 @@ export default Vue.extend({
       // this.mouse.x = ( ( event.clientX / window.innerWidth ) * 2 ) - 1;
       // this.mouse.y = ( -( event.clientY / window.innerHeight ) * 2 ) + 1;
 
+      const step = 0.7;
+
       this.mouse.x = ( event.clientX - (window.innerWidth * 0.5) ) / ( window.innerWidth * 0.5 );
       this.mouse.y = ( event.clientY - (window.innerHeight * 0.5) ) / ( window.innerHeight * 0.5 );
 
-      this.rotationEase += ( this.mouse.x - this.rotationEase ) * 0.05;
+      if ( Math.abs(this.mouse.x) > step ) {
+
+        this.rotationEase += ( this.mouse.x - this.rotationEase ) * 0.05;
+      } else {
+
+        this.rotationEase = 0;
+      }
+
+      // this.checkMouseFocus();
     },
+
+    // checkMouseFocus() {
+    //
+    //   for (let i = 0; i < this.projectMeshes.length; i++) {
+    //
+    //     this.projectMeshes[i].checkFocus(this.mouse);
+    //   }
+    // },
 
     onWeblGLMouseleave() {
 
@@ -230,32 +249,29 @@ export default Vue.extend({
         const project = this.projectMeshes[i];
 
         let x = project.position.x + 10 * this.rotationEase;
+
         const width = project.getMaskWidth();
 
         if ( x >= window.innerWidth * 0.5 + width ) {
 
           x = this.projectMeshes[ this.projectMeshes.length - 1 ].position.x - this.projectMeshes[ this.projectMeshes.length - 1 ].getMaskWidth() - this.stepPosition;
 
-          console.log('BOUH');
-
           last = project;
 
           project.position.setX( x );
-        }
-        else if ( x <= this.widthProjects ) {
+        } else if ( x <= this.widthProjects ) {
 
           x = this.projectMeshes[ 0 ].position.x + this.projectMeshes[ 0 ].getMaskWidth() + this.stepPosition;
 
           start = project;
 
           project.position.setX( x );
-        }
-        else {
+        } else {
 
           project.position.setX( x );
         }
 
-        project.update( this.clock.time, this.rotationEase );
+        project.update( this.clock.time, this.rotationEase, this.mouse );
       }
 
       if (start) {

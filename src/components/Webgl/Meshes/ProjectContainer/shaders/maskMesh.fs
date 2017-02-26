@@ -103,9 +103,7 @@ float snoise(vec2 v)
   return 130.0 * dot(m, g);
 }
 
-// float rand(vec2 co){
-//     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-// }
+uniform float u_ease;
 
 void main() {
 
@@ -146,8 +144,8 @@ void main() {
 
   // float alpha = diffuseColor.a * noise;
   // float alpha = diffuseColor.a * ( noiseTexture.r * noiseTexture2.r * 3. );
-  // float alpha = diffuseColor.a * noiseTexture.a + smoothstep( 0., 0.1, noiseTexture.a);
-  float alpha = 1.;
+  float alpha = diffuseColor.a * noiseTexture.a + smoothstep( 0., 0.1, noiseTexture.a) + abs( u_ease - 1. );
+  // float alpha = 1.;
   // float alpha = 0.;
 
   gl_FragColor = vec4( outgoingLight, alpha );

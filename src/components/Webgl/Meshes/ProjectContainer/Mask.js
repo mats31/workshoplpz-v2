@@ -15,6 +15,9 @@ class Mask extends THREE.Object3D {
 
   setup() {
 
+    this.maskRender = false;
+    this.easeValue = 0;
+
     this.createMask();
 
     // Signals.onAssetsLoaded.add(this.onAssetsLoaded.bind(this));
@@ -45,9 +48,10 @@ class Mask extends THREE.Object3D {
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
     this.maskUniforms = {
       ...baseUniforms,
-      u_time: { type: 'f', value: 0 },
+      // u_time: { type: 'f', value: 0 },
       emissive: { value: new THREE.Color( 0x000000 ) },
       specular: { value: new THREE.Color( 0x111111 ) },
+      u_ease: { type: 'f', value: this.easeValue },
       u_mapNoise: { type: 't', value: this.maskTextuteCanvas },
     };
 
@@ -75,6 +79,37 @@ class Mask extends THREE.Object3D {
     return this.maskMesh;
   }
 
+  /* ****************** STATE ****************** */
+
+  activateMask() {
+
+    this.maskRender = true;
+
+    TweenLite.killTweensOf(this.maskUniforms.u_ease);
+    TweenLite.to(
+      this.maskUniforms.u_ease,
+      0.5,
+      {
+        value: 1,
+        ease: 'Expo.easeOut',
+      },
+    );
+  }
+
+  deactivateMask() {
+
+    this.maskRender = false;
+
+    TweenLite.killTweensOf(this.maskUniforms.u_ease);
+    TweenLite.to(
+      this.maskUniforms.u_ease,
+      0.5,
+      {
+        value: 0,
+        ease: 'Expo.easeOut',
+      },
+    );
+  }
 
   /* ****************** UPDATE ****************** */
 
@@ -89,11 +124,21 @@ class Mask extends THREE.Object3D {
 
   /* ****************** RENDER ****************** */
 
-  update(time) {
+  update( time ) {
+
+    if (this.maskRender) {
+      this.maskTexture.update();
+      this.maskTextuteCanvas.needsUpdate = true;
+
+      // console.log('ouesh');
+      // this.maskTexture.update();
+      // this.maskTextuteCanvas.needsUpdate = true;
+      // this.maskMaterial.uniforms.u_time.value = time;
+    }
 
     // this.maskTexture.update();
     // this.maskTextuteCanvas.needsUpdate = true;
-    this.maskMaterial.uniforms.u_time.value = time;
+    // this.maskMaterial.uniforms.u_time.value = time;
     // this.maskMesh.rotation.y += 0.01;
 
 
