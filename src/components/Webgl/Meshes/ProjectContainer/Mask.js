@@ -25,10 +25,14 @@ class Mask extends THREE.Object3D {
 
   createMask() {
 
+    const model = States.resources.getModel('forme1').media;
+    // console.log(model);
+
     // this.maskGeometry = new THREE.IcosahedronGeometry( 2.5, 0 );
     // this.maskGeometry = new THREE.IcosahedronGeometry( 200, 0 );
     // this.maskGeometry = new THREE.BoxGeometry( 2.5, 2.5, 2.5 );
-    this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
+    // this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
+    this.maskGeometry = model.children[0].geometry;
 
     this.maskTexture = new MaskTexture();
 
@@ -41,18 +45,21 @@ class Mask extends THREE.Object3D {
     const noise = States.resources.getTexture('project-preview-noise').media;
     noise.needsUpdate = true;
     noise.minFilter = THREE.LinearFilter;
-    noise.wrapS = THREE.RepeatWrapping;
-    noise.wrapT = THREE.RepeatWrapping;
+
+    const circle = States.resources.getTexture('project-preview-circle').media;
+    circle.needsUpdate = true;
+    circle.minFilter = THREE.LinearFilter;
 
     const baseShader = THREE.ShaderLib.phong;
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
     this.maskUniforms = {
       ...baseUniforms,
-      // u_time: { type: 'f', value: 0 },
+      u_time: { type: 'f', value: 0 },
       emissive: { value: new THREE.Color( 0x000000 ) },
       specular: { value: new THREE.Color( 0x111111 ) },
       u_ease: { type: 'f', value: this.easeValue },
-      u_mapNoise: { type: 't', value: this.maskTextuteCanvas },
+      u_mapNoise: { type: 't', value: noise },
+      u_mapCircle: { type: 't', value: circle },
     };
 
     this.maskMaterial = new THREE.ShaderMaterial({
@@ -127,8 +134,8 @@ class Mask extends THREE.Object3D {
   update( time ) {
 
     if (this.maskRender) {
-      this.maskTexture.update();
-      this.maskTextuteCanvas.needsUpdate = true;
+      // this.maskTexture.update();
+      // this.maskTextuteCanvas.needsUpdate = true;
 
       // console.log('ouesh');
       // this.maskTexture.update();
@@ -138,7 +145,7 @@ class Mask extends THREE.Object3D {
 
     // this.maskTexture.update();
     // this.maskTextuteCanvas.needsUpdate = true;
-    // this.maskMaterial.uniforms.u_time.value = time;
+    this.maskMaterial.uniforms.u_time.value = time;
     // this.maskMesh.rotation.y += 0.01;
 
 

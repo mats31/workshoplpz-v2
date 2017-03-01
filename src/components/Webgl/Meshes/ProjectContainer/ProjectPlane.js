@@ -113,7 +113,7 @@ class ProjectPlane extends THREE.Object3D {
 
     // this.maskMesh.position.set( 0, 20, 15 );
     // console.log(this.maskMesh);
-    this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
+    // this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
     const maskMaterial = new THREE.MeshBasicMaterial({
       color: new THREE.Color('red'),
     });

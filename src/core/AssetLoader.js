@@ -1,6 +1,9 @@
 import States from 'core/States';
 import resources from 'config/resources';
+import OBJLoader from 'helpers/OBJLoader';
 import { TextureLoader } from 'three';
+
+// require('helpers/OBJLoader')(THREE);
 
 class AssetLoader {
 
@@ -17,9 +20,15 @@ class AssetLoader {
       this.assetsToLoad += resources.textures.length;
       this.loadTextures();
     }
+
     if (typeof resources.videos !== 'undefined' && resources.videos.length > 0) {
       this.assetsToLoad += resources.videos.length;
       this.loadVideos();
+    }
+
+    if (typeof resources.models !== 'undefined' && resources.models.length > 0) {
+      this.assetsToLoad += resources.models.length;
+      this.loadModels();
     }
 
     if (this.assetsToLoad === 0) Signals.onAssetsLoaded.dispatch(100);
@@ -89,7 +98,7 @@ class AssetLoader {
           resolve( { id: media.id, media: texture } );
         },
         ( xhr ) => {
-          console.log( `${( ( xhr.loaded / xhr.total ) * 100)} % loaded` );
+          // console.log( `${( ( xhr.loaded / xhr.total ) * 100)} % loaded` );
         },
         ( xhr ) => {
           reject( `Une erreur est survenue lors du chargement de la texture : ${xhr}` );
@@ -148,6 +157,82 @@ class AssetLoader {
       };
 
       video.src = media.url;
+
+    });
+  }
+
+  loadModels() {
+
+    const models = resources.models;
+
+    for ( let i = 0; i < models.length; i += 1 ) {
+
+      this.loadModel( models[i] ).then( (model) => {
+
+        console.log(model);
+
+        States.resources.models.push( model );
+        this.assetsLoaded += 1;
+
+        const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
+        Signals.onAssetLoaded.dispatch(percent);
+        if (percent === 100) Signals.onAssetsLoaded.dispatch(percent);
+      }, (err) => {
+        console.error(err);
+      });
+
+    }
+  }
+
+  loadModel(model) {
+
+    return new Promise( ( resolve, reject ) => {
+
+      const ext = model.url.split('.').pop();
+
+
+      switch (ext) {
+
+        case 'obj': {
+          const loader = new THREE.OBJLoader();
+
+          // load a resource
+          loader.load(
+            // resource URL
+            model.url,
+            // Function when resource is loaded
+            ( object ) => {
+
+              resolve( { id: model.id, media: object, type: 'obj' } );
+            },
+
+            () => {},
+            () => {
+              reject('An error happened with the model import.');
+            },
+          );
+          break;
+        }
+
+        default: {
+          const loader = new OBJLoader();
+
+          // load a resource
+          loader.load(
+            // resource URL
+            model.url,
+            // Function when resource is loaded
+            ( object ) => {
+              resolve( { id: model.id, media: object, type: 'obj' } );
+            },
+
+            () => {},
+            () => {
+              reject('An error happened with the model import.');
+            },
+          );
+        }
+      }
 
     });
   }

@@ -7,9 +7,7 @@ varying vec2 vUV;
 uniform float shininess;
 uniform float opacity;
 uniform float u_time;
-uniform float u_ease;
 uniform sampler2D u_mapNoise;
-uniform sampler2D u_mapCircle;
 
 #include <common>
 #include <packing>
@@ -105,6 +103,8 @@ float snoise(vec2 v)
   return 130.0 * dot(m, g);
 }
 
+uniform float u_ease;
+
 void main() {
 
 	#include <clipping_planes_fragment>
@@ -134,12 +134,7 @@ void main() {
 
 	#include <envmap_fragment>
 
-  vec2 customUv1 = vec2( vUV.x + u_time * 0.1, vUV.y + u_time * 0.1 );
-  vec2 customUv2 = vec2( vUV.x - u_time * 0.1, vUV.y - u_time * 0.1 );
-  vec4 noiseTexture1 = texture2D(u_mapNoise, customUv1 );
-  vec4 noiseTexture2 = texture2D(u_mapNoise, customUv2 );
-  vec4 circleTexture1 = texture2D(u_mapCircle, vec2( vUV.x, vUV.y + noiseTexture1.r * u_ease - 0.5 ) );
-  vec4 circleTexture2 = texture2D(u_mapCircle, vec2( vUV.x, vUV.y - noiseTexture2.r * u_ease + 0.5 ) );
+  vec4 noiseTexture = texture2D(u_mapNoise, vUV );
   // vec4 noiseTexture = texture2D(u_mapNoise, ( vUV + u_time * 0.1 ) * 0.4 );
   // vec4 noiseTexture2 = texture2D(u_mapNoise, ( vUV - u_time * 0.1 ) * 0.4 );
 
@@ -149,7 +144,7 @@ void main() {
 
   // float alpha = diffuseColor.a * noise;
   // float alpha = diffuseColor.a * ( noiseTexture.r * noiseTexture2.r * 3. );
-  float alpha = abs( circleTexture1.a - 1. ) * abs( circleTexture2.a - 1. ) + abs( u_ease - 1. );
+  float alpha = diffuseColor.a * noiseTexture.a + smoothstep( 0., 0.1, noiseTexture.a) + abs( u_ease - 1. );
   // float alpha = 1.;
   // float alpha = 0.;
 
