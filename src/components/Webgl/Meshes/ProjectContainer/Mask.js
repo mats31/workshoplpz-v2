@@ -58,7 +58,8 @@ class Mask extends THREE.Object3D {
       emissive: { value: new THREE.Color( 0x000000 ) },
       specular: { value: new THREE.Color( 0x111111 ) },
       u_ease: { type: 'f', value: this.easeValue },
-      u_mapNoise: { type: 't', value: noise },
+      // u_mapNoise: { type: 't', value: noise },
+      u_mapNoise: { type: 't', value: this.maskTextuteCanvas },
       u_mapCircle: { type: 't', value: circle },
     };
 
@@ -134,8 +135,8 @@ class Mask extends THREE.Object3D {
   update( time ) {
 
     if (this.maskRender) {
-      // this.maskTexture.update();
-      // this.maskTextuteCanvas.needsUpdate = true;
+      this.maskTexture.update();
+      this.maskTextuteCanvas.needsUpdate = true;
 
       // console.log('ouesh');
       // this.maskTexture.update();

@@ -18,7 +18,7 @@ class MaskTexture {
     this.threshold = 180;
     this.colors = { r: 255, g: 255, b: 255 };
     this.cycle = 0;
-    this.nbPoints = 10;
+    this.nbPoints = 25;
     this.points = [];
 
     this.mainCanvas = document.createElement('canvas');
@@ -36,11 +36,11 @@ class MaskTexture {
     // this.tempCanvas.style.zIndex = 100;
     // document.body.appendChild(this.tempCanvas);
 
-    // this.mainCanvas.style.position = 'absolute';
-    // this.mainCanvas.style.top = 0;
-    // this.mainCanvas.style.left = 0;
-    // this.mainCanvas.style.zIndex = 100;
-    // document.body.appendChild(this.mainCanvas);
+    this.mainCanvas.style.position = 'absolute';
+    this.mainCanvas.style.top = 0;
+    this.mainCanvas.style.left = 0;
+    this.mainCanvas.style.zIndex = 100;
+    document.body.appendChild(this.mainCanvas);
   }
 
   initializePoints() {
@@ -50,11 +50,11 @@ class MaskTexture {
       const x = Math.random() * this.width;
       const y = Math.random() * this.height;
 
-      const vx = Math.random() * 8 - 4;
-      const vy = Math.random() * 8 - 4;
+      const vx = Math.random() * 2 - 1;
+      const vy = Math.random() * 2 - 1;
 
       // const size = Math.floor( Math.random() * 8 ) + 80;
-      const size = 150;
+      const size = 100;
 
       this.points.push({ x, y, vx, vy, size });
     }

@@ -136,6 +136,7 @@ void main() {
 
   vec2 customUv1 = vec2( vUV.x + u_time * 0.1, vUV.y + u_time * 0.1 );
   vec2 customUv2 = vec2( vUV.x - u_time * 0.1, vUV.y - u_time * 0.1 );
+  vec4 noiseTexture = texture2D(u_mapNoise, vUV );
   vec4 noiseTexture1 = texture2D(u_mapNoise, customUv1 );
   vec4 noiseTexture2 = texture2D(u_mapNoise, customUv2 );
   vec4 circleTexture1 = texture2D(u_mapCircle, vec2( vUV.x, vUV.y + noiseTexture1.r * u_ease - 0.5 ) );
@@ -147,14 +148,14 @@ void main() {
   // float noise = max( snoise(u_time + gl_FragCoord.xy * 0.012 * randomValue), 0. );
   // float noise = snoise( fract( u_time) * gl_FragCoord.xy * 0.001);
 
-  // float alpha = diffuseColor.a * noise;
+  float alpha = smoothstep( 0.05, 0.2 , abs( noiseTexture.a - 1. ) );
   // float alpha = diffuseColor.a * ( noiseTexture.r * noiseTexture2.r * 3. );
-  float alpha = abs( circleTexture1.a - 1. ) * abs( circleTexture2.a - 1. ) + abs( u_ease - 1. );
+  // float alpha = abs( circleTexture1.a - 1. ) * abs( circleTexture2.a - 1. ) + abs( u_ease - 1. );
   // float alpha = 1.;
   // float alpha = 0.;
 
   gl_FragColor = vec4( outgoingLight, alpha );
-	// gl_FragColor = vec4( vec3(1.,1.,1.), alpha );
+	// gl_FragColor = vec4( noiseTexture.rgb, 1. );
 
 	#include <premultiplied_alpha_fragment>
 	#include <tonemapping_fragment>
