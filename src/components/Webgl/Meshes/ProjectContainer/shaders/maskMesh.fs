@@ -148,7 +148,7 @@ void main() {
   // float noise = max( snoise(u_time + gl_FragCoord.xy * 0.012 * randomValue), 0. );
   // float noise = snoise( fract( u_time) * gl_FragCoord.xy * 0.001);
 
-  float alpha = smoothstep( 0.05, 0.2 , abs( noiseTexture.a - 1. ) );
+  float alpha = smoothstep( 0.05, 0.2 , abs( noiseTexture.a - 1. ) ) + abs( 1. - u_ease );
   // float alpha = diffuseColor.a * ( noiseTexture.r * noiseTexture2.r * 3. );
   // float alpha = abs( circleTexture1.a - 1. ) * abs( circleTexture2.a - 1. ) + abs( u_ease - 1. );
   // float alpha = 1.;

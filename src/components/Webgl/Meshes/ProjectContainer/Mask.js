@@ -15,6 +15,7 @@ class Mask extends THREE.Object3D {
 
   setup() {
 
+    this.isMasking = false;
     this.maskRender = false;
     this.easeValue = 0;
 
@@ -91,32 +92,41 @@ class Mask extends THREE.Object3D {
 
   activateMask() {
 
-    this.maskRender = true;
+    if (!this.isMasking) {
 
-    TweenLite.killTweensOf(this.maskUniforms.u_ease);
-    TweenLite.to(
-      this.maskUniforms.u_ease,
-      0.5,
-      {
-        value: 1,
-        ease: 'Expo.easeOut',
-      },
-    );
+      this.isMasking = true;
+      this.maskRender = true;
+
+      TweenLite.to(
+        this.maskUniforms.u_ease,
+        0.25,
+        {
+          value: 1,
+          ease: 'Power2.easeIn',
+        },
+      );
+    }
   }
 
   deactivateMask() {
 
-    this.maskRender = false;
+    if (this.isMasking) {
 
-    TweenLite.killTweensOf(this.maskUniforms.u_ease);
-    TweenLite.to(
-      this.maskUniforms.u_ease,
-      0.5,
-      {
-        value: 0,
-        ease: 'Expo.easeOut',
-      },
-    );
+      this.isMasking = false;
+
+      TweenLite.to(
+        this.maskUniforms.u_ease,
+        0.25,
+        {
+          value: 0,
+          ease: 'Power2.easeIn',
+          onComplete: () => {
+
+            this.maskRender = false;
+          },
+        },
+      );
+    }
   }
 
   /* ****************** UPDATE ****************** */

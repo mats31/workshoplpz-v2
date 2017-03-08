@@ -47,7 +47,7 @@ const Config = {
       },
       {
         test: /\.styl$/,
-        loader: 'style-loader!css-loader!stylus-loader',
+        loader: 'style-loader!css-loader!stylus-loader!font-loader?format[]=truetype&format[]=woff&format[]=embedded-opentype',
       },
       {
         test: /\.(glsl|vs|fs)$/,

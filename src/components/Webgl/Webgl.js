@@ -132,12 +132,10 @@ export default Vue.extend({
 
       for (let i = 0; i < projectList.length; i += 1) {
 
-        const previewId = projectList[i].previewId;
-        const texture = States.resources.getTexture(previewId).media;
-        texture.minFilter = THREE.LinearFilter;
-        texture.needsUpdate = true;
+        const projectContainer = new ProjectContainer({
+          project: projectList[i],
+        });
 
-        const projectContainer = new ProjectContainer(texture);
         const width = projectContainer.getMaskWidth();
 
         if ( i === 0) { previousX += width; }
@@ -271,7 +269,7 @@ export default Vue.extend({
           project.position.setX( x );
         }
 
-        project.update( this.clock.time, this.rotationEase, this.mouse );
+        project.update( this.clock.time, this.rotationEase, this.mouse, i );
       }
 
       if (start) {

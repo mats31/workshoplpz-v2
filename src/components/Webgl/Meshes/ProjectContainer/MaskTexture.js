@@ -36,11 +36,11 @@ class MaskTexture {
     // this.tempCanvas.style.zIndex = 100;
     // document.body.appendChild(this.tempCanvas);
 
-    this.mainCanvas.style.position = 'absolute';
-    this.mainCanvas.style.top = 0;
-    this.mainCanvas.style.left = 0;
-    this.mainCanvas.style.zIndex = 100;
-    document.body.appendChild(this.mainCanvas);
+    // this.mainCanvas.style.position = 'absolute';
+    // this.mainCanvas.style.top = 0;
+    // this.mainCanvas.style.left = 0;
+    // this.mainCanvas.style.zIndex = 100;
+    // document.body.appendChild(this.mainCanvas);
   }
 
   initializePoints() {
