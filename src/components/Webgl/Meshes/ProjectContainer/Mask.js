@@ -99,7 +99,7 @@ class Mask extends THREE.Object3D {
 
       TweenLite.to(
         this.maskUniforms.u_ease,
-        0.25,
+        0.5,
         {
           value: 1,
           ease: 'Power2.easeIn',
@@ -116,7 +116,7 @@ class Mask extends THREE.Object3D {
 
       TweenLite.to(
         this.maskUniforms.u_ease,
-        0.25,
+        0.5,
         {
           value: 0,
           ease: 'Power2.easeIn',

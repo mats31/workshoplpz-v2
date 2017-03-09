@@ -13,7 +13,7 @@ class ProjectContainer extends THREE.Object3D {
 
   setup(options) {
 
-    this.isMasking = false;
+    this.isActive = false;
 
     this.projectID = options.project.previewId;
     this.title = options.project.title;
@@ -108,42 +108,32 @@ class ProjectContainer extends THREE.Object3D {
 
   activeFocus() {
 
-    if (!this.isMasking) {
+    TweenLite.killTweensOf(this.box);
+    TweenLite.to(
+      this.box,
+      0.55,
+      {
+        opacity: 1,
+        ease: 'Power2.easeIn',
+      },
+    );
 
-      this.isMasking = true;
-
-      TweenLite.killTweensOf(this.box);
-      TweenLite.to(
-        this.box,
-        0.25,
-        {
-          opacity: 1,
-          ease: 'Power2.easeIn',
-        },
-      );
-
-      this.mask.activateMask();
-    }
+    this.mask.activateMask();
   }
 
   deactiveFocus() {
 
-    if (this.isMasking) {
+    TweenLite.killTweensOf(this.box);
+    TweenLite.to(
+      this.box,
+      0.5,
+      {
+        opacity: 0.5,
+        ease: 'Power2.easeIn',
+      },
+    );
 
-      TweenLite.killTweensOf(this.box);
-      TweenLite.to(
-        this.box,
-        0.25,
-        {
-          opacity: 0.5,
-          ease: 'Power2.easeIn',
-          onComplete: () => {
-            this.isMasking = false;
-          },
-        },
-      );
-      this.mask.deactivateMask();
-    }
+    this.mask.deactivateMask();
   }
 
   update( time, rotationEase, point, i ) {
@@ -173,10 +163,17 @@ class ProjectContainer extends THREE.Object3D {
 
     if ( point.x >= box.left && point.x <= box.right && point.y >= box.bottom && point.y <= box.top ) {
 
-      this.activeFocus();
-    } else {
+      if (!this.isActive) {
+
+        this.activeFocus();
+        this.isActive = true;
+      }
+
+    } else if (this.isActive) {
 
       this.deactiveFocus();
+      this.isActive = false;
+
     }
   }
 }
