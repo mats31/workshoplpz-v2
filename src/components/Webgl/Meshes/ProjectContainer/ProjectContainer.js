@@ -13,7 +13,8 @@ class ProjectContainer extends THREE.Object3D {
 
   setup(options) {
 
-    this.isActive = false;
+    this.isHover = false;
+    this.isFocus = false;
 
     this.projectID = options.project.previewId;
     this.title = options.project.title;
@@ -26,12 +27,12 @@ class ProjectContainer extends THREE.Object3D {
 
     this.texture = texture;
 
-    this.createMask();
-    this.createProjectPlane();
-    this.createDescription();
+    this.setupMask();
+    this.setupProjectPlane();
+    this.setupDescription();
   }
 
-  createMask() {
+  setupMask() {
 
     this.mask = new Mask();
 
@@ -41,7 +42,7 @@ class ProjectContainer extends THREE.Object3D {
     this.add(this.mask);
   }
 
-  createProjectPlane() {
+  setupProjectPlane() {
 
     const maskMesh = this.mask.getMaskMesh();
 
@@ -53,7 +54,7 @@ class ProjectContainer extends THREE.Object3D {
     this.add(this.projectPlane);
   }
 
-  createDescription() {
+  setupDescription() {
 
     this.box = document.createElement('div');
     this.box.className = 'webgl__projects-project';
@@ -75,6 +76,9 @@ class ProjectContainer extends THREE.Object3D {
 
     const projectDOM = document.querySelector('.webgl__projects');
     projectDOM.appendChild(this.box);
+
+    this.box.addEventListener( 'mouseover', this.onDOMMouseover.bind(this) );
+    this.box.addEventListener( 'mouseleave', this.onDOMMouseleave.bind(this) );
   }
 
   getMask() {
@@ -108,6 +112,10 @@ class ProjectContainer extends THREE.Object3D {
 
   activeFocus() {
 
+    this.isFocus = true;
+
+    document.body.style.cursor = 'pointer';
+
     TweenLite.killTweensOf(this.box);
     TweenLite.to(
       this.box,
@@ -123,6 +131,10 @@ class ProjectContainer extends THREE.Object3D {
 
   deactiveFocus() {
 
+    this.isFocus = false;
+
+    document.body.style.cursor = 'initial';
+
     TweenLite.killTweensOf(this.box);
     TweenLite.to(
       this.box,
@@ -136,6 +148,26 @@ class ProjectContainer extends THREE.Object3D {
     this.mask.deactivateMask();
   }
 
+  // Events -----------------------------------------------
+
+  onDOMMouseover() {
+
+    this.activeFocus();
+  }
+
+  onDOMMouseleave() {
+
+    this.deactiveFocus();
+  }
+
+  onClick() {
+
+    if (this.isFocus) {
+
+      Signals.onProjectClick.dispatch(this.id);
+    }
+  }
+
   update( time, rotationEase, point, i ) {
 
     this.updateDOM(i);
@@ -144,7 +176,7 @@ class ProjectContainer extends THREE.Object3D {
     this.projectPlane.update( time, rotationEase );
   }
 
-  updateDOM(i) {
+  updateDOM() {
 
     this.box.style.left = `${this.getMaskPosition().left + this.getMaskWidth() + window.innerWidth * 0.5}px`;
     this.box.style.top = `${( this.getMaskPosition().top - window.innerHeight * 0.5 ) * -1}px`;
@@ -163,16 +195,16 @@ class ProjectContainer extends THREE.Object3D {
 
     if ( point.x >= box.left && point.x <= box.right && point.y >= box.bottom && point.y <= box.top ) {
 
-      if (!this.isActive) {
+      if (!this.isHover) {
 
         this.activeFocus();
-        this.isActive = true;
+        this.isHover = true;
       }
 
-    } else if (this.isActive) {
+    } else if (this.isHover) {
 
       this.deactiveFocus();
-      this.isActive = false;
+      this.isHover = false;
 
     }
   }

@@ -26,16 +26,14 @@ export default Vue.extend({
   created() {
 
     this.setup();
-
-    Signals.onAssetsLoaded.add(this.onAssetsLoaded);
-    Signals.onWeblGLMousemove.add(this.onWeblGLMousemove);
-    Signals.onWeblGLMouseleave.add(this.onWeblGLMouseleave);
   },
 
   mounted() {
 
     this.renderer.domElement.style.position = 'absolute';
     this.$refs.container.appendChild(this.renderer.domElement);
+
+    this.setupEvents();
   },
 
   methods: {
@@ -50,16 +48,15 @@ export default Vue.extend({
       this.rotationEase = 0;
       this.mainAngle = 0;
 
-      this.projectMeshes = [];
+      this.projectContainers = [];
       this.widthProjects = null;
 
       this.mouse = new THREE.Vector2();
 
-      this.createWebgl(window.innerWidth, window.innerHeight);
-      // this.setupEvent();
+      this.setupWebGL(window.innerWidth, window.innerHeight);
     },
 
-    createWebgl(width, height) {
+    setupWebGL(width, height) {
 
       this.scene = window.scene = new THREE.Scene();
 
@@ -90,6 +87,15 @@ export default Vue.extend({
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       // this.camera.lookAt(cameraTarget);
+    },
+
+    setupEvents() {
+
+      Signals.onAssetsLoaded.add(this.onAssetsLoaded);
+      Signals.onWeblGLMousemove.add(this.onWeblGLMousemove);
+      Signals.onWeblGLMouseleave.add(this.onWeblGLMouseleave);
+
+      this.$el.addEventListener('click', this.onWebGLClick.bind(this));
     },
 
     setupLight() {
@@ -148,7 +154,7 @@ export default Vue.extend({
         projectContainer.position.set( x, y, z );
 
         this.orthographicScene.add(projectContainer);
-        this.projectMeshes.push(projectContainer);
+        this.projectContainers.push(projectContainer);
 
         if ( i === 0 ) { this.startProject = projectContainer; }
         if ( i === projectList.length - 1 ) { this.endProject = projectContainer; }
@@ -199,15 +205,23 @@ export default Vue.extend({
 
     // checkMouseFocus() {
     //
-    //   for (let i = 0; i < this.projectMeshes.length; i++) {
+    //   for (let i = 0; i < this.projectContainers.length; i++) {
     //
-    //     this.projectMeshes[i].checkFocus(this.mouse);
+    //     this.projectContainers[i].checkFocus(this.mouse);
     //   }
     // },
 
     onWeblGLMouseleave() {
 
       this.rotationEase = 0;
+    },
+
+    onWebGLClick() {
+
+      for (let i = 0; i < this.projectContainers.length; i++) {
+
+        this.projectContainers[i].onClick();
+      }
     },
 
     /* Update */
@@ -242,9 +256,9 @@ export default Vue.extend({
       let start = null;
       let last = null;
 
-      for ( let i = 0; i < this.projectMeshes.length; i++ ) {
+      for ( let i = 0; i < this.projectContainers.length; i++ ) {
 
-        const project = this.projectMeshes[i];
+        const project = this.projectContainers[i];
 
         let x = project.position.x + 10 * this.rotationEase;
 
@@ -252,14 +266,14 @@ export default Vue.extend({
 
         if ( x >= window.innerWidth * 0.5 + width ) {
 
-          x = this.projectMeshes[ this.projectMeshes.length - 1 ].position.x - this.projectMeshes[ this.projectMeshes.length - 1 ].getMaskWidth() - this.stepPosition;
+          x = this.projectContainers[ this.projectContainers.length - 1 ].position.x - this.projectContainers[ this.projectContainers.length - 1 ].getMaskWidth() - this.stepPosition;
 
           last = project;
 
           project.position.setX( x );
         } else if ( x <= this.widthProjects ) {
 
-          x = this.projectMeshes[ 0 ].position.x + this.projectMeshes[ 0 ].getMaskWidth() + this.stepPosition;
+          x = this.projectContainers[ 0 ].position.x + this.projectContainers[ 0 ].getMaskWidth() + this.stepPosition;
 
           start = project;
 
@@ -274,14 +288,14 @@ export default Vue.extend({
 
       if (start) {
 
-        this.projectMeshes.splice( this.projectMeshes.length - 1, 1 );
-        this.projectMeshes.splice( 0, 0, start );
+        this.projectContainers.splice( this.projectContainers.length - 1, 1 );
+        this.projectContainers.splice( 0, 0, start );
       }
 
       if (last) {
 
-        this.projectMeshes.splice( 0, 1 );
-        this.projectMeshes.push( last );
+        this.projectContainers.splice( 0, 1 );
+        this.projectContainers.push( last );
       }
     },
 

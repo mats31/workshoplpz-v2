@@ -118,7 +118,7 @@ class ProjectPlane extends THREE.Object3D {
       color: new THREE.Color('red'),
     });
     this.maskMesh = new THREE.Mesh( this.maskGeometry, maskMaterial );
-    this.maskMesh.scale.set( 0.9, 0.9, 0.9 );
+    this.maskMesh.scale.set( 0.99, 0.99, 0.99 );
     this.maskMesh.position.set( 0, 20, 15 );
     this.maskMesh.rotation.x = 0.5;
     this.maskMesh.rotation.y = -0.5;

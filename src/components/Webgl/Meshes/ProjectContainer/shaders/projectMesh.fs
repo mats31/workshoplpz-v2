@@ -106,9 +106,9 @@ void main() {
   // float alpha = step(1., maskTexture.r) * ( noiseTexture.r - 0.1 ) * ( noiseTexture2.r - 0.1 );
   float alpha = step(1., maskTexture.r);
 
-  if( alpha < 0.1) {
-    discard;
-  }
+  // if( alpha < 0.1) {
+  //   discard;
+  // }
 
   gl_FragColor = vec4(color, alpha);
   // gl_FragColor = maskTexture;
