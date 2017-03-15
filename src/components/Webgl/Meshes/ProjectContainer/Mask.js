@@ -75,7 +75,7 @@ class Mask extends THREE.Object3D {
     });
 
     this.maskMesh = new THREE.Mesh(this.maskGeometry, this.maskMaterial);
-    this.maskMesh.castShadow = true;
+    // this.maskMesh.castShadow = true;
     // this.maskMesh.receiveShadow = true;
     // this.maskMesh.rotation.x = 0.8;
     // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
@@ -127,6 +127,41 @@ class Mask extends THREE.Object3D {
         },
       );
     }
+  }
+
+  // activateProject() {
+  //
+  //   console.log(this.position.x);
+  //   const x = 0;
+  //   // const x = window.innerWidth * -0.5 + this.getMaskWidth() * 0.5;
+  //   // const y = window.innerHeight * 2;
+  //   const y = this.position.y + window.innerHeight * 2;
+  //
+  //   TweenLite.to(
+  //     this.position,
+  //     5,
+  //     {
+  //       x,
+  //       y,
+  //       ease: 'Power2.easeOut',
+  //     },
+  //   );
+  // }
+
+  /* ****************** GETTERS ****************** */
+
+  getMaskWidth() {
+
+    const box3 = new THREE.Box3().setFromObject( this );
+
+    return Math.abs( box3.max.x - box3.min.x );
+  }
+
+  getMaskPosition() {
+
+    const box3 = new THREE.Box3().setFromObject( this );
+
+    return box3;
   }
 
   /* ****************** UPDATE ****************** */

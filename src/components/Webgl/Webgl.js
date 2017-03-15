@@ -40,6 +40,7 @@ export default Vue.extend({
 
     setup() {
 
+      this.test = 0;
       this.cameraTarget = new THREE.Vector3(0, 20, 100);
       this.cameraPos = new THREE.Vector3(0, 20, -1);
 
@@ -84,6 +85,7 @@ export default Vue.extend({
       );
       this.orthographicCamera.position.copy(this.cameraPos);
       this.orthographicCamera.lookAt(this.cameraTarget);
+      console.log(this.orthographicCamera);
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       // this.camera.lookAt(cameraTarget);
@@ -94,6 +96,7 @@ export default Vue.extend({
       Signals.onAssetsLoaded.add(this.onAssetsLoaded);
       Signals.onWeblGLMousemove.add(this.onWeblGLMousemove);
       Signals.onWeblGLMouseleave.add(this.onWeblGLMouseleave);
+      Signals.onProjectClick.add(this.onProjectClick);
 
       this.$el.addEventListener('click', this.onWebGLClick.bind(this));
     },
@@ -224,6 +227,28 @@ export default Vue.extend({
       }
     },
 
+    onProjectClick(id) {
+
+      TweenLite.to(
+        this.orthographicCamera.position,
+        5,
+        {
+          y: this.cameraPos.y + window.innerHeight * 2,
+          ease: 'Power2.easeInOut',
+        },
+      );
+
+      // for (let i = 0; i < this.projectContainers.length; i++) {
+      //
+      //   const projectContainer = this.projectContainers[i];
+      //
+      //   if (projectContainer.id === id) {
+      //
+      //     this.orthographicCamera.lookAt(projectContainer.getMask().position);
+      //   }
+      // }
+    },
+
     /* Update */
 
     animate() {
@@ -248,7 +273,12 @@ export default Vue.extend({
     updateCamera() {
 
       this.camera.rotation.y += 0.01 * this.rotationEase;
-      // this.orthographicCamera.rotation.y += 0.01;
+      // this.test += 0.1;
+      // this.orthographicCamera.lookAt(new THREE.Vector3(
+      //   this.cameraTarget.x,
+      //   this.cameraTarget.y + this.test,
+      //   this.cameraTarget.z
+      // ));
     },
 
     updateProjectContainers() {

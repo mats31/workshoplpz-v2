@@ -100,9 +100,7 @@ class ProjectContainer extends THREE.Object3D {
 
   getMaskWidth() {
 
-    const box3 = new THREE.Box3().setFromObject( this.mask );
-
-    return Math.abs( box3.max.x - box3.min.x );
+    return this.mask.getMaskWidth();
   }
 
   getProjectPlane() {
@@ -165,6 +163,22 @@ class ProjectContainer extends THREE.Object3D {
     if (this.isFocus) {
 
       Signals.onProjectClick.dispatch(this.id);
+
+      console.log(this.position.x);
+      const x = 0;
+      // const x = window.innerWidth * -0.5 + this.getMaskWidth() * 0.5;
+      // const y = window.innerHeight * 2;
+      const y = this.position.y + window.innerHeight * 2;
+
+      TweenLite.to(
+        this.position,
+        5,
+        {
+          x,
+          y,
+          ease: 'Power2.easeInOut',
+        },
+      );
     }
   }
 
