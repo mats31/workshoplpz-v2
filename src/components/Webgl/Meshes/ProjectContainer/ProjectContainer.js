@@ -164,10 +164,7 @@ class ProjectContainer extends THREE.Object3D {
 
       Signals.onProjectClick.dispatch(this.id);
 
-      console.log(this.position.x);
       const x = 0;
-      // const x = window.innerWidth * -0.5 + this.getMaskWidth() * 0.5;
-      // const y = window.innerHeight * 2;
       const y = this.position.y + window.innerHeight * 2;
 
       TweenLite.to(

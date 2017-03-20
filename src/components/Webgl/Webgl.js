@@ -238,6 +238,15 @@ export default Vue.extend({
         },
       );
 
+      TweenLite.to(
+        this.ground.position,
+        5,
+        {
+          y: -90,
+          ease: 'Power2.easeInOut',
+        },
+      );
+
       // for (let i = 0; i < this.projectContainers.length; i++) {
       //
       //   const projectContainer = this.projectContainers[i];
