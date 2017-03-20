@@ -247,15 +247,10 @@ export default Vue.extend({
         },
       );
 
-      // for (let i = 0; i < this.projectContainers.length; i++) {
-      //
-      //   const projectContainer = this.projectContainers[i];
-      //
-      //   if (projectContainer.id === id) {
-      //
-      //     this.orthographicCamera.lookAt(projectContainer.getMask().position);
-      //   }
-      // }
+      for (let i = 0; i < this.projectContainers.length; i++) {
+
+        this.projectContainers[i].hideText();
+      }
     },
 
     /* Update */

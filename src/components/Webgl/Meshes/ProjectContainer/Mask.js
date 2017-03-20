@@ -15,6 +15,7 @@ class Mask extends THREE.Object3D {
 
   setup() {
 
+    this.tester = false;
     this.isMasking = false;
     this.maskRender = false;
     this.easeValue = 0;
@@ -81,6 +82,13 @@ class Mask extends THREE.Object3D {
     // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
     this.add(this.maskMesh);
     // this.addGUI()
+  }
+
+  // Getters -------------------------------------------------------------------
+
+  getMaskTexture() {
+
+    return this.maskTextuteCanvas;
   }
 
   getMaskMesh() {
@@ -179,7 +187,8 @@ class Mask extends THREE.Object3D {
 
   update( time ) {
 
-    if (this.maskRender) {
+    if (this.maskRender || this.tester) {
+      // console.log(1);
       this.maskTexture.update();
       this.maskTextuteCanvas.needsUpdate = true;
 

@@ -44,10 +44,8 @@ class ProjectContainer extends THREE.Object3D {
 
   setupProjectPlane() {
 
-    const maskMesh = this.mask.getMaskMesh();
-
     this.projectPlane = new ProjectPlane({
-      geometry: maskMesh.geometry,
+      mask: this.mask,
       texture: this.texture,
     });
     this.projectPlane.position.setZ( 1 );
@@ -81,6 +79,8 @@ class ProjectContainer extends THREE.Object3D {
     this.box.addEventListener( 'mouseleave', this.onDOMMouseleave.bind(this) );
   }
 
+  // Getter -----------------------------------------------
+
   getMask() {
 
     return this.mask;
@@ -107,6 +107,8 @@ class ProjectContainer extends THREE.Object3D {
 
     return this.projectPlane;
   }
+
+  // State -----------------------------------------------
 
   activeFocus() {
 
@@ -146,6 +148,18 @@ class ProjectContainer extends THREE.Object3D {
     this.mask.deactivateMask();
   }
 
+  hideText() {
+
+    TweenLite.to(
+      this.box,
+      0.55,
+      {
+        opacity: 0,
+        ease: 'Power2.easeIn',
+      },
+    );
+  }
+
   // Events -----------------------------------------------
 
   onDOMMouseover() {
@@ -174,8 +188,15 @@ class ProjectContainer extends THREE.Object3D {
           x,
           y,
           ease: 'Power2.easeInOut',
+          onComplete: () => {
+
+            this.projectPlane.displayPlane();
+          },
         },
       );
+
+      this.mask.tester = true;
+      // this.projectPlane.displayPlane();
     }
   }
 

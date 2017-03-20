@@ -1,7 +1,11 @@
 uniform sampler2D u_map;
 uniform sampler2D u_mapNoise;
 uniform sampler2D u_maskMap;
+uniform sampler2D u_metaBallMap;
+
+uniform float u_discover;
 uniform float u_time;
+
 uniform vec3 u_position;
 
 varying vec2 vUV;
@@ -90,6 +94,7 @@ void main() {
   vec4 noiseTexture = texture2D(u_mapNoise, vUV + u_time * 0.1);
   vec4 noiseTexture2 = texture2D(u_mapNoise, vUV - u_time * 0.1);
   vec4 maskTexture = texture2D(u_maskMap, vec2( vUV.x, vUV.y) );
+  vec4 metaBallsTexture = texture2D(u_metaBallMap, vec2( vUV.x, vUV.y) );
 
   float randomValue = sign( rand(gl_FragCoord.xy) - 0.5 );
   float noise = max( snoise(u_time + gl_FragCoord.xy * 0.012 * randomValue), 0. );
@@ -104,7 +109,7 @@ void main() {
   // float noise = clamp( snoise(u_time + gl_FragCoord.xy * 0.03), 0., 0.01 ) + 0.1;
 
   // float alpha = step(1., maskTexture.r) * ( noiseTexture.r - 0.1 ) * ( noiseTexture2.r - 0.1 );
-  float alpha = step(1., maskTexture.r);
+  float alpha = step( 1., maskTexture.r) + smoothstep( 0.05, 0.2, metaBallsTexture.a ) * u_discover;
 
   // if( alpha < 0.1) {
   //   discard;

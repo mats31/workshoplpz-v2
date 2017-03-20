@@ -16,15 +16,16 @@ class ProjectPlane extends THREE.Object3D {
 
   setup(options) {
 
-    this.maskGeometry = options.geometry.clone();
+    this.maskMetaBall = options.mask.getMaskTexture();
+    this.maskGeometry = options.mask.getMaskMesh().geometry.clone();
     this.texture = options.texture;
 
-    this.createProjectPlane();
+    this.setupProjectPlane();
   }
 
-  createProjectPlane() {
+  setupProjectPlane() {
 
-    this.createRenderTarget();
+    this.setupRenderTarget();
 
     const noise = States.resources.getTexture('project-preview-noise').media;
     noise.needsUpdate = true;
@@ -35,9 +36,11 @@ class ProjectPlane extends THREE.Object3D {
     this.planeGeometry = new THREE.PlaneGeometry( window.innerWidth, window.innerHeight, 10, 10 );
     this.planeUniforms = {
       u_time: { type: 'f', value: 0 },
+      u_discover: { type: 'f', value: 0 },
       u_map: { type: 't', value: this.texture },
       u_mapNoise: { type: 't', value: noise },
       u_maskMap: { type: 't', value: this.renderTarget.texture },
+      u_metaBallMap: { type: 't', value: this.maskMetaBall },
       // u_position: { type: 'v3', value: new THREE.Vector3(0, 20, 15) },
     };
 
@@ -63,7 +66,7 @@ class ProjectPlane extends THREE.Object3D {
     this.add(this.planeMesh);
   }
 
-  createRenderTarget() {
+  setupRenderTarget() {
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -142,6 +145,19 @@ class ProjectPlane extends THREE.Object3D {
 
     // console.log(window.orthographicCamera);
     // console.log(this.renderCamera);
+  }
+
+  // State ---------------------------------------------------------------------
+
+  displayPlane() {
+
+    TweenLite.to(
+      this.planeMaterial.uniforms.u_discover,
+      2,
+      {
+        value: 1,
+      },
+    );
   }
 
 
