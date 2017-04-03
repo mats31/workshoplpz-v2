@@ -227,23 +227,23 @@ export default Vue.extend({
       }
     },
 
-    onProjectClick(id) {
+    onProjectClick( id, y ) {
 
       TweenLite.to(
         this.orthographicCamera.position,
-        5,
+        3.5,
         {
-          y: this.cameraPos.y + window.innerHeight * 2,
-          ease: 'Power2.easeInOut',
+          y: y + window.innerHeight * 2,
+          ease: 'Power4.easeInOut',
         },
       );
 
       TweenLite.to(
         this.ground.position,
-        5,
+        3.5,
         {
           y: -90,
-          ease: 'Power2.easeInOut',
+          ease: 'Power4.easeInOut',
         },
       );
 

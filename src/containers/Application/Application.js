@@ -15,9 +15,34 @@ export default Vue.extend({
 
   created() {},
 
+  mounted() {
+
+    this.setupEvent();
+  },
+
   ready() {},
 
-  methods: {},
+  methods: {
+
+    setupEvent() {
+
+      window.addEventListener('resize', this.onResize.bind(this));
+
+      Signals.onAssetsLoaded.add(this.onAssetsLoaded);
+    },
+
+    // Events
+
+    onAssetsLoaded() {
+
+      Signals.onResize.dispatch( window.innerWidth, window.innerHeight );
+    },
+
+    onResize() {
+
+      Signals.onResize.dispatch( window.innerWidth, window.innerHeight );
+    },
+  },
 
   components: {
     'loader-component': LoaderComponent,

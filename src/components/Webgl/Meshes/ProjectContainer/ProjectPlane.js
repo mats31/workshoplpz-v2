@@ -1,4 +1,6 @@
 import States from 'core/States';
+import MaskTexture from './MaskTexture';
+import getAspectRatio from 'utils/getAspectRatio';
 
 import vertexProjectShader from './shaders/projectMesh.vs';
 import fragmentProjectShader from './shaders/projectMesh.fs';
@@ -9,6 +11,11 @@ class ProjectPlane extends THREE.Object3D {
 
     super();
 
+    this.maskRender = false;
+    this.scaleValue = 0;
+    this.planeWidth = 512;
+    this.planeHeight = 512;
+
     this.setup(options);
 
     // Signals.onAssetsLoaded.add(this.onAssetsLoaded.bind(this));
@@ -16,11 +23,21 @@ class ProjectPlane extends THREE.Object3D {
 
   setup(options) {
 
-    this.maskMetaBall = options.mask.getMaskTexture();
+    // this.maskMetaBall = options.mask.getMaskTexture();
+    this.maskTexture = new MaskTexture({
+      size: 512,
+      points: 10,
+    });
+
+    this.maskTextuteCanvas = new THREE.Texture( this.maskTexture.getCanvas() );
+    this.maskTextuteCanvas.needsUpdate = true;
+    this.maskTextuteCanvas.minFilter = THREE.LinearFilter;
+
     this.maskGeometry = options.mask.getMaskMesh().geometry.clone();
     this.texture = options.texture;
 
     this.setupProjectPlane();
+    this.setupEvent();
   }
 
   setupProjectPlane() {
@@ -33,14 +50,19 @@ class ProjectPlane extends THREE.Object3D {
     noise.wrapS = THREE.RepeatWrapping;
     noise.wrapT = THREE.RepeatWrapping;
 
+    const voronoi = States.resources.getTexture('project-preview-voronoi').media;
+    noise.needsUpdate = true;
+
     this.planeGeometry = new THREE.PlaneGeometry( window.innerWidth, window.innerHeight, 10, 10 );
+    // this.planeGeometry = new THREE.PlaneGeometry( this.planeWidth, this.planeHeight, 10, 10 );
     this.planeUniforms = {
       u_time: { type: 'f', value: 0 },
       u_discover: { type: 'f', value: 0 },
       u_map: { type: 't', value: this.texture },
       u_mapNoise: { type: 't', value: noise },
       u_maskMap: { type: 't', value: this.renderTarget.texture },
-      u_metaBallMap: { type: 't', value: this.maskMetaBall },
+      u_metaBallMap: { type: 't', value: this.maskTextuteCanvas },
+      u_voronoiMap: { type: 't', value: voronoi },
       // u_position: { type: 'v3', value: new THREE.Vector3(0, 20, 15) },
     };
 
@@ -70,6 +92,8 @@ class ProjectPlane extends THREE.Object3D {
 
     const width = window.innerWidth;
     const height = window.innerHeight;
+    // const width = this.planeWidth;
+    // const height = this.planeHeight;
     const options = {
       minFilter: THREE.LinearFilter,
       // wrapS: THREE.RepeatWrapping,
@@ -117,8 +141,16 @@ class ProjectPlane extends THREE.Object3D {
     // this.maskMesh.position.set( 0, 20, 15 );
     // console.log(this.maskMesh);
     // this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
+
+    // const backgroundPlane = new THREE.Mesh(
+    //   new THREE.PlaneBufferGeometry(window.innerWidth, window.innerHeight, 1, 1),
+    //   new THREE.MeshBasicMaterial({ color: new THREE.Color('black') })
+    // );
+    // this.renderScene.add(backgroundPlane);
+
     const maskMaterial = new THREE.MeshBasicMaterial({
       color: new THREE.Color('red'),
+      transparent: true,
     });
     this.maskMesh = new THREE.Mesh( this.maskGeometry, maskMaterial );
     this.maskMesh.scale.set( 0.99, 0.99, 0.99 );
@@ -147,21 +179,53 @@ class ProjectPlane extends THREE.Object3D {
     // console.log(this.renderCamera);
   }
 
+  setupEvent() {
+
+    Signals.onResize.add( this.onResize.bind(this) );
+  }
+
   // State ---------------------------------------------------------------------
 
-  displayPlane() {
+  activateProject() {
 
     TweenLite.to(
-      this.planeMaterial.uniforms.u_discover,
-      2,
+      this.maskMesh.material,
+      3.5,
       {
-        value: 1,
+        opacity: 0,
+        ease: 'Power4.easeInOut',
       },
     );
   }
 
+  displayPlane() {
 
-  /* ****************** UPDATE ****************** */
+    TweenLite.delayedCall( 4.5, () => {
+      this.planeMaterial.uniforms.u_discover.value = 1;
+    });
+
+    // TweenLite.to(
+    //   this.planeMaterial.uniforms.u_discover,
+    //   3.5,
+    //   {
+    //     value: 2,
+    //     ease: 'Power4.easeInOut',
+    //   },
+    // );
+    //
+    // TweenLite.to(
+    //   this,
+    //   3.5,
+    //   {
+    //     scaleValue: 6,
+    //     ease: 'Power4.easeIn',
+    //   },
+    // );
+    //
+    // this.maskRender = true;
+  }
+
+  // Events --------------------------------------------------------------------
 
   onAssetsLoaded() {
 
@@ -172,9 +236,40 @@ class ProjectPlane extends THREE.Object3D {
     this.maskMaterial.uniforms.u_map.value = texture;
   }
 
-  /* ****************** RENDER ****************** */
+  onResize(wW, wH) {
+
+    const ratio = wW / wH;
+
+    let width = this.texture.image.width * ratio;
+    let height = this.texture.image.height * ratio;
+
+    if (height < width) {
+
+      width = width * wH / height;
+      height = wH;
+    } else if (width < height) {
+
+      height = height * wW / width;
+      width = wW;
+    }
+
+    const x = width / this.planeWidth;
+    const y = height / this.planeHeight;
+
+    // this.planeMesh.scale.set( x, y, 1 );
+    // this.renderTarget.setSize( width, height );
+
+    // window.renderer.render( this.renderScene, this.renderCamera, this.renderTarget, true );
+  }
+
+  // Render --------------------------------------------------------------------
 
   update( time, rotationEase ) {
+
+    if (this.maskRender) {
+      this.maskTexture.update(this.scaleValue);
+      this.maskTextuteCanvas.needsUpdate = true;
+    }
 
     // this.planeTest.rotation.x += 0.1;
     // this.planeTest.rotation.y += 0.1;

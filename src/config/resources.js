@@ -13,10 +13,12 @@ const ressources = {
     { id: 'project-preview', url: 'textures/project-preview.jpg', description: '' },
     { id: 'project-preview-noise', url: 'textures/project-preview-noise.jpg', description: '' },
     { id: 'project-preview-circle', url: 'textures/project-preview-circle.png', description: '' },
+    { id: 'project-preview-voronoi', url: 'textures/project-preview-voronoi2.png', description: '' },
   ],
 
   models: [
-    { id: 'forme1', url: 'models/forme1.obj' },
+    { id: 'forme1-start', url: 'models/forme1-start.obj' },
+    { id: 'forme1-final', url: 'models/forme1-final.obj' },
   ],
 };
 

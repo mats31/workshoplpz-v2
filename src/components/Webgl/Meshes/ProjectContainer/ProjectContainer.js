@@ -176,27 +176,28 @@ class ProjectContainer extends THREE.Object3D {
 
     if (this.isFocus) {
 
-      Signals.onProjectClick.dispatch(this.id);
+      Signals.onProjectClick.dispatch( this.id, this.position.y );
 
       const x = 0;
       const y = this.position.y + window.innerHeight * 2;
 
+      this.mask.activateProject();
+      this.projectPlane.activateProject();
+
       TweenLite.to(
         this.position,
-        5,
+        3.5,
         {
           x,
           y,
-          ease: 'Power2.easeInOut',
-          onComplete: () => {
-
-            this.projectPlane.displayPlane();
-          },
+          ease: 'Power4.easeInOut',
         },
       );
 
-      this.mask.tester = true;
-      // this.projectPlane.displayPlane();
+      // TweenLite.delayedCall( 0.8, () => {
+
+      this.projectPlane.displayPlane();
+      // });
     }
   }
 

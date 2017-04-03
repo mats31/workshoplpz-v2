@@ -94,7 +94,10 @@ float snoise(vec2 v)
   return 130.0 * dot(m, g);
 }
 
+attribute vec3 finalPosition;
+
 uniform float u_time;
+uniform float u_morph;
 
 varying vec2 vUV;
 // varying vec3 vNormal;
@@ -119,6 +122,8 @@ void main() {
 #endif
 
 	#include <begin_vertex>
+
+	transformed = mix( transformed, finalPosition, u_morph );
 
   // float offset = snoise(transformed.xy * 0.015 + u_time * 0.05) * 10.;
   // transformed.z += abs( offset );

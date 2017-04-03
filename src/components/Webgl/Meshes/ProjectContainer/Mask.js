@@ -15,28 +15,34 @@ class Mask extends THREE.Object3D {
 
   setup() {
 
-    this.tester = false;
+    this.projectState = false;
     this.isMasking = false;
     this.maskRender = false;
     this.easeValue = 0;
+    this.morphValue = 0;
+    this.scaleValue = 0;
 
     this.createMask();
-
-    // Signals.onAssetsLoaded.add(this.onAssetsLoaded.bind(this));
+    this.setupEvent();
   }
 
   createMask() {
 
-    const model = States.resources.getModel('forme1').media;
-    // console.log(model);
+    const startModel = States.resources.getModel('forme1-start').media;
+    const finalModel = States.resources.getModel('forme1-final').media;
+    // console.log(startModel);
 
     // this.maskGeometry = new THREE.IcosahedronGeometry( 2.5, 0 );
     // this.maskGeometry = new THREE.IcosahedronGeometry( 200, 0 );
     // this.maskGeometry = new THREE.BoxGeometry( 2.5, 2.5, 2.5 );
     // this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
-    this.maskGeometry = model.children[0].geometry;
+    this.maskGeometry = startModel.children[0].geometry;
+    this.maskGeometry.addAttribute( 'finalPosition', new THREE.BufferAttribute( finalModel.children[0].geometry.attributes.position.array, 3 ) );
 
-    this.maskTexture = new MaskTexture();
+    this.maskTexture = new MaskTexture({
+      size: 216,
+      points: 25,
+    });
 
     this.maskTextuteCanvas = new THREE.Texture( this.maskTexture.getCanvas() );
     this.maskTextuteCanvas.needsUpdate = true;
@@ -60,9 +66,11 @@ class Mask extends THREE.Object3D {
       emissive: { value: new THREE.Color( 0x000000 ) },
       specular: { value: new THREE.Color( 0x111111 ) },
       u_ease: { type: 'f', value: this.easeValue },
-      // u_mapNoise: { type: 't', value: noise },
+      u_morph: { type: 'f', value: this.morphValue },
+      u_mapDisplacement: { type: 't', value: noise },
       u_mapNoise: { type: 't', value: this.maskTextuteCanvas },
       u_mapCircle: { type: 't', value: circle },
+      u_alpha: { type: 'f', value: 1 },
     };
 
     this.maskMaterial = new THREE.ShaderMaterial({
@@ -84,33 +92,35 @@ class Mask extends THREE.Object3D {
     // this.addGUI()
   }
 
-  // Getters -------------------------------------------------------------------
+  setupEvent() {
 
-  getMaskTexture() {
-
-    return this.maskTextuteCanvas;
+    Signals.onResize.add( this.onResize.bind(this) );
   }
 
-  getMaskMesh() {
-
-    return this.maskMesh;
-  }
-
-  /* ****************** STATE ****************** */
+  // State ---------------------------------------------------------------------
 
   activateMask() {
 
-    if (!this.isMasking) {
+    if (!this.isMasking && !this.projectState) {
 
       this.isMasking = true;
       this.maskRender = true;
 
       TweenLite.to(
         this.maskUniforms.u_ease,
-        0.5,
+        1.5,
         {
           value: 1,
-          ease: 'Power2.easeIn',
+          ease: 'Power4.easeOut',
+        },
+      );
+
+      TweenLite.to(
+        this,
+        1.5,
+        {
+          scaleValue: 0.65,
+          ease: 'Power4.easeOut',
         },
       );
     }
@@ -118,9 +128,18 @@ class Mask extends THREE.Object3D {
 
   deactivateMask() {
 
-    if (this.isMasking) {
+    if (this.isMasking && !this.projectState) {
 
       this.isMasking = false;
+
+      TweenLite.to(
+        this,
+        0.5,
+        {
+          scaleValue: 0,
+          ease: 'Power2.easeIn',
+        },
+      );
 
       TweenLite.to(
         this.maskUniforms.u_ease,
@@ -137,32 +156,123 @@ class Mask extends THREE.Object3D {
     }
   }
 
-  // activateProject() {
-  //
-  //   console.log(this.position.x);
-  //   const x = 0;
-  //   // const x = window.innerWidth * -0.5 + this.getMaskWidth() * 0.5;
-  //   // const y = window.innerHeight * 2;
-  //   const y = this.position.y + window.innerHeight * 2;
-  //
-  //   TweenLite.to(
-  //     this.position,
-  //     5,
-  //     {
-  //       x,
-  //       y,
-  //       ease: 'Power2.easeOut',
-  //     },
-  //   );
-  // }
+  activateProject() {
 
-  /* ****************** GETTERS ****************** */
+    const previousX = this.rotation.x;
+    const previousY = this.rotation.y;
+    this.rotation.x = 0;
+    this.rotation.y = 0;
+
+    const scaleX = this.wW / this.getMaskWidth();
+    const scaleY = this.wH / this.getMaskHeight();
+
+    this.rotation.x = previousX;
+    this.rotation.y = previousY;
+
+    this.projectState = true;
+
+    TweenLite.to(
+      this,
+      1,
+      {
+        scaleValue: 0,
+        // ease: 'Power4.easeOut',
+        onComplete: () => {
+          this.maskRender = false;
+        },
+      },
+    );
+
+    TweenLite.to(
+      this.scale,
+      3.5,
+      {
+        delay: 1,
+        x: scaleX,
+        y: scaleY,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    TweenLite.to(
+      this.rotation,
+      3.5,
+      {
+        delay: 1,
+        x: 0,
+        y: 0,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    TweenLite.to(
+      this.maskMaterial.uniforms.u_morph,
+      3.5,
+      {
+        delay: 1,
+        value: 1,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    TweenLite.delayedCall(4.5, () => {
+
+      this.maskRender = true;
+
+      TweenLite.to(
+        this.maskUniforms.u_ease,
+        0.3,
+        {
+          value: 1,
+          ease: 'Power2.easeIn',
+        },
+      );
+
+      TweenLite.to(
+        this,
+        5,
+        {
+          scaleValue: 1.5,
+          ease: 'Power4.easeOut',
+        },
+      );
+
+      TweenLite.to(
+        this.maskUniforms.u_alpha,
+        1.5,
+        {
+          delay: 1,
+          value: 0,
+        },
+      );
+
+    });
+  }
+
+  // Getters -------------------------------------------------------------------
+
+  getMaskTexture() {
+
+    return this.maskTextuteCanvas;
+  }
+
+  getMaskMesh() {
+
+    return this.maskMesh;
+  }
 
   getMaskWidth() {
 
     const box3 = new THREE.Box3().setFromObject( this );
 
     return Math.abs( box3.max.x - box3.min.x );
+  }
+
+  getMaskHeight() {
+
+    const box3 = new THREE.Box3().setFromObject( this );
+
+    return Math.abs( box3.max.y - box3.min.y );
   }
 
   getMaskPosition() {
@@ -172,7 +282,7 @@ class Mask extends THREE.Object3D {
     return box3;
   }
 
-  /* ****************** UPDATE ****************** */
+  // Update -------------------------------------------------------------------
 
   onAssetsLoaded() {
 
@@ -187,9 +297,9 @@ class Mask extends THREE.Object3D {
 
   update( time ) {
 
-    if (this.maskRender || this.tester) {
-      // console.log(1);
-      this.maskTexture.update();
+    if (this.maskRender) {
+
+      this.maskTexture.update(this.scaleValue);
       this.maskTextuteCanvas.needsUpdate = true;
 
       // console.log('ouesh');
@@ -205,6 +315,14 @@ class Mask extends THREE.Object3D {
 
 
     // this.maskMesh.rotation.x += 0.1;
+  }
+
+  // Events --------------------------------------------------------------------
+
+  onResize( wW, wH ) {
+
+    this.wW = wW;
+    this.wH = wH;
   }
 
   // addGUI() {

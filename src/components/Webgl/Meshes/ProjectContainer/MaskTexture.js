@@ -1,6 +1,9 @@
 class MaskTexture {
 
-  constructor() {
+  constructor(options) {
+
+    this.points = options.points;
+    this.size = options.size;
 
     this.setup();
   }
@@ -13,12 +16,12 @@ class MaskTexture {
 
   createCanvas() {
 
-    this.width = 256;
-    this.height = 256;
+    this.width = this.size;
+    this.height = this.size;
     this.threshold = 180;
     this.colors = { r: 255, g: 255, b: 255 };
     this.cycle = 0;
-    this.nbPoints = 25;
+    this.nbPoints = this.points;
     this.points = [];
 
     this.mainCanvas = document.createElement('canvas');
@@ -35,7 +38,7 @@ class MaskTexture {
     // this.tempCanvas.style.left = 0;
     // this.tempCanvas.style.zIndex = 100;
     // document.body.appendChild(this.tempCanvas);
-
+    //
     // this.mainCanvas.style.position = 'absolute';
     // this.mainCanvas.style.top = 0;
     // this.mainCanvas.style.left = 0;
@@ -67,7 +70,7 @@ class MaskTexture {
 
   /* ****************** RENDER ****************** */
 
-  update() {
+  update(scale) {
 
     let len = this.points.length;
 
@@ -80,19 +83,19 @@ class MaskTexture {
       point.x += point.vx;
       point.y += point.vy;
 
-      if (point.x > this.width + point.size) { point.x = 0 - point.size; }
-      if (point.x < 0 - point.size) { point.x = this.width + point.size; }
-      if (point.y > this.height + point.size) { point.y = 0 - point.size; }
-      if (point.y < 0 - point.size) { point.y = this.height + point.size; }
+      if (point.x > this.width + point.size * scale) { point.x = 0 - point.size * scale; }
+      if (point.x < 0 - point.size * scale) { point.x = this.width + point.size * scale; }
+      if (point.y > this.height + point.size * scale) { point.y = 0 - point.size * scale; }
+      if (point.y < 0 - point.size * scale) { point.y = this.height + point.size * scale; }
 
       this.tempCtx.beginPath();
 
-      const grad = this.tempCtx.createRadialGradient( point.x, point.y, 1, point.x, point.y, point.size );
+      const grad = this.tempCtx.createRadialGradient( point.x, point.y, 1, point.x, point.y, point.size * scale );
       grad.addColorStop(0, `rgba(${this.colors.r}, ${this.colors.g}, ${this.colors.b}, 1)` );
       grad.addColorStop(1, `rgba(${this.colors.r}, ${this.colors.g}, ${this.colors.b}, 0)` );
 
       this.tempCtx.fillStyle = grad;
-      this.tempCtx.arc(point.x, point.y, point.size, 0, Math.PI * 2 );
+      this.tempCtx.arc(point.x, point.y, point.size * scale, 0, Math.PI * 2 );
       this.tempCtx.fill();
     }
 
