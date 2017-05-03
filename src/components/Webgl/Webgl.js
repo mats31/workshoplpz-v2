@@ -187,23 +187,26 @@ export default Vue.extend({
 
     onWeblGLMousemove(event) {
 
-      // this.mouse.x = ( ( event.clientX / window.innerWidth ) * 2 ) - 1;
-      // this.mouse.y = ( -( event.clientY / window.innerHeight ) * 2 ) + 1;
+      if (!States.application.activateProject) {
 
-      const step = 0.7;
+        // this.mouse.x = ( ( event.clientX / window.innerWidth ) * 2 ) - 1;
+        // this.mouse.y = ( -( event.clientY / window.innerHeight ) * 2 ) + 1;
 
-      this.mouse.x = ( event.clientX - (window.innerWidth * 0.5) ) / ( window.innerWidth * 0.5 );
-      this.mouse.y = ( event.clientY - (window.innerHeight * 0.5) ) / ( window.innerHeight * 0.5 );
+        const step = 0.7;
 
-      if ( Math.abs(this.mouse.x) > step ) {
+        this.mouse.x = ( event.clientX - (window.innerWidth * 0.5) ) / ( window.innerWidth * 0.5 );
+        this.mouse.y = ( event.clientY - (window.innerHeight * 0.5) ) / ( window.innerHeight * 0.5 );
 
-        this.rotationEase += ( this.mouse.x - this.rotationEase ) * 0.05;
-      } else {
+        if ( Math.abs(this.mouse.x) > step ) {
 
-        this.rotationEase = 0;
+          this.rotationEase += ( this.mouse.x - this.rotationEase ) * 0.05;
+        } else {
+
+          this.rotationEase = 0;
+        }
+
+        // this.checkMouseFocus();
       }
-
-      // this.checkMouseFocus();
     },
 
     // checkMouseFocus() {
@@ -228,6 +231,8 @@ export default Vue.extend({
     },
 
     onProjectClick( id, y ) {
+
+      States.application.activateProject = true;
 
       TweenLite.to(
         this.orthographicCamera.position,

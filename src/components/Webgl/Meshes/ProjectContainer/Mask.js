@@ -179,6 +179,7 @@ class Mask extends THREE.Object3D {
         // ease: 'Power4.easeOut',
         onComplete: () => {
           this.maskRender = false;
+          Signals.onProjectAnimationDone.dispatch();
         },
       },
     );
@@ -243,6 +244,10 @@ class Mask extends THREE.Object3D {
         {
           delay: 1,
           value: 0,
+          onComplete: () => {
+            this.maskRender = false;
+
+          }
         },
       );
 

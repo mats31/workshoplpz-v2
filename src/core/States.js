@@ -34,6 +34,10 @@ class States {
         return this.models.find( model => model.id === id );
       },
     };
+
+    this.application = {
+      projectActived: false,
+    };
   }
 }
 

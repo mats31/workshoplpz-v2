@@ -15,6 +15,7 @@ class Signals {
     this.onWeblGLMousemove = new Signal();
     this.onWeblGLMouseleave = new Signal();
     this.onProjectClick = new Signal();
+    this.onProjectAnimationDone = new Signal();
   }
 }
 
