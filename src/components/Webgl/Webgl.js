@@ -232,6 +232,7 @@ export default Vue.extend({
 
     onProjectClick( id, y ) {
 
+      this.$router.push({ name: 'project', params: { id: 1 }});
       States.application.activateProject = true;
 
       TweenLite.to(
