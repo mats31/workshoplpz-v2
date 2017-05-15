@@ -19,12 +19,20 @@ export default Vue.extend({
 
   mounted() {
 
+    this.show();
   },
 
   methods: {
 
     setPercentLoading(value) {
 
+    },
+
+    // State -------------------------------------------------------------------
+
+    show() {
+
+      this.$refs.container.style.display = 'block';
     },
 
     /* Events */
