@@ -1,15 +1,46 @@
 .project
   display none
+  position relative
+  z-index 10
 
 .project__container
   background #191919
   color #ffffff
+  font-family 'gotham-medium'
 
-.project__padding
+.project__titleContainer
   height 100vh
+  position relative
+
+.project__back
+  font-family 'gotham-medium'
+  font-size 2rem
+  position absolute
+  right 70px
+  top 70px
+
+.project__scroll
+  height 8.25vh
+  width 5px
+  position absolute
+  left 50%
+  bottom 0
+  transform translate3d(-50%, 0, 0)
+  background-color #ffffff
+
+.project__title
+  font-family 'majesti-medium'
+  font-size 10rem
+  position absolute
+  left 50%
+  top 50%
+  width 23.17708333vw
+  transform: translate3d(-50%, -50%, 0);
+  text-align: center;
+  min-width: 450px;
 
 .project__category
-  font-family 'gotham-bold'
+  font-family 'gotham-medium'
   font-size 2rem
 
 .project__clientName
@@ -17,7 +48,7 @@
   font-size 10rem
 
 .project__clientVisit
-  font-family 'gotham-bold'
+  font-family 'gotham-medium'
   font-size 2rem
 
 .project__pitchDescription,
