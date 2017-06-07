@@ -38,6 +38,10 @@
   text-align: center;
   min-width: 450px;
 
+.project__sections
+  background #191919
+  position relative
+
 .project__lines
   position absolute
   height 100%
@@ -48,7 +52,7 @@
 
 .project__firstLine
   background rgba(255, 255, 255, 0.1)
-  left 19.6875%
+  left 19.7916666667%
   height 100%
   width 1px
 
@@ -65,19 +69,101 @@
   width 1px
 
 .project__firstContainer
-  background #191919
+  height 100vh
+  min-height 69.5rem
+  position relative
+  width: 100%
+
+.project__flexContainer
+  display flex
+  padding-left 19.79166667%
+  width 80.20833333%
+
+.project__firstFlex
+  position absolute
+  top 50%
+  transform translate3d( 0, -50%, 0 )
+
+.project__column
+  padding-left 2rem
+  width calc( 30.2083333333% - 2rem )
+
+.project__lastColumn
+  padding-left 2rem
+  width calc( 19.79166667% - 2rem )
 
 .project__category
   font-family 'gotham-medium'
   font-size 2rem
+  margin 0 0 6rem 0
 
 .project__clientName
   font-family 'majesti-medium'
   font-size 10rem
+  margin 0 0 10rem 0
 
 .project__clientVisit
+  border-bottom 4px solid #ffffff
+  display inline-block
   font-family 'gotham-medium'
   font-size 2rem
+  margin 0
+  padding-bottom: 1.6rem
+
+.project__role
+  margin-bottom 9rem
+
+.project__secondContainer
+  position relative
+  width: 100%
+
+.project__backTop
+  height 7.65rem
+  margin-bottom 11.2rem
+  position relative
+
+.project__backTopText
+  cursor pointer
+  font-family 'gotham-light'
+  font-size 2.4rem
+  position absolute
+  right 10.8rem
+  top 2rem
+
+.project__sliderContainer
+  flex-grow 0
+  flex-shrink 0
+  flex-basis 61.8429591175%
+
+.project__chapterContainer
+  font-family 'gotham-light'
+  font-size 2.4rem
+  flex-grow 0
+  flex-shrink 0
+  flex-basis calc( 38.1570408825% - 6.6rem )
+  padding-left 6.6rem
+
+.project__chapterTitle
+  font-family 'majesti-medium'
+  font-size 4.5rem
+  padding-right 10.8rem
+  text-align right
+
+.project__backBottom
+  height 7.65rem
+  margin-top 11.2rem
+  position relative
+
+.project__backBottomText
+  cursor pointer
+  font-family 'gotham-light'
+  font-size 2.4rem
+  position absolute
+  left 10.8rem
+  bottom 2rem
+
+.project__sliderContainer
+  width 49.63541667%
 
 .project__pitchDescription,
 .project__roleDescription,
