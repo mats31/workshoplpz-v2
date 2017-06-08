@@ -38,6 +38,8 @@ export default Vue.extend({
 
   methods: {
 
+    // SETUP -------------------------------------------------------------------
+
     setup() {
 
       this.test = 0;
@@ -85,7 +87,6 @@ export default Vue.extend({
       );
       this.orthographicCamera.position.copy(this.cameraPos);
       this.orthographicCamera.lookAt(this.cameraTarget);
-      console.log(this.orthographicCamera);
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       // this.camera.lookAt(cameraTarget);
@@ -99,6 +100,14 @@ export default Vue.extend({
       Signals.onProjectClick.add(this.onProjectClick);
 
       this.$el.addEventListener('click', this.onWebGLClick.bind(this));
+    },
+
+    checkRoute() {
+
+      if ( this.$route.name === 'project' ) {
+
+        this.goToProject( this.$route.params.id, 0 );
+      }
     },
 
     setupLight() {
@@ -173,7 +182,7 @@ export default Vue.extend({
       this.scene.add(this.ground);
     },
 
-    /* Events */
+    // EVENTS ------------------------------------------------------------------
 
     onAssetsLoaded() {
 
@@ -183,6 +192,8 @@ export default Vue.extend({
       this.setupProject();
       this.setupLight();
       this.animate();
+
+      this.checkRoute();
     },
 
     onWeblGLMousemove(event) {
@@ -232,7 +243,14 @@ export default Vue.extend({
 
     onProjectClick( id, y ) {
 
-      this.$router.push({ name: 'project', params: { id: 1 }});
+      this.goToProject( id, y );
+    },
+
+    // STATE -------------------------------------------------------------------
+
+    goToProject( id, y ) {
+
+      this.$router.push({ name: 'project', params: { id: id }});
       States.application.activateProject = true;
 
       TweenLite.to(
@@ -259,7 +277,7 @@ export default Vue.extend({
       }
     },
 
-    /* Update */
+    // UPDATE -------------------------------------------------------------------
 
     animate() {
 

@@ -169,8 +169,6 @@ class AssetLoader {
 
       this.loadModel( models[i] ).then( (model) => {
 
-        console.log(model);
-
         States.resources.models.push( model );
         this.assetsLoaded += 1;
 

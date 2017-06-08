@@ -1,5 +1,7 @@
 import './project.styl';
 
+import projects from 'config/projects';
+
 import template from './project.html';
 
 export default Vue.extend({
@@ -19,7 +21,7 @@ export default Vue.extend({
 
   mounted() {
 
-    this.show();
+    this.checkRoute();
   },
 
   methods: {
@@ -29,6 +31,33 @@ export default Vue.extend({
     },
 
     // State -------------------------------------------------------------------
+
+    checkRoute() {
+
+      for (var i = 0; i < projects.projectList.length; i++) {
+
+        if ( projects.projectList[i].id === this.$route.params.id ) {
+
+          this.populateProject( projects.projectList[i] );
+          this.show();
+
+          return;
+        } else {
+
+          this.$router.push({ name: 'home' });
+        }
+      }
+    },
+
+    populateProject( currentProject ) {
+
+      this.$refs.projectName.innerHTML = currentProject.title;
+      this.$refs.clientName.innerHTML = currentProject.client;
+      this.$refs.projectDescription.innerHTML = currentProject.description;
+      this.$refs.projectStatut.innerHTML = currentProject.statut;
+      this.$refs.projectReward.innerHTML = currentProject.reward;
+      this.$refs.projectChapterText.innerHTML = currentProject.chapters[0];
+    },
 
     show() {
 

@@ -16,12 +16,15 @@ class ProjectContainer extends THREE.Object3D {
     this.isHover = false;
     this.isFocus = false;
 
-    this.projectID = options.project.previewId;
+
+
+    this.projectID = options.project.id;
+    this.previewID = options.project.previewId;
     this.title = options.project.title;
     this.date = options.project.date;
     this.statut = options.project.statut;
 
-    const texture = States.resources.getTexture(this.projectID).media;
+    const texture = States.resources.getTexture(this.previewID).media;
     texture.minFilter = THREE.LinearFilter;
     texture.needsUpdate = true;
 
@@ -176,7 +179,7 @@ class ProjectContainer extends THREE.Object3D {
 
     if (this.isFocus) {
 
-      Signals.onProjectClick.dispatch( this.id, this.position.y );
+      Signals.onProjectClick.dispatch( this.projectID, this.position.y );
 
       const x = 0;
       const y = this.position.y + window.innerHeight * 2;
