@@ -18,11 +18,19 @@ export default class Router extends VueRouter {
           path: '/',
           children: [
             {
+              name: 'projects',
+              path: 'projects',
+            },
+            {
+              name: 'everydays',
+              path: 'everydays',
+            },
+            {
               component: ProjectComponent,
               name: 'project',
-              path: 'project/:id',
-            }
-          ]
+              path: 'projects/:id',
+            },
+          ],
         },
       ],
     });

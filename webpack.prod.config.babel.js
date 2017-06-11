@@ -10,6 +10,7 @@ export default {
   entry: './src/main.js',
   output: {
     path: `${__dirname}/build`,
+    publicPath: '/workshoplpz/',
     filename: '[name]-[hash].min.js',
   },
   resolve: {
@@ -48,14 +49,23 @@ export default {
         test: /\.json$/,
         loader: 'json',
       },
+      // {
+      //   test: /\.(woff)$/,
+      //   loader: 'file',
+      //   query: {
+      //     limit: 8192,
+      //     name: '[name].[ext]',
+      //     publicPath: '/workshoplpz/',
+      //   },
+      // },
       {
         test: /\.styl$/,
-        loader: ExtractTextPlugin.extract('css-loader!stylus-loader'),
+        loader: ExtractTextPlugin.extract('css-loader?sourceMap!resolve-url-loader!stylus-loader'),
       },
       {
-        test: /\.(glsl|frag|vert)$/,
-        loader: 'raw-loader!glslify-loader',
-        exclude: /node_modules/,
+        test: /\.(glsl|vs|fs)$/,
+        loader: 'shader',
+        // exclude: /node_modules/,
       },
       {
         test: /animation.gsap\.js$/,
@@ -67,10 +77,11 @@ export default {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       inject: 'body',
-      template: './src/template/index.tpl.html',
+      template: './src/template/index.prod.tpl.html',
     }),
     new webpack.ProvidePlugin({
-      Vue: 'vue',
+      THREE: 'three',
+      Vue: 'vue/dist/vue',
     }),
     new CopyWebpackPlugin([
       { from: 'static' },
@@ -83,7 +94,7 @@ export default {
     //     pure_funcs: ['console.log'],
     //   },
     // }),
-    new ExtractTextPlugin('[name]-[hash].min.css', { allChunks: true }),
+    new ExtractTextPlugin('[name]-[hash].min.css', { allChunks: true, publicPath: 'workshoplpz/' }),
     new CleanWebpackPlugin(['build'], { root: `${__dirname}` }),
   ],
 };

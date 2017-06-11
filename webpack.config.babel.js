@@ -12,6 +12,9 @@ const Config = {
   },
   resolve: {
     root: path.resolve( __dirname, 'src' ),
+    alias: {
+      fonts: path.resolve( __dirname, 'static/fonts' ),
+    },
     extensions: [
       '',
       '.js',
@@ -47,7 +50,7 @@ const Config = {
       },
       {
         test: /\.styl$/,
-        loader: 'style-loader!css-loader!stylus-loader',
+        loader: 'style-loader!css-loader!stylus-loader?resolve url',
       },
       {
         test: /\.(glsl|vs|fs)$/,

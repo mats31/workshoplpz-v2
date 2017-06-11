@@ -3,6 +3,15 @@
 @import 'common/normalize'
 
 @font-face
+    font-family 'soleil-bold'
+    src url('/fonts/soleil-bold.eot')
+    src url('/fonts/soleil-bold.eot?#iefix') format('embedded-opentype'),
+    url('/fonts/soleil-bold.woff') format('woff'),
+    url('/fonts/soleil-bold.ttf') format('truetype'),
+    url('/fonts/soleil-bold.svg#soleilbold') format('svg')
+    font-weight 400
+
+@font-face
     font-family 'majesti-light'
     src url('/fonts/Majesti-Banner-LightItalic.eot')
     src url('/fonts/Majesti-Banner-LightItalic.eot?#iefix') format('embedded-opentype'),url('/fonts/Majesti-Banner-LightItalic.woff') format('woff'),url('/fonts/Majesti-Banner-LightItalic.ttf') format('truetype'),url('/fonts/Majesti-Banner-LightItalic.svg#majesti_bannermedium_italic') format('svg')
@@ -41,6 +50,17 @@
     font-weight 400
     font-style normal
     font-stretch normal
+
+
+font-smoothing()
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+font-bold()
+  font-family 'soleil-bold'
+  font-weight normal
+  font-style normal
+  font-smoothing()
 
 html
   font-family: 'Nunito', sans-serif;

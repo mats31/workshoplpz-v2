@@ -1,3 +1,4 @@
+import MenuComponent from 'components/Menu/Menu';
 import WebglComponent from 'components/Webgl/Webgl';
 
 import './home.styl';
@@ -15,6 +16,7 @@ export default Vue.extend({
 
   created() {
 
+    this.checkRoute();
   },
 
   mounted() {
@@ -23,6 +25,14 @@ export default Vue.extend({
   },
 
   methods: {
+
+    checkRoute() {
+
+      if (this.$route.name === 'home') {
+
+        this.$router.push({ name: 'projects' });
+      }
+    },
 
     setupEvent() {
 
@@ -42,6 +52,7 @@ export default Vue.extend({
   },
 
   components: {
+    'menu-component': MenuComponent,
     'webgl-component': WebglComponent,
   },
 });

@@ -8,7 +8,7 @@ import Signals from 'core/Signals'; /* exported Signals */
 
 import AssetLoader from 'core/AssetLoader';
 
-import './stylesheets/main.styl';
+import 'stylesheets/main.styl';
 
 class Main {
 
