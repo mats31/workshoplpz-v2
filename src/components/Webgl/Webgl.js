@@ -152,6 +152,7 @@ export default Vue.extend({
 
         const projectContainer = new ProjectContainer({
           project: projectList[i],
+          index: i,
         });
 
         const width = projectContainer.getMaskWidth();

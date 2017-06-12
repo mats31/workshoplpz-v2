@@ -17,12 +17,12 @@ class ProjectContainer extends THREE.Object3D {
     this.isFocus = false;
 
 
-
     this.projectID = options.project.id;
     this.previewID = options.project.previewId;
     this.title = options.project.title;
     this.date = options.project.date;
     this.statut = options.project.statut;
+    this.index = options.index;
 
     const texture = States.resources.getTexture(this.previewID).media;
     texture.minFilter = THREE.LinearFilter;
@@ -64,16 +64,17 @@ class ProjectContainer extends THREE.Object3D {
     title.className = 'webgl__projects-title';
     title.innerHTML = this.title;
     this.box.appendChild(title);
+    this.box.style.top = this.index % 2 === 0 ? '20%' : '60%';
 
-    const date = document.createElement('p');
-    date.className = 'webgl__projects-date';
-    date.innerHTML = this.date;
-    this.box.appendChild(date);
+    // const date = document.createElement('p');
+    // date.className = 'webgl__projects-date';
+    // date.innerHTML = this.date;
+    // this.box.appendChild(date);
 
-    const statut = document.createElement('h3');
-    statut.className = 'webgl__projects-statut';
-    statut.innerHTML = this.statut;
-    this.box.appendChild(statut);
+    // const statut = document.createElement('h3');
+    // statut.className = 'webgl__projects-statut';
+    // statut.innerHTML = this.statut;
+    // this.box.appendChild(statut);
 
     const projectDOM = document.querySelector('.webgl__projects');
     projectDOM.appendChild(this.box);
@@ -119,15 +120,15 @@ class ProjectContainer extends THREE.Object3D {
 
     document.body.style.cursor = 'pointer';
 
-    TweenLite.killTweensOf(this.box);
-    TweenLite.to(
-      this.box,
-      0.55,
-      {
-        opacity: 1,
-        ease: 'Power2.easeIn',
-      },
-    );
+    // TweenLite.killTweensOf(this.box);
+    // TweenLite.to(
+    //   this.box,
+    //   0.55,
+    //   {
+    //     opacity: 1,
+    //     ease: 'Power2.easeIn',
+    //   },
+    // );
 
     this.mask.activateMask();
   }
@@ -138,15 +139,15 @@ class ProjectContainer extends THREE.Object3D {
 
     document.body.style.cursor = 'initial';
 
-    TweenLite.killTweensOf(this.box);
-    TweenLite.to(
-      this.box,
-      0.5,
-      {
-        opacity: 0.5,
-        ease: 'Power2.easeIn',
-      },
-    );
+    // TweenLite.killTweensOf(this.box);
+    // TweenLite.to(
+    //   this.box,
+    //   0.5,
+    //   {
+    //     opacity: 0.5,
+    //     ease: 'Power2.easeIn',
+    //   },
+    // );
 
     this.mask.deactivateMask();
   }
@@ -214,8 +215,8 @@ class ProjectContainer extends THREE.Object3D {
 
   updateDOM() {
 
-    this.box.style.left = `${this.getMaskPosition().left + this.getMaskWidth() + window.innerWidth * 0.5}px`;
-    this.box.style.top = `${( this.getMaskPosition().top - window.innerHeight * 0.5 ) * -1}px`;
+    this.box.style.left = `${this.getMaskPosition().left}px`;
+    // this.box.style.top = `${( this.getMaskPosition().top - window.innerHeight * 0.5 ) * -1}px`;
 
     // if (i===1) console.log(this.getMaskPosition().left);
   }

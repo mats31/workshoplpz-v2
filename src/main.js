@@ -1,5 +1,7 @@
 /* eslint no-unused-vars: "off" */
 
+import 'stylesheets/main.styl';
+
 import domready from 'domready';
 import gsap from 'gsap';
 import Application from 'containers/Application/Application';
@@ -8,7 +10,6 @@ import Signals from 'core/Signals'; /* exported Signals */
 
 import AssetLoader from 'core/AssetLoader';
 
-import 'stylesheets/main.styl';
 
 class Main {
 
