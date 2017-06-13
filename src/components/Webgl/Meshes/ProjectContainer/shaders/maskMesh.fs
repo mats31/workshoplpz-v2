@@ -7,6 +7,7 @@ uniform vec3 u_color;
 varying vec2 vUV;
 uniform float shininess;
 uniform float opacity;
+uniform float u_fullColor;
 uniform float u_time;
 uniform float u_ease;
 uniform float u_alpha;
@@ -116,7 +117,7 @@ void main() {
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-    vec3 totalEmissiveRadiance = emissive * min( 1., vRandomColor * u_ease );
+  vec3 totalEmissiveRadiance = emissive * min( 1., vRandomColor * u_ease );
 	// vec3 totalEmissiveRadiance = emissive * u_ease * vRandomColor;
 
 	#include <logdepthbuf_fragment>
@@ -155,7 +156,7 @@ void main() {
   // gl_FragColor = vec4( outgoingLight, alpha );
 
   float alpha = 1.;
-  gl_FragColor = vec4( outgoingLight, alpha );
+  gl_FragColor = vec4( mix( outgoingLight, emissive, u_fullColor ), alpha );
   // gl_FragColor = vec4( emissive * u_ease * vRandomColor, alpha );
 
   // gl_FragColor = vec4( vec3( vRandomColor, 0, 0) , 1. );

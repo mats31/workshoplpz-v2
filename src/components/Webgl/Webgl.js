@@ -54,7 +54,7 @@ export default Vue.extend({
       this.projectContainers = [];
       this.widthProjects = null;
 
-      this.mouse = new THREE.Vector2();
+      this.mouse = new THREE.Vector2( 9999, 9999 );
 
       this.setupWebGL(window.innerWidth, window.innerHeight);
     },
@@ -67,7 +67,9 @@ export default Vue.extend({
       this.camera.position.copy(this.cameraPos);
       this.camera.lookAt(this.cameraTarget);
 
-      this.renderer = window.renderer = new THREE.WebGLRenderer();
+      this.renderer = window.renderer = new THREE.WebGLRenderer({
+        antialias: true,
+      });
       this.renderer.setSize(width, height);
       this.renderer.setClearColor(0x1a1a1a);
       this.renderer.autoClear = false;

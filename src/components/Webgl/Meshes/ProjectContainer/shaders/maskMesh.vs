@@ -20,85 +20,15 @@ varying vec3 vViewPosition;
 #include <logdepthbuf_pars_vertex>
 #include <clipping_planes_pars_vertex>
 
-
-
-//
-// Description : Array and textureless GLSL 2D simplex noise function.
-//      Author : Ian McEwan, Ashima Arts.
-//  Maintainer : stegu
-//     Lastmod : 20110822 (ijm)
-//     License : Copyright (C) 2011 Ashima Arts. All rights reserved.
-//               Distributed under the MIT License. See LICENSE file.
-//               https://github.com/ashima/webgl-noise
-//               https://github.com/stegu/webgl-noise
-//
-
-vec3 mod289(vec3 x) {
-  return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-
-vec2 mod289(vec2 x) {
-  return x - floor(x * (1.0 / 289.0)) * 289.0;
-}
-
-vec3 permute(vec3 x) {
-  return mod289(((x*34.0)+1.0)*x);
-}
-
-float snoise(vec2 v)
-  {
-  const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
-                      0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
-                     -0.577350269189626,  // -1.0 + 2.0 * C.x
-                      0.024390243902439); // 1.0 / 41.0
-// First corner
-  vec2 i  = floor(v + dot(v, C.yy) );
-  vec2 x0 = v -   i + dot(i, C.xx);
-
-// Other corners
-  vec2 i1;
-  //i1.x = step( x0.y, x0.x ); // x0.x > x0.y ? 1.0 : 0.0
-  //i1.y = 1.0 - i1.x;
-  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-  // x0 = x0 - 0.0 + 0.0 * C.xx ;
-  // x1 = x0 - i1 + 1.0 * C.xx ;
-  // x2 = x0 - 1.0 + 2.0 * C.xx ;
-  vec4 x12 = x0.xyxy + C.xxzz;
-  x12.xy -= i1;
-
-// Permutations
-  i = mod289(i); // Avoid truncation effects in permutation
-  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
-		+ i.x + vec3(0.0, i1.x, 1.0 ));
-
-  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-  m = m*m ;
-  m = m*m ;
-
-// Gradients: 41 points uniformly over a line, mapped onto a diamond.
-// The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)
-
-  vec3 x = 2.0 * fract(p * C.www) - 1.0;
-  vec3 h = abs(x) - 0.5;
-  vec3 ox = floor(x + 0.5);
-  vec3 a0 = x - ox;
-
-// Normalise gradients implicitly by scaling m
-// Approximation of: m *= inversesqrt( a0*a0 + h*h );
-  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-
-// Compute final noise value at P
-  vec3 g;
-  g.x  = a0.x  * x0.x  + h.x  * x0.y;
-  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-  return 130.0 * dot(m, g);
-}
-
 attribute vec3 a_finalPosition;
 attribute float a_randomColor;
 
+uniform vec2 u_direction;
+uniform vec2 u_resolution;
 uniform float u_time;
+uniform float u_speed;
 uniform float u_morph;
+uniform float u_translationOffset;
 
 varying vec3 vWorldPosition;
 varying vec2 vUV;
@@ -124,7 +54,12 @@ void main() {
 
 	#include <begin_vertex>
 
-	transformed = mix( transformed, a_finalPosition, u_morph );
+	transformed.x += ( cos( u_time * u_speed ) * 10. ) * u_direction.x;
+	transformed.y += ( sin( u_time * u_speed ) * 10. ) * u_direction.y;
+	vec3 finalPosition = a_finalPosition;
+	// finalPosition.x += u_resolution.x * 0.4 * u_translationOffset;
+	// finalPosition.x += 100. / 1.997700021202425;
+	transformed = mix( transformed, finalPosition, u_morph );
 
   // float offset = snoise(transformed.xy * 0.015 + u_time * 0.05) * 10.;
   // transformed.z += abs( offset );

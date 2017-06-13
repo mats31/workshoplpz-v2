@@ -42,9 +42,9 @@ class Mask extends THREE.Object3D {
     const length = this.maskGeometry.attributes.position.array.length;
     const randomColors = new Float32Array( parseInt( length / 3, 10 ) );
 
-    for (var i = 0; i < length; i++ ) {
+    for (let i = 0; i < length; i++ ) {
 
-      const random = Math.random() * 4 + 1;
+      const random = Math.random() * 0.6 + 0.5;
 
       randomColors[ i ] = random;
     }
@@ -52,39 +52,44 @@ class Mask extends THREE.Object3D {
     this.maskGeometry.addAttribute( 'a_finalPosition', new THREE.BufferAttribute( finalModel.children[0].geometry.attributes.position.array, 3 ) );
     this.maskGeometry.addAttribute( 'a_randomColor', new THREE.BufferAttribute( randomColors, 1 ) );
 
-    this.maskTexture = new MaskTexture({
-      size: 216,
-      points: 25,
-    });
+    // this.maskTexture = new MaskTexture({
+    //   size: 216,
+    //   points: 25,
+    // });
 
-    this.maskTextuteCanvas = new THREE.Texture( this.maskTexture.getCanvas() );
-    this.maskTextuteCanvas.needsUpdate = true;
-    this.maskTextuteCanvas.minFilter = THREE.LinearFilter;
+    // this.maskTextuteCanvas = new THREE.Texture( this.maskTexture.getCanvas() );
+    // this.maskTextuteCanvas.needsUpdate = true;
+    // this.maskTextuteCanvas.minFilter = THREE.LinearFilter;
     // this.maskTextuteCanvas.wrapS = THREE.RepeatWrapping;
     // this.maskTextuteCanvas.wrapT = THREE.RepeatWrapping;
 
-    const noise = States.resources.getTexture('project-preview-noise').media;
-    noise.needsUpdate = true;
-    noise.minFilter = THREE.LinearFilter;
+    // const noise = States.resources.getTexture('project-preview-noise').media;
+    // noise.needsUpdate = true;
+    // noise.minFilter = THREE.LinearFilter;
 
-    const circle = States.resources.getTexture('project-preview-circle').media;
-    circle.needsUpdate = true;
-    circle.minFilter = THREE.LinearFilter;
+    // const circle = States.resources.getTexture('project-preview-circle').media;
+    // circle.needsUpdate = true;
+    // circle.minFilter = THREE.LinearFilter;
 
     const baseShader = THREE.ShaderLib.phong;
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
     this.maskUniforms = {
       ...baseUniforms,
       u_color: { type: 'v3', value: new THREE.Color( this.color ) },
+      u_direction: { type: 'v2', value: new THREE.Vector2( Math.random() > 0.5 ? 1 : -1, Math.random() > 0.5 ? 1 : -1 ) },
+      u_resolution: { type: 'v2', value: new THREE.Vector2( window.innerWidth, window.innerHeight ) },
       u_time: { type: 'f', value: 0 },
+      u_speed: { type: 'f', value: Math.random() * 0.35 + 0.1 },
+      u_fullColor: { type: 'f', value: 0 },
+      u_translationOffset: { type: 'f', value: 0 },
       emissive: { value: new THREE.Color( this.color ) },
       specular: { value: new THREE.Color( 0x111111 ) },
       u_ease: { type: 'f', value: this.easeValue },
       u_morph: { type: 'f', value: this.morphValue },
-      u_mapDisplacement: { type: 't', value: noise },
-      u_mapNoise: { type: 't', value: this.maskTextuteCanvas },
-      u_mapCircle: { type: 't', value: circle },
-      u_alpha: { type: 'f', value: 1 },
+      // u_mapDisplacement: { type: 't', value: noise },
+      // u_mapNoise: { type: 't', value: this.maskTextuteCanvas },
+      // u_mapCircle: { type: 't', value: circle },
+      // u_alpha: { type: 'f', value: 1 },
     };
 
     this.maskMaterial = new THREE.ShaderMaterial({
@@ -105,8 +110,6 @@ class Mask extends THREE.Object3D {
     // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
     this.add(this.maskMesh);
     // this.addGUI()
-
-    console.log(this.maskMesh);
   }
 
   setupEvent() {
@@ -121,7 +124,7 @@ class Mask extends THREE.Object3D {
     if (!this.isMasking && !this.projectState) {
 
       this.isMasking = true;
-      this.maskRender = true;
+      // this.maskRender = true;
 
       TweenLite.to(
         this.maskUniforms.u_ease,
@@ -145,8 +148,6 @@ class Mask extends THREE.Object3D {
 
   deactivateMask() {
 
-    console.log('deactive');
-
     if (this.isMasking && !this.projectState) {
 
       this.isMasking = false;
@@ -166,10 +167,10 @@ class Mask extends THREE.Object3D {
         {
           value: 0,
           ease: 'Power2.easeOut',
-          onComplete: () => {
+          // onComplete: () => {
 
-            this.maskRender = false;
-          },
+          //   this.maskRender = false;
+          // },
         },
       );
     }
@@ -197,7 +198,7 @@ class Mask extends THREE.Object3D {
         scaleValue: 0,
         // ease: 'Power4.easeOut',
         onComplete: () => {
-          this.maskRender = false;
+          // this.maskRender = false;
           Signals.onProjectAnimationDone.dispatch();
         },
       },
@@ -235,40 +236,69 @@ class Mask extends THREE.Object3D {
       },
     );
 
+    TweenLite.to(
+      this.maskUniforms.u_fullColor,
+      3.5,
+      {
+        delay: 1,
+        value: 1,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
     TweenLite.delayedCall(4.5, () => {
 
-      this.maskRender = true;
+      // console.info(this.maskMesh);
+
+      // TweenLite.to(
+      //   this.maskUniforms.u_translationOffset,
+      //   1.5,
+      //   {
+      //     value: 1,
+      //     ease: 'Power4.easeInOut',
+      //   },
+      // );
 
       TweenLite.to(
-        this.maskUniforms.u_ease,
-        0.3,
-        {
-          value: 1,
-          ease: 'Power2.easeIn',
-        },
-      );
-
-      TweenLite.to(
-        this,
-        5,
-        {
-          scaleValue: 1.5,
-          ease: 'Power4.easeOut',
-        },
-      );
-
-      TweenLite.to(
-        this.maskUniforms.u_alpha,
+        this.maskMesh.position,
         1.5,
         {
-          delay: 1,
-          value: 0,
-          onComplete: () => {
-            this.maskRender = false;
-
-          }
+          x: ( window.innerWidth * 0.9921875 ) / scaleX,
+          ease: 'Power4.easeInOut',
         },
       );
+
+      // this.maskRender = true;
+
+      // TweenLite.to(
+      //   this.maskUniforms.u_fullColor,
+      //   0.3,
+      //   {
+      //     value: 1,
+      //     // ease: 'Power2.easeInOut',
+      //   },
+      // );
+
+      // TweenLite.to(
+      //   this,
+      //   5,
+      //   {
+      //     scaleValue: 1.5,
+      //     ease: 'Power4.easeOut',
+      //   },
+      // );
+      //
+      // TweenLite.to(
+      //   this.maskUniforms.u_alpha,
+      //   1.5,
+      //   {
+      //     delay: 1,
+      //     value: 0,
+      //     onComplete: () => {
+      //       this.maskRender = false;
+      //     },
+      //   },
+      // );
 
     });
   }
@@ -338,6 +368,7 @@ class Mask extends THREE.Object3D {
     // this.maskMesh.rotation.y += 0.01;
 
 
+    // this.maskMesh.rotation.x += 0.1;
     // this.maskMesh.rotation.x += 0.1;
   }
 
