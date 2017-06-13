@@ -94,14 +94,15 @@ float snoise(vec2 v)
   return 130.0 * dot(m, g);
 }
 
-attribute vec3 finalPosition;
+attribute vec3 a_finalPosition;
+attribute float a_randomColor;
 
 uniform float u_time;
 uniform float u_morph;
 
-varying vec2 vUV;
-// varying vec3 vNormal;
 varying vec3 vWorldPosition;
+varying vec2 vUV;
+varying float vRandomColor;
 
 void main() {
 
@@ -123,7 +124,7 @@ void main() {
 
 	#include <begin_vertex>
 
-	transformed = mix( transformed, finalPosition, u_morph );
+	transformed = mix( transformed, a_finalPosition, u_morph );
 
   // float offset = snoise(transformed.xy * 0.015 + u_time * 0.05) * 10.;
   // transformed.z += abs( offset );
@@ -142,6 +143,7 @@ void main() {
 	#include <shadowmap_vertex>
 
   vUV = uv;
+  vRandomColor = a_randomColor;
 }
 
 // void main() {

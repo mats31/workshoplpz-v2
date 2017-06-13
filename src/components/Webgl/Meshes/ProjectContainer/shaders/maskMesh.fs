@@ -3,6 +3,7 @@
 uniform vec3 diffuse;
 uniform vec3 emissive;
 uniform vec3 specular;
+uniform vec3 u_color;
 varying vec2 vUV;
 uniform float shininess;
 uniform float opacity;
@@ -12,6 +13,8 @@ uniform float u_alpha;
 uniform sampler2D u_mapNoise;
 uniform sampler2D u_mapDisplacement;
 uniform sampler2D u_mapCircle;
+
+varying float vRandomColor;
 
 #include <common>
 #include <packing>
@@ -113,7 +116,8 @@ void main() {
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-	vec3 totalEmissiveRadiance = emissive;
+    vec3 totalEmissiveRadiance = emissive * min( 1., vRandomColor * u_ease );
+	// vec3 totalEmissiveRadiance = emissive * u_ease * vRandomColor;
 
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
@@ -136,29 +140,25 @@ void main() {
 
 	#include <envmap_fragment>
 
-  vec2 customUv1 = vec2( vUV.x + u_time * 0.1, vUV.y + u_time * 0.1 );
-  vec2 customUv2 = vec2( vUV.x - u_time * 0.1, vUV.y - u_time * 0.1 );
-  vec4 displacementTexture1 = texture2D(u_mapDisplacement, vec2(vUV.x + u_time * 0.1, vUV.y + u_time * 0.1 ) );
-  vec4 displacementTexture2 = texture2D(u_mapDisplacement, vec2(vUV.x - u_time * 0.1, vUV.y - u_time * 0.1 ) );
-  vec4 noiseTexture = texture2D(u_mapNoise, vUV + displacementTexture1.r * 0.05 + displacementTexture2.r * 0.05 );
-  vec4 noiseTexture1 = texture2D(u_mapNoise, customUv1 );
-  vec4 noiseTexture2 = texture2D(u_mapNoise, customUv2 );
-  vec4 circleTexture1 = texture2D(u_mapCircle, vec2( vUV.x, vUV.y + noiseTexture1.r * u_ease - 0.5 ) );
-  vec4 circleTexture2 = texture2D(u_mapCircle, vec2( vUV.x, vUV.y - noiseTexture2.r * u_ease + 0.5 ) );
-  // vec4 noiseTexture = texture2D(u_mapNoise, ( vUV + u_time * 0.1 ) * 0.4 );
-  // vec4 noiseTexture2 = texture2D(u_mapNoise, ( vUV - u_time * 0.1 ) * 0.4 );
+  // vec2 customUv1 = vec2( vUV.x + u_time * 0.1, vUV.y + u_time * 0.1 );
+  // vec2 customUv2 = vec2( vUV.x - u_time * 0.1, vUV.y - u_time * 0.1 );
+  // vec4 displacementTexture1 = texture2D(u_mapDisplacement, vec2(vUV.x + u_time * 0.1, vUV.y + u_time * 0.1 ) );
+  // vec4 displacementTexture2 = texture2D(u_mapDisplacement, vec2(vUV.x - u_time * 0.1, vUV.y - u_time * 0.1 ) );
+  // vec4 noiseTexture = texture2D(u_mapNoise, vUV + displacementTexture1.r * 0.05 + displacementTexture2.r * 0.05 );
+  // vec4 noiseTexture1 = texture2D(u_mapNoise, customUv1 );
+  // vec4 noiseTexture2 = texture2D(u_mapNoise, customUv2 );
+  // vec4 circleTexture1 = texture2D(u_mapCircle, vec2( vUV.x, vUV.y + noiseTexture1.r * u_ease - 0.5 ) );
+  // vec4 circleTexture2 = texture2D(u_mapCircle, vec2( vUV.x, vUV.y - noiseTexture2.r * u_ease + 0.5 ) );
+  //
+  // float alpha = u_alpha * ( smoothstep( 0.05, 0.2 , abs( noiseTexture.a - 1. ) ) + abs( 1. - u_ease ) );
+  //
+  // gl_FragColor = vec4( outgoingLight, alpha );
 
-  // float randomValue = sign( rand(gl_FragCoord.xy) - 0.5 );
-  // float noise = max( snoise(u_time + gl_FragCoord.xy * 0.012 * randomValue), 0. );
-  // float noise = snoise( fract( u_time) * gl_FragCoord.xy * 0.001);
-
-  float alpha = u_alpha * ( smoothstep( 0.05, 0.2 , abs( noiseTexture.a - 1. ) ) + abs( 1. - u_ease ) );
-  // float alpha = diffuseColor.a * ( noiseTexture.r * noiseTexture2.r * 3. );
-  // float alpha = abs( circleTexture1.a - 1. ) * abs( circleTexture2.a - 1. ) + abs( u_ease - 1. );
-  // float alpha = 1.;
-  // float alpha = 0.;
-
+  float alpha = 1.;
   gl_FragColor = vec4( outgoingLight, alpha );
+  // gl_FragColor = vec4( emissive * u_ease * vRandomColor, alpha );
+
+  // gl_FragColor = vec4( vec3( vRandomColor, 0, 0) , 1. );
 	// gl_FragColor = vec4( noiseTexture.rgb, 1. );
 
 	#include <premultiplied_alpha_fragment>

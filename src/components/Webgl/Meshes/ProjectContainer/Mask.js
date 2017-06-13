@@ -6,14 +6,9 @@ import fragmentMaskShader from './shaders/maskMesh.fs';
 
 class Mask extends THREE.Object3D {
 
-  constructor() {
+  constructor(options) {
 
     super();
-
-    this.setup();
-  }
-
-  setup() {
 
     this.projectState = false;
     this.isMasking = false;
@@ -21,6 +16,12 @@ class Mask extends THREE.Object3D {
     this.easeValue = 0;
     this.morphValue = 0;
     this.scaleValue = 0;
+    this.color = options.color;
+
+    this.setup();
+  }
+
+  setup() {
 
     this.createMask();
     this.setupEvent();
@@ -37,7 +38,19 @@ class Mask extends THREE.Object3D {
     // this.maskGeometry = new THREE.BoxGeometry( 2.5, 2.5, 2.5 );
     // this.maskGeometry = new THREE.BoxGeometry( 200, 200, 200 );
     this.maskGeometry = startModel.children[0].geometry;
-    this.maskGeometry.addAttribute( 'finalPosition', new THREE.BufferAttribute( finalModel.children[0].geometry.attributes.position.array, 3 ) );
+
+    const length = this.maskGeometry.attributes.position.array.length;
+    const randomColors = new Float32Array( parseInt( length / 3, 10 ) );
+
+    for (var i = 0; i < length; i++ ) {
+
+      const random = Math.random() * 4 + 1;
+
+      randomColors[ i ] = random;
+    }
+
+    this.maskGeometry.addAttribute( 'a_finalPosition', new THREE.BufferAttribute( finalModel.children[0].geometry.attributes.position.array, 3 ) );
+    this.maskGeometry.addAttribute( 'a_randomColor', new THREE.BufferAttribute( randomColors, 1 ) );
 
     this.maskTexture = new MaskTexture({
       size: 216,
@@ -62,8 +75,9 @@ class Mask extends THREE.Object3D {
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
     this.maskUniforms = {
       ...baseUniforms,
+      u_color: { type: 'v3', value: new THREE.Color( this.color ) },
       u_time: { type: 'f', value: 0 },
-      emissive: { value: new THREE.Color( 0x000000 ) },
+      emissive: { value: new THREE.Color( this.color ) },
       specular: { value: new THREE.Color( 0x111111 ) },
       u_ease: { type: 'f', value: this.easeValue },
       u_morph: { type: 'f', value: this.morphValue },
@@ -91,6 +105,8 @@ class Mask extends THREE.Object3D {
     // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
     this.add(this.maskMesh);
     // this.addGUI()
+
+    console.log(this.maskMesh);
   }
 
   setupEvent() {
@@ -109,19 +125,19 @@ class Mask extends THREE.Object3D {
 
       TweenLite.to(
         this.maskUniforms.u_ease,
-        1.5,
+        1.15,
         {
           value: 1,
-          ease: 'Power4.easeOut',
+          ease: 'Power2.easeInOut',
         },
       );
 
       TweenLite.to(
         this,
-        1.5,
+        1.15,
         {
           scaleValue: 0.65,
-          ease: 'Power4.easeOut',
+          ease: 'Power2.easeInOut',
         },
       );
     }
@@ -129,25 +145,27 @@ class Mask extends THREE.Object3D {
 
   deactivateMask() {
 
+    console.log('deactive');
+
     if (this.isMasking && !this.projectState) {
 
       this.isMasking = false;
 
       TweenLite.to(
         this,
-        0.5,
+        0.7,
         {
           scaleValue: 0,
-          ease: 'Power2.easeIn',
+          ease: 'Power2.easeOut',
         },
       );
 
       TweenLite.to(
         this.maskUniforms.u_ease,
-        0.5,
+        0.7,
         {
           value: 0,
-          ease: 'Power2.easeIn',
+          ease: 'Power2.easeOut',
           onComplete: () => {
 
             this.maskRender = false;

@@ -16,6 +16,7 @@ const projects = {
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
       ],
+      color: 0xffc86b,
     },
     {
       id: 'bouygues',
@@ -32,6 +33,7 @@ const projects = {
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
       ],
+      color: 0x6bffd7,
     },
     {
       id: 'sfr',
@@ -48,6 +50,7 @@ const projects = {
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
       ],
+      color: 0x816bff,
     },
   ],
 };

@@ -23,6 +23,7 @@ class ProjectContainer extends THREE.Object3D {
     this.date = options.project.date;
     this.statut = options.project.statut;
     this.index = options.index;
+    this.maskColor = options.project.color;
 
     const texture = States.resources.getTexture(this.previewID).media;
     texture.minFilter = THREE.LinearFilter;
@@ -37,7 +38,9 @@ class ProjectContainer extends THREE.Object3D {
 
   setupMask() {
 
-    this.mask = new Mask();
+    this.mask = new Mask({
+      color: this.maskColor,
+    });
 
     this.mask.rotation.x = 0.5;
     this.mask.rotation.y = 0.5;
