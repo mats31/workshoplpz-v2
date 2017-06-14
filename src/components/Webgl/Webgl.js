@@ -303,6 +303,7 @@ export default Vue.extend({
 
     updateCamera() {
 
+      // this.camera.position.setX( this.camera.position.x + 0.1 * this.rotationEase );
       this.camera.rotation.y += 0.01 * this.rotationEase;
       // this.test += 0.1;
       // this.orthographicCamera.lookAt(new THREE.Vector3(
