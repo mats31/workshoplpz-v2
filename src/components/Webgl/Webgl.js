@@ -72,23 +72,23 @@ export default Vue.extend({
       });
       this.renderer.setSize(width, height);
       this.renderer.setClearColor(0x1a1a1a);
-      this.renderer.autoClear = false;
+      // this.renderer.autoClear = false;
       // this.renderer.shadowMap.enabled = true;
       // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       // this.renderer.antialias = true;
 
-      this.orthographicScene = new THREE.Scene();
-
-      this.orthographicCamera = window.orthographicCamera = new THREE.OrthographicCamera(
-        window.innerWidth / -2,
-        window.innerWidth / 2,
-        window.innerHeight / 2,
-        window.innerHeight / -2,
-        -10000,
-        10000,
-      );
-      this.orthographicCamera.position.copy(this.cameraPos);
-      this.orthographicCamera.lookAt(this.cameraTarget);
+      // this.orthographicScene = new THREE.Scene();
+      //
+      // this.orthographicCamera = window.orthographicCamera = new THREE.OrthographicCamera(
+      //   window.innerWidth / -2,
+      //   window.innerWidth / 2,
+      //   window.innerHeight / 2,
+      //   window.innerHeight / -2,
+      //   -10000,
+      //   10000,
+      // );
+      // this.orthographicCamera.position.copy(this.cameraPos);
+      // this.orthographicCamera.lookAt(this.cameraTarget);
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       // this.camera.lookAt(cameraTarget);
@@ -128,12 +128,12 @@ export default Vue.extend({
           light.shadow.mapSize.height = 2048;
           light.shadow.bias = 0;
 
-          const cloneLight = light.clone();
-          cloneLight.position.set( 0, 20, 15 );
+          // const cloneLight = light.clone();
+          // cloneLight.position.set( 0, 20, 15 );
 
-          const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.01 );
-          directionalLight.position.set(-20, 100, -100);
-          this.orthographicScene.add( directionalLight );
+          // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.01 );
+          // directionalLight.position.set(-20, 100, -100);
+          // this.orthographicScene.add( directionalLight );
 
           this.scene.add( light );
           // this.orthographicScene.add( cloneLight );
@@ -168,7 +168,8 @@ export default Vue.extend({
 
         projectContainer.position.set( x, y, z );
 
-        this.orthographicScene.add(projectContainer);
+        // this.orthographicScene.add(projectContainer);
+        this.scene.add(projectContainer);
         this.projectContainers.push(projectContainer);
 
         if ( i === 0 ) { this.startProject = projectContainer; }
@@ -197,6 +198,8 @@ export default Vue.extend({
       this.animate();
 
       this.checkRoute();
+
+      console.info(this.projectContainers);
     },
 
     onWeblGLMousemove(event) {
@@ -253,7 +256,7 @@ export default Vue.extend({
 
     goToProject( id, y ) {
 
-      this.$router.push({ name: 'project', params: { id }});
+      this.$router.push({ name: 'project', params: { id } });
       States.application.activateProject = true;
 
       TweenLite.to(
@@ -288,14 +291,14 @@ export default Vue.extend({
 
       this.updateCamera();
 
+      this.updateProjectContainers();
       this.ground.update( this.clock.time );
-      this.renderer.clear();
+      // this.renderer.clear();
       this.renderer.render(this.scene, this.camera);
 
-      this.updateProjectContainers();
 
-      this.renderer.clearDepth();
-      this.renderer.render(this.orthographicScene, this.orthographicCamera);
+      // this.renderer.clearDepth();
+      // this.renderer.render(this.orthographicScene, this.orthographicCamera);
       // this.renderer.clear();
       // this.projectContainer.update( this.clock.time, this.rotationEase );
 
@@ -304,7 +307,7 @@ export default Vue.extend({
     updateCamera() {
 
       // this.camera.position.setX( this.camera.position.x + 0.1 * this.rotationEase );
-      this.camera.rotation.y += 0.01 * this.rotationEase;
+      // this.camera.rotation.y += 0.01 * this.rotationEase;
       // this.test += 0.1;
       // this.orthographicCamera.lookAt(new THREE.Vector3(
       //   this.cameraTarget.x,
@@ -315,49 +318,10 @@ export default Vue.extend({
 
     updateProjectContainers() {
 
-      let start = null;
-      let last = null;
-
       for ( let i = 0; i < this.projectContainers.length; i++ ) {
 
         const project = this.projectContainers[i];
-
-        let x = project.position.x + 10 * this.rotationEase;
-
-        const width = project.getMaskWidth();
-
-        if ( x >= window.innerWidth * 0.5 + width ) {
-
-          x = this.projectContainers[ this.projectContainers.length - 1 ].position.x - this.projectContainers[ this.projectContainers.length - 1 ].getMaskWidth() - this.stepPosition;
-
-          last = project;
-
-          project.position.setX( x );
-        } else if ( x <= this.widthProjects ) {
-
-          x = this.projectContainers[ 0 ].position.x + this.projectContainers[ 0 ].getMaskWidth() + this.stepPosition;
-
-          start = project;
-
-          project.position.setX( x );
-        } else {
-
-          project.position.setX( x );
-        }
-
         project.update( this.clock.time, this.rotationEase, this.mouse, i );
-      }
-
-      if (start) {
-
-        this.projectContainers.splice( this.projectContainers.length - 1, 1 );
-        this.projectContainers.splice( 0, 0, start );
-      }
-
-      if (last) {
-
-        this.projectContainers.splice( 0, 1 );
-        this.projectContainers.push( last );
       }
     },
 

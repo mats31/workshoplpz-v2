@@ -32,7 +32,6 @@ class ProjectContainer extends THREE.Object3D {
     this.texture = texture;
 
     this.setupMask();
-    this.setupProjectPlane();
     this.setupDescription();
   }
 
@@ -42,20 +41,11 @@ class ProjectContainer extends THREE.Object3D {
       color: this.maskColor,
     });
 
+    this.mask.position.set(0, 20, 100);
     this.mask.rotation.x = 0.5;
     this.mask.rotation.y = 0.5;
 
     this.add(this.mask);
-  }
-
-  setupProjectPlane() {
-
-    this.projectPlane = new ProjectPlane({
-      mask: this.mask,
-      texture: this.texture,
-    });
-    this.projectPlane.position.setZ( 1 );
-    this.add(this.projectPlane);
   }
 
   setupDescription() {
@@ -211,9 +201,9 @@ class ProjectContainer extends THREE.Object3D {
   update( time, rotationEase, point, i ) {
 
     this.updateDOM(i);
-    this.checkFocus(point);
+    // this.checkFocus(point);
     this.mask.update( time );
-    this.projectPlane.update( time, rotationEase );
+    // this.projectPlane.update( time, rotationEase );
   }
 
   updateDOM() {
