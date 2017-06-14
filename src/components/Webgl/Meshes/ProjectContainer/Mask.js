@@ -13,6 +13,7 @@ class Mask extends THREE.Object3D {
     this.projectState = false;
     this.isMasking = false;
     this.maskRender = false;
+    this.activeRotation = 1;
     this.easeValue = 0;
     this.morphValue = 0;
     this.scaleValue = 0;
@@ -246,6 +247,16 @@ class Mask extends THREE.Object3D {
       },
     );
 
+    TweenLite.to(
+      this,
+      3.5,
+      {
+        delay: 1,
+        activeRotation: 0,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
     TweenLite.delayedCall(4.5, () => {
 
       // console.info(this.maskMesh);
@@ -368,8 +379,8 @@ class Mask extends THREE.Object3D {
     // this.maskMesh.rotation.y += 0.01;
 
 
-    // this.maskMesh.rotation.x += 0.1;
-    // this.maskMesh.rotation.x += 0.1;
+    this.maskMesh.rotation.x = time * 0.01 * this.maskUniforms.u_speed.value * this.activeRotation;
+    this.maskMesh.rotation.z = time * 0.01 * this.maskUniforms.u_speed.value * this.activeRotation;
   }
 
   // Events --------------------------------------------------------------------
