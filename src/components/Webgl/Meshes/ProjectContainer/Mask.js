@@ -104,7 +104,7 @@ class Mask extends THREE.Object3D {
     });
 
     this.maskMesh = new THREE.Mesh(this.maskGeometry, this.maskMaterial);
-    this.maskMesh.scale.set( 0.5, 0.5, 0.5 );
+    // this.maskMesh.scale.set( 0.5, 0.5, 0.5 );
     // this.maskMesh.castShadow = true;
     // this.maskMesh.receiveShadow = true;
     // this.maskMesh.rotation.x = 0.8;

@@ -120,7 +120,7 @@ void main() {
 
 	#include <begin_vertex>
 
-  float offset = snoise(transformed.xy * 0.015 + u_time * 0.05) * 10.;
+  float offset = snoise(transformed.xy * 0.005 + u_time * 0.05) * 20.;
   transformed.z += abs( offset );
 
 	#include <displacementmap_vertex>

@@ -1,6 +1,7 @@
 import States from 'core/States';
 import Mask from './Mask';
 import ProjectPlane from './ProjectPlane';
+import modulo from 'utils/modulo';
 
 class ProjectContainer extends THREE.Object3D {
 
@@ -25,6 +26,8 @@ class ProjectContainer extends THREE.Object3D {
     this.index = options.index;
     this.maskColor = options.project.color;
 
+    this.initialPosition = new THREE.Vector3();
+
     const texture = States.resources.getTexture(this.previewID).media;
     texture.minFilter = THREE.LinearFilter;
     texture.needsUpdate = true;
@@ -41,11 +44,17 @@ class ProjectContainer extends THREE.Object3D {
       color: this.maskColor,
     });
 
-    this.mask.position.set(0, 20, 100);
-    this.mask.rotation.x = 0.5;
-    this.mask.rotation.y = 0.5;
+    this.mask.scale.set( 0.5, 0.5, 0.5 );
+    // this.mask.position.set(this.getMaskWidth() * 0.5, 20, 100);
+    // this.mask.position.set(0, 20, 100) ;
+    // this.mask.rotation.x = 0.5;
+    // this.mask.rotation.y = 0.5;
 
     this.add(this.mask);
+
+    const box = new THREE.BoxHelper( this.mask, 0xffff00 );
+    console.info(this.mask.position);
+    this.add( box );
   }
 
   setupDescription() {
@@ -106,6 +115,12 @@ class ProjectContainer extends THREE.Object3D {
   }
 
   // State -----------------------------------------------
+
+  setInitialPosition( pos ) {
+
+    this.initialPosition.copy( pos );
+    this.mask.position.copy( pos );
+  }
 
   activeFocus() {
 
@@ -198,12 +213,13 @@ class ProjectContainer extends THREE.Object3D {
     }
   }
 
-  update( time, rotationEase, point, i ) {
+  update( time, translationEase, camera, i ) {
 
     this.updateDOM(i);
+    this.updatePosition( translationEase, camera, i );
     // this.checkFocus(point);
     this.mask.update( time );
-    // this.projectPlane.update( time, rotationEase );
+    // this.projectPlane.update( time, translationEase );
   }
 
   updateDOM() {
@@ -212,6 +228,20 @@ class ProjectContainer extends THREE.Object3D {
     // this.box.style.top = `${( this.getMaskPosition().top - window.innerHeight * 0.5 ) * -1}px`;
 
     // if (i===1) console.log(this.getMaskPosition().left);
+  }
+
+  updatePosition( translationEase, camera, length, i ) {
+
+    const hFOV = 2 * Math.atan( Math.tan( camera.fov / 2 ) * camera.aspect );
+    const width = 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.mask.position.z );
+    const moduloLength = length + ( this.getMaskWidth() * 0.5 );
+    const extraMargin = 15;
+    const offset = Math.abs(width * 2) + ( this.getMaskWidth() * 0.5 ) + extraMargin;
+
+    this.initialPosition.setX( this.initialPosition.x + translationEase );
+    const x = modulo( this.initialPosition.x, moduloLength ) - offset;
+
+    this.mask.position.setX( x );
   }
 
   checkFocus( mousePoint ) {

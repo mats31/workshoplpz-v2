@@ -9,6 +9,8 @@ import ProjectContainer from './Meshes/ProjectContainer/ProjectContainer';
 
 import projects from 'config/projects';
 
+import map from 'utils/map';
+
 import './webgl.styl';
 
 
@@ -42,13 +44,13 @@ export default Vue.extend({
 
     setup() {
 
-      this.test = 0;
-      this.cameraTarget = new THREE.Vector3(0, 20, 100);
-      this.cameraPos = new THREE.Vector3(0, 20, -1);
+      this.xStep = 50;
+      this.zDepth = -80;
+      this.cameraTarget = new THREE.Vector3(0, 20, this.zDepth);
+      this.cameraPos = new THREE.Vector3(0, 20, 0);
 
-      this.stepPosition = window.innerWidth * 0.3;
-
-      this.rotationEase = 0;
+      this.translationTarget = 0;
+      this.translationEase = 0;
       this.mainAngle = 0;
 
       this.projectContainers = [];
@@ -57,6 +59,12 @@ export default Vue.extend({
       this.mouse = new THREE.Vector2( 9999, 9999 );
 
       this.setupWebGL(window.innerWidth, window.innerHeight);
+
+      // const height = 2 * Math.tan( ( this.camera.fov / 2 ) ) * 50;
+      // const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
+      // const width = 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth );
+
+      // console.info(height);
     },
 
     setupWebGL(width, height) {
@@ -67,6 +75,11 @@ export default Vue.extend({
       this.camera.position.copy(this.cameraPos);
       this.camera.lookAt(this.cameraTarget);
 
+      const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
+      const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 2.5;
+
+      this.xStep = xStep;
+
       this.renderer = window.renderer = new THREE.WebGLRenderer({
         antialias: true,
       });
@@ -76,6 +89,8 @@ export default Vue.extend({
       // this.renderer.shadowMap.enabled = true;
       // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       // this.renderer.antialias = true;
+
+      this.raycaster = new THREE.Raycaster();
 
       // this.orthographicScene = new THREE.Scene();
       //
@@ -102,6 +117,7 @@ export default Vue.extend({
       Signals.onProjectClick.add(this.onProjectClick);
 
       this.$el.addEventListener('click', this.onWebGLClick.bind(this));
+      window.addEventListener('resize', this.onResize.bind(this));
     },
 
     checkRoute() {
@@ -148,9 +164,10 @@ export default Vue.extend({
     setupProject() {
 
       const projectList = projects.projectList;
+      const length = projectList.length;
       let previousX = window.innerWidth * 0.5;
 
-      for (let i = 0; i < projectList.length; i += 1) {
+      for (let i = 0; i < length; i += 1) {
 
         const projectContainer = new ProjectContainer({
           project: projectList[i],
@@ -161,12 +178,13 @@ export default Vue.extend({
 
         if ( i === 0) { previousX += width; }
 
-        const x = previousX - this.stepPosition;
-        const y = 20 + ( Math.random() * 260 - 130 );
-        const z = 100;
+        // const angle = ( ( Math.PI * 2 ) / length ) * i;
+        const x = this.xStep * i;
+        const y = i % 2 === 0 ? 25 : 40;
+        const z = this.zDepth;
+        const initialPosition = new THREE.Vector3(x, y, z);
         previousX = x - width;
-
-        projectContainer.position.set( x, y, z );
+        projectContainer.setInitialPosition(initialPosition);
 
         // this.orthographicScene.add(projectContainer);
         this.scene.add(projectContainer);
@@ -184,72 +202,6 @@ export default Vue.extend({
       this.ground = new Ground();
       this.ground.rotation.x = Math.PI * -0.5;
       this.scene.add(this.ground);
-    },
-
-    // EVENTS ------------------------------------------------------------------
-
-    onAssetsLoaded() {
-
-      this.clock = new Clock();
-
-      this.setupGround();
-      this.setupProject();
-      this.setupLight();
-      this.animate();
-
-      this.checkRoute();
-
-      console.info(this.projectContainers);
-    },
-
-    onWeblGLMousemove(event) {
-
-      if (!States.application.activateProject) {
-
-        // this.mouse.x = ( ( event.clientX / window.innerWidth ) * 2 ) - 1;
-        // this.mouse.y = ( -( event.clientY / window.innerHeight ) * 2 ) + 1;
-
-        const step = 0.7;
-
-        this.mouse.x = ( event.clientX - (window.innerWidth * 0.5) ) / ( window.innerWidth * 0.5 );
-        this.mouse.y = ( event.clientY - (window.innerHeight * 0.5) ) / ( window.innerHeight * 0.5 );
-
-        if ( Math.abs(this.mouse.x) > step ) {
-
-          this.rotationEase += ( this.mouse.x - this.rotationEase ) * 0.05;
-        } else {
-
-          this.rotationEase = 0;
-        }
-
-        // this.checkMouseFocus();
-      }
-    },
-
-    // checkMouseFocus() {
-    //
-    //   for (let i = 0; i < this.projectContainers.length; i++) {
-    //
-    //     this.projectContainers[i].checkFocus(this.mouse);
-    //   }
-    // },
-
-    onWeblGLMouseleave() {
-
-      this.rotationEase = 0;
-    },
-
-    onWebGLClick() {
-
-      for (let i = 0; i < this.projectContainers.length; i++) {
-
-        this.projectContainers[i].onClick();
-      }
-    },
-
-    onProjectClick( id, y ) {
-
-      this.goToProject( id, y );
     },
 
     // STATE -------------------------------------------------------------------
@@ -283,13 +235,101 @@ export default Vue.extend({
       }
     },
 
+    resize() {
+
+      this.width = window.innerWidth;
+      this.height = window.innerHeight;
+
+      this.renderer.setViewport(0, 0, this.width, this.height);
+      this.camera.aspect = this.width / this.height;
+      this.camera.updateProjectionMatrix();
+
+      const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
+      const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 2.5;
+
+      this.xStep = xStep;
+    },
+
+    // EVENTS ------------------------------------------------------------------
+
+    onAssetsLoaded() {
+
+      this.clock = new Clock();
+
+      this.setupGround();
+      this.setupProject();
+      this.setupLight();
+      this.animate();
+
+      this.checkRoute();
+
+    },
+
+    onResize() {
+
+      this.resize();
+    },
+
+    onWeblGLMousemove(event) {
+
+      if (!States.application.activateProject) {
+
+        // this.mouse.x = ( ( event.clientX / window.innerWidth ) * 2 ) - 1;
+        // this.mouse.y = ( -( event.clientY / window.innerHeight ) * 2 ) + 1;
+
+        const step = 0.65;
+
+        this.mouse.x = ( event.clientX - (window.innerWidth * 0.5) ) / ( window.innerWidth * 0.5 );
+        this.mouse.y = ( event.clientY - (window.innerHeight * 0.5) ) / ( window.innerHeight * 0.5 );
+
+        console.log(this.mouse);
+
+        if ( Math.abs(this.mouse.x) > step ) {
+
+          this.translationTarget = map( Math.abs( this.mouse.x ), 0.7, 1, 0, 2 ) * Math.sign( this.mouse.x );
+
+        } else {
+
+          this.translationTarget = 0;
+        }
+
+        // this.checkMouseFocus();
+      }
+    },
+
+    // checkMouseFocus() {
+    //
+    //   for (let i = 0; i < this.projectContainers.length; i++) {
+    //
+    //     this.projectContainers[i].checkFocus(this.mouse);
+    //   }
+    // },
+
+    onWeblGLMouseleave() {
+
+      this.translationEase = 0;
+    },
+
+    onWebGLClick() {
+
+      for (let i = 0; i < this.projectContainers.length; i++) {
+
+        this.projectContainers[i].onClick();
+      }
+    },
+
+    onProjectClick( id, y ) {
+
+      this.goToProject( id, y );
+    },
+
     // UPDATE -------------------------------------------------------------------
 
     animate() {
 
       raf(this.animate);
 
-      this.updateCamera();
+      this.updateRaycast();
 
       this.updateProjectContainers();
       this.ground.update( this.clock.time );
@@ -300,14 +340,25 @@ export default Vue.extend({
       // this.renderer.clearDepth();
       // this.renderer.render(this.orthographicScene, this.orthographicCamera);
       // this.renderer.clear();
-      // this.projectContainer.update( this.clock.time, this.rotationEase );
+      // this.projectContainer.update( this.clock.time, this.translationEase );
 
     },
 
-    updateCamera() {
+    updateRaycast() {
 
-      // this.camera.position.setX( this.camera.position.x + 0.1 * this.rotationEase );
-      // this.camera.rotation.y += 0.01 * this.rotationEase;
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+
+      const intersects = this.raycaster.intersectObjects( this.scene.children );
+
+      for ( let i = 0; i < intersects.length; i++ ) {
+
+        console.log(1);
+        // intersects[ i ].object.material.color.set( 0xff0000 );
+
+      }
+
+      // this.camera.position.setX( this.camera.position.x + 0.1 * this.translationEase );
+      // this.camera.rotation.y -= 0.01 * this.translationEase;
       // this.test += 0.1;
       // this.orthographicCamera.lookAt(new THREE.Vector3(
       //   this.cameraTarget.x,
@@ -318,10 +369,17 @@ export default Vue.extend({
 
     updateProjectContainers() {
 
+      const length = this.projectContainers.length * this.xStep;
+      this.translationEase += ( this.translationTarget - this.translationEase ) * 0.05;
+
       for ( let i = 0; i < this.projectContainers.length; i++ ) {
 
         const project = this.projectContainers[i];
-        project.update( this.clock.time, this.rotationEase, this.mouse, i );
+        project.update( this.clock.time, this.translationEase, this.camera, length, i );
+
+        if (i === 0) {
+          // console.log(project.mask.position.x);
+        }
       }
     },
 
