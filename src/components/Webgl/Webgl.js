@@ -45,7 +45,7 @@ export default Vue.extend({
     setup() {
 
       this.xStep = 50;
-      this.zDepth = -80;
+      this.zDepth = -150;
       this.cameraTarget = new THREE.Vector3(0, 20, this.zDepth);
       this.cameraPos = new THREE.Vector3(0, 20, 0);
 

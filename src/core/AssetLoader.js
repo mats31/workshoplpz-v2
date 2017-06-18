@@ -317,10 +317,10 @@ class AssetLoader {
     let rule = null;
     let i = sheet.length;
     let j;
-    while ( 0 <= --i ) {
+    while ( --i >= 0 ) {
       rule = sheet[i].rules || sheet[i].cssRules || [];
       j = rule.length;
-      while (0 <= --j) {
+      while (--j >= 0) {
         if (rule[j].constructor.name === 'CSSFontFaceRule') {
           // rule[j].slice(0, 10).toLowerCase() === '@font-face'
           o[rule[j].style.fontFamily] = rule[j].style.src;

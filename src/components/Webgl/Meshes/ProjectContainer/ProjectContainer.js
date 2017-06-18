@@ -1,5 +1,6 @@
 import States from 'core/States';
 import Mask from './Mask';
+import Text from './Text';
 import ProjectPlane from './ProjectPlane';
 import modulo from 'utils/modulo';
 
@@ -51,38 +52,19 @@ class ProjectContainer extends THREE.Object3D {
     // this.mask.rotation.y = 0.5;
 
     this.add(this.mask);
-
-    const box = new THREE.BoxHelper( this.mask, 0xffff00 );
-    console.info(this.mask.position);
-    this.add( box );
   }
 
   setupDescription() {
 
-    this.box = document.createElement('div');
-    this.box.className = 'webgl__projects-project';
+    const texture = new THREE.Texture( States.resources.getImage('orange').media );
+    texture.needsUpdate = true;
+    console.info(States.resources.getImage('orange').media);
 
-    const title = document.createElement('h2');
-    title.className = 'webgl__projects-title';
-    title.innerHTML = this.title;
-    this.box.appendChild(title);
-    this.box.style.top = this.index % 2 === 0 ? '20%' : '60%';
+    this.text = new Text({
+      texture,
+    });
 
-    // const date = document.createElement('p');
-    // date.className = 'webgl__projects-date';
-    // date.innerHTML = this.date;
-    // this.box.appendChild(date);
-
-    // const statut = document.createElement('h3');
-    // statut.className = 'webgl__projects-statut';
-    // statut.innerHTML = this.statut;
-    // this.box.appendChild(statut);
-
-    const projectDOM = document.querySelector('.webgl__projects');
-    projectDOM.appendChild(this.box);
-
-    this.box.addEventListener( 'mouseover', this.onDOMMouseover.bind(this) );
-    this.box.addEventListener( 'mouseleave', this.onDOMMouseleave.bind(this) );
+    this.add(this.text);
   }
 
   // Getter -----------------------------------------------
@@ -227,10 +209,11 @@ class ProjectContainer extends THREE.Object3D {
 
   update( time, translationEase, camera, i ) {
 
-    this.updateDOM(i);
+    // this.updateDOM(i);
     this.updatePosition( translationEase, camera, i );
     // this.checkFocus(point);
     this.mask.update( time );
+    this.text.update( time );
     // this.projectPlane.update( time, translationEase );
   }
 
@@ -254,6 +237,10 @@ class ProjectContainer extends THREE.Object3D {
     const x = modulo( this.initialPosition.x, moduloLength ) - offset;
 
     this.mask.position.setX( x );
+    this.text.position.setX( x );
+    this.text.position.setY( 40 );
+    this.text.position.setZ( -150 );
+    // this.position.setX( x );
   }
 
   checkFocus( mousePoint ) {

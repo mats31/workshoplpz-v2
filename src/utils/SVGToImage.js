@@ -15,6 +15,8 @@ export default function (svg, callback) {
 
     img.onload = () => {
       callback(img, null);
+
+      document.body.appendChild(img);
     };
 
     img.onerror = () => {

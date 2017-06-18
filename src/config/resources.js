@@ -23,7 +23,7 @@ const ressources = {
   ],
 
   svgs: [
-    { id: 'Orange', selector: '.svgs__orange' },
+    { id: 'orange', selector: '.svgs__orange' },
   ],
 };
 
