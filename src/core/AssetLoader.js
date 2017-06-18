@@ -2,6 +2,7 @@ import States from 'core/States';
 import resources from 'config/resources';
 import OBJLoader from 'helpers/OBJLoader';
 import { TextureLoader } from 'three';
+import svgToImage from 'utils/svgToImage';
 
 // require('helpers/OBJLoader')(THREE);
 
@@ -29,6 +30,11 @@ class AssetLoader {
     if (typeof resources.models !== 'undefined' && resources.models.length > 0) {
       this.assetsToLoad += resources.models.length;
       this.loadModels();
+    }
+
+    if (typeof resources.svgs !== 'undefined' && resources.svgs.length > 0) {
+      this.assetsToLoad += resources.svgs.length;
+      this.loadSVGS();
     }
 
     if (this.assetsToLoad === 0) Signals.onAssetsLoaded.dispatch(100);
@@ -91,7 +97,9 @@ class AssetLoader {
   }
 
   loadTexture(media) {
+
     return new Promise( ( resolve, reject ) => {
+
       new TextureLoader().load(
         media.url,
         ( texture ) => {
@@ -233,6 +241,93 @@ class AssetLoader {
       }
 
     });
+  }
+
+  loadSVGS() {
+
+    const svgs = resources.svgs;
+
+    for ( let i = 0; i < svgs.length; i += 1 ) {
+
+      this.loadSVG( svgs[i] ).then( (svg) => {
+
+        States.resources.images.push( svg );
+        this.assetsLoaded += 1;
+
+        const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
+        Signals.onAssetLoaded.dispatch(percent);
+        if (percent === 100) Signals.onAssetsLoaded.dispatch(percent); console.log(States.resources);
+      }, (err) => {
+        console.error(err);
+      });
+
+    }
+  }
+
+  loadSVG(resource) {
+
+    return new Promise( ( resolve, reject ) => {
+
+      const fontDefinitions = this.getFonts();
+      // const ie = window.navigator.userAgent.indexOf('MSIE') > 0;
+      // const ie10 = window.navigator.userAgent.indexOf('Trident/') > 0;
+      // const edge = window.navigator.userAgent.indexOf('Edge/') > 0;
+      // const safari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
+
+      // let prefix = '.fo';
+      // if (safari || ie || ie10 || edge) {
+      //   prefix = '.noFo';
+      // }
+
+      const svg = document.querySelector(resource.selector);
+
+      if (svg.dataset.fonts) {
+
+        const fonts = svg.dataset.fonts.split(',');
+        let inlineFontDefinitions = '';
+
+        for (let i = 0; i < fonts.length; i++) {
+
+          inlineFontDefinitions += `<style>@font-face{font-family:${fonts[i]};src:${fontDefinitions[fonts[i]]}}</style>`;
+        }
+
+        const tempEl = document.createElement('div');
+        tempEl.innerHTML = inlineFontDefinitions;
+
+        for (let i = 0; i < tempEl.children.length; i++) {
+          svg.appendChild(tempEl.children[i]);
+        }
+
+        svgToImage(svg, (img, error) => {
+          if (error) {
+            reject(error);
+
+            return;
+          }
+
+          resolve( { id: resource.id, media: img } );
+        });
+      }
+    });
+  }
+
+  getFonts(obj) {
+    const o = obj || {};
+    const sheet = document.styleSheets;
+    let rule = null;
+    let i = sheet.length;
+    let j;
+    while ( 0 <= --i ) {
+      rule = sheet[i].rules || sheet[i].cssRules || [];
+      j = rule.length;
+      while (0 <= --j) {
+        if (rule[j].constructor.name === 'CSSFontFaceRule') {
+          // rule[j].slice(0, 10).toLowerCase() === '@font-face'
+          o[rule[j].style.fontFamily] = rule[j].style.src;
+        }
+      }
+    }
+    return o;
   }
 }
 

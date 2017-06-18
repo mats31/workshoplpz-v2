@@ -116,6 +116,18 @@ class ProjectContainer extends THREE.Object3D {
 
   // State -----------------------------------------------
 
+  deActiveRaycast() {
+
+    this.deactiveFocus();
+    this.isHover = false;
+  }
+
+  activeRaycast() {
+
+    this.activeFocus();
+    this.isHover = true;
+  }
+
   setInitialPosition( pos ) {
 
     this.initialPosition.copy( pos );

@@ -107,6 +107,7 @@ export default Vue.extend({
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       // this.camera.lookAt(cameraTarget);
+
     },
 
     setupEvents() {
@@ -279,14 +280,12 @@ export default Vue.extend({
 
         const step = 0.65;
 
-        this.mouse.x = ( event.clientX - (window.innerWidth * 0.5) ) / ( window.innerWidth * 0.5 );
-        this.mouse.y = ( event.clientY - (window.innerHeight * 0.5) ) / ( window.innerHeight * 0.5 );
-
-        console.log(this.mouse);
+        this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
 
         if ( Math.abs(this.mouse.x) > step ) {
 
-          this.translationTarget = map( Math.abs( this.mouse.x ), 0.7, 1, 0, 2 ) * Math.sign( this.mouse.x );
+          this.translationTarget = map( Math.abs( this.mouse.x ), 0.7, 1, 0, 2 ) * Math.sign( this.mouse.x * -1 );
 
         } else {
 
@@ -346,14 +345,19 @@ export default Vue.extend({
 
     updateRaycast() {
 
+      // console.info(this.mouse);
+
       this.raycaster.setFromCamera( this.mouse, this.camera );
 
-      const intersects = this.raycaster.intersectObjects( this.scene.children );
+      for (let i = 0; i < this.projectContainers.length; i++) {
 
-      for ( let i = 0; i < intersects.length; i++ ) {
+        const intersects = this.raycaster.intersectObjects( this.projectContainers[i].getMask().children );
 
-        console.log(1);
-        // intersects[ i ].object.material.color.set( 0xff0000 );
+        if (intersects.length > 0) {
+          this.projectContainers[i].activeRaycast();
+        } else {
+          this.projectContainers[i].deActiveRaycast();
+        }
 
       }
 

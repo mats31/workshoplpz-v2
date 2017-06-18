@@ -21,6 +21,10 @@ const ressources = {
     { id: 'forme1-start', url: 'models/forme1-start-test.obj' },
     { id: 'forme1-final', url: 'models/forme1-final-test.obj' },
   ],
+
+  svgs: [
+    { id: 'Orange', selector: '.svgs__orange' },
+  ],
 };
 
 module.exports = ressources;
