@@ -256,7 +256,7 @@ class AssetLoader {
 
         const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
         Signals.onAssetLoaded.dispatch(percent);
-        if (percent === 100) Signals.onAssetsLoaded.dispatch(percent); console.log(States.resources);
+        if (percent === 100) Signals.onAssetsLoaded.dispatch(percent);
       }, (err) => {
         console.error(err);
       });
@@ -268,37 +268,9 @@ class AssetLoader {
 
     return new Promise( ( resolve, reject ) => {
 
-      const fontDefinitions = this.getFonts();
-      // const ie = window.navigator.userAgent.indexOf('MSIE') > 0;
-      // const ie10 = window.navigator.userAgent.indexOf('Trident/') > 0;
-      // const edge = window.navigator.userAgent.indexOf('Edge/') > 0;
-      // const safari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
-
-      // let prefix = '.fo';
-      // if (safari || ie || ie10 || edge) {
-      //   prefix = '.noFo';
-      // }
-
-      const svg = document.querySelector(resource.selector);
-
-      if (svg.dataset.fonts) {
-
-        const fonts = svg.dataset.fonts.split(',');
-        let inlineFontDefinitions = '';
-
-        for (let i = 0; i < fonts.length; i++) {
-
-          inlineFontDefinitions += `<style>@font-face{font-family:${fonts[i]};src:${fontDefinitions[fonts[i]]}}</style>`;
-        }
-
-        const tempEl = document.createElement('div');
-        tempEl.innerHTML = inlineFontDefinitions;
-
-        for (let i = 0; i < tempEl.children.length; i++) {
-          svg.appendChild(tempEl.children[i]);
-        }
-
-        svgToImage(svg, (img, error) => {
+      svgToImage({
+        selector: resource.selector,
+        callback: (img, error) => {
           if (error) {
             reject(error);
 
@@ -306,8 +278,8 @@ class AssetLoader {
           }
 
           resolve( { id: resource.id, media: img } );
-        });
-      }
+        },
+      });
     });
   }
 

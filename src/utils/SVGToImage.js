@@ -1,54 +1,102 @@
 import base64js from 'base64-js';
 
-export default function (svg, callback) {
+/* eslint no-param-reassign: 0 */
+
+export default function (options) {
+
+  // Init ----------------------------------------------------------------------
 
   let nbImgsLoaded = 0;
-  const imgs = svg.querySelectorAll('img');
+  const selector = options.selector;
+  const callback = options.callback;
+  let imgs = null;
+  let svg = null;
 
-  function createFinalImage() {
-    const serializedXML = new window.XMLSerializer().serializeToString(svg);
-    const base64encodedSVG = base64js.fromByteArray(
-      new window.TextEncoder().encode(serializedXML),
-    );
+  setup();
 
-    const img = document.createElement('img');
+  function setup() {
 
-    img.onload = () => {
-      callback(img, null);
+    const fontDefinitions = getFonts();
+    // const ie = window.navigator.userAgent.indexOf('MSIE') > 0;
+    // const ie10 = window.navigator.userAgent.indexOf('Trident/') > 0;
+    // const edge = window.navigator.userAgent.indexOf('Edge/') > 0;
+    // const safari = /^((?!chrome|android).)*safari/i.test(window.navigator.userAgent);
 
-      document.body.appendChild(img);
-    };
-
-    img.onerror = () => {
-      callback(null, 'Error when loading image from svg to image.');
-    };
-
-    // img.src = "data:image/png;base64," + base64encodedSVG;
-    // img.src = "data:image/svg+xml;base64," + base64encodedSVG;
-
-    // if ($(svg).find("image")[0]) {
-    //     img.src = $(svg).find("image")[0].href.baseVal;
-    // } else {
-    //     img.src = "data:image/svg+xml;base64," + base64encodedSVG;
+    // let prefix = '.fo';
+    // if (safari || ie || ie10 || edge) {
+    //   prefix = '.noFo';
     // }
 
-    img.src = `data:image/svg+xml;base64,${base64encodedSVG}`;
+    svg = document.querySelector(selector);
+    let inlineFontDefinitions = '';
+
+    if (svg.dataset.fonts) {
+
+      const fonts = svg.dataset.fonts.split(',');
+
+      for (let i = 0; i < fonts.length; i++) {
+
+        inlineFontDefinitions += `<style>@font-face{font-family:${fonts[i]};src:${fontDefinitions[fonts[i]]}}</style>`;
+      }
+    }
+
+    const tempEl = document.createElement('div');
+    tempEl.innerHTML = inlineFontDefinitions;
+
+    for (let i = 0; i < tempEl.children.length; i++) {
+      svg.appendChild(tempEl.children[i]);
+    }
+
+    imgs = svg.querySelectorAll('img');
+
+    start();
   }
 
-  function replaceImg(index, img, error) {
-    nbImgsLoaded++;
+  // State ---------------------------------------------------------------------
 
-    if (error) {
-      console.error(error);
-      return;
+  function getFonts(obj) {
+    const o = obj || {};
+    const sheet = document.styleSheets;
+    let rule = null;
+    let i = sheet.length;
+    let j;
+    while ( --i >= 0 ) {
+      rule = sheet[i].rules || sheet[i].cssRules || [];
+      j = rule.length;
+      while (--j >= 0) {
+        if (rule[j].constructor.name === 'CSSFontFaceRule') {
+          // rule[j].slice(0, 10).toLowerCase() === '@font-face'
+          o[rule[j].style.fontFamily] = rule[j].style.src;
+        }
+      }
     }
+    return o;
+  }
 
-    imgs[index].src = img.src;
-
-    if (nbImgsLoaded === imgs.length) {
+  function start() {
+    if (imgs.length > 0) {
+      checkImages();
+    } else {
       createFinalImage();
     }
-  };
+  }
+
+  function checkImages() {
+    for (let i = 0; i < imgs.length; i++) {
+
+      const canvas = document.createElement('canvas');
+      canvas.width = imgs[i].naturalWidth;
+      canvas.height = imgs[i].naturalHeight;
+
+      const context = canvas.getContext('2d');
+      context.drawImage(imgs[i], 0, 0);
+
+      const previousSrc = imgs[i].src;
+      imgs[i].src = canvas.toDataURL();
+
+      this.waitForLoad(imgs[i], previousSrc, i);
+    }
+  }
 
   function waitForLoad(targetImg, previousSrc, index) {
     if (targetImg.complete) {
@@ -77,27 +125,49 @@ export default function (svg, callback) {
     };
   }
 
-  function checkImages() {
+  function replaceImg(index, img, error) {
+    nbImgsLoaded++;
 
-    for (let i = 0; i < imgs.length; i++) {
+    if (error) {
+      console.error(error);
+      return;
+    }
 
-      const canvas = document.createElement('canvas');
-      canvas.width = imgs[i].naturalWidth;
-      canvas.height = imgs[i].naturalHeight;
+    imgs[index].src = img.src;
 
-      const context = canvas.getContext('2d');
-      context.drawImage(imgs[i], 0, 0);
-
-      const previousSrc = imgs[i].src;
-      imgs[i].src = canvas.toDataURL();
-
-      waitForLoad(imgs[i], previousSrc, i);
+    if (nbImgsLoaded === imgs.length) {
+      createFinalImage();
     }
   }
 
-  if (imgs.length > 0) {
-    checkImages();
-  } else {
-    createFinalImage();
+  function createFinalImage() {
+    const serializedXML = new window.XMLSerializer().serializeToString(svg);
+    const base64encodedSVG = base64js.fromByteArray(
+      new window.TextEncoder().encode(serializedXML),
+    );
+
+    const img = document.createElement('img');
+
+    img.onload = () => {
+      callback(img, null);
+
+      document.body.appendChild(img);
+      document.body.appendChild(svg);
+    };
+
+    img.onerror = () => {
+      callback(null, 'Error when loading image from svg to image.');
+    };
+
+    // img.src = "data:image/png;base64," + base64encodedSVG;
+    // img.src = "data:image/svg+xml;base64," + base64encodedSVG;
+
+    // if ($(svg).find("image")[0]) {
+    //     img.src = $(svg).find("image")[0].href.baseVal;
+    // } else {
+    //     img.src = "data:image/svg+xml;base64," + base64encodedSVG;
+    // }
+
+    img.src = `data:image/svg+xml;base64,${base64encodedSVG}`;
   }
 }
