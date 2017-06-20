@@ -271,6 +271,8 @@ class AssetLoader {
       svgToImage({
         selector: resource.selector,
         callback: (img, error) => {
+          console.log(img.width);
+          console.log(img.height);
           if (error) {
             reject(error);
 
@@ -281,25 +283,6 @@ class AssetLoader {
         },
       });
     });
-  }
-
-  getFonts(obj) {
-    const o = obj || {};
-    const sheet = document.styleSheets;
-    let rule = null;
-    let i = sheet.length;
-    let j;
-    while ( --i >= 0 ) {
-      rule = sheet[i].rules || sheet[i].cssRules || [];
-      j = rule.length;
-      while (--j >= 0) {
-        if (rule[j].constructor.name === 'CSSFontFaceRule') {
-          // rule[j].slice(0, 10).toLowerCase() === '@font-face'
-          o[rule[j].style.fontFamily] = rule[j].style.src;
-        }
-      }
-    }
-    return o;
   }
 }
 

@@ -11,6 +11,8 @@ export default function (options) {
   const callback = options.callback;
   let imgs = null;
   let svg = null;
+  let width = null;
+  let height = null;
 
   setup();
 
@@ -28,6 +30,15 @@ export default function (options) {
     // }
 
     svg = document.querySelector(selector);
+    const sizeElement = svg.querySelector('.svgs__size');
+    // const sizeElement = svg.querySelector('#container');
+    width = sizeElement.offsetWidth;
+    height = sizeElement.offsetHeight;
+
+    svg.style.width = width;
+    svg.style.height = height;
+
+
     let inlineFontDefinitions = '';
 
     if (svg.dataset.fonts) {
@@ -141,6 +152,10 @@ export default function (options) {
   }
 
   function createFinalImage() {
+    console.info(svg);
+    const sizeElement = svg.querySelector('.svgs__size');
+    console.info(sizeElement.offsetWidth);
+
     const serializedXML = new window.XMLSerializer().serializeToString(svg);
     const base64encodedSVG = base64js.fromByteArray(
       new window.TextEncoder().encode(serializedXML),
@@ -149,10 +164,23 @@ export default function (options) {
     const img = document.createElement('img');
 
     img.onload = () => {
-      callback(img, null);
 
-      document.body.appendChild(img);
+      // const sizeElement = svg.querySelector('.svgs__size');
+
+      // width = sizeElement.offsetWidth;
+
+
+      img.width = width;
+      img.style.width = width;
+      // img.naturalWidth = width;
+      img.height = height;
+      // img.naturalHeight = height;
+      img.style.height = height;
+
+      // document.body.appendChild(img);
       document.body.appendChild(svg);
+
+      callback(img, null);
     };
 
     img.onerror = () => {

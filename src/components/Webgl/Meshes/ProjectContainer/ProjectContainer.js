@@ -51,17 +51,24 @@ class ProjectContainer extends THREE.Object3D {
     // this.mask.rotation.x = 0.5;
     // this.mask.rotation.y = 0.5;
 
-    this.add(this.mask);
+    // this.add(this.mask);
   }
 
   setupDescription() {
 
-    const texture = new THREE.Texture( States.resources.getImage('orange').media );
-    texture.needsUpdate = true;
-    console.info(States.resources.getImage('orange').media);
+    this.texture2 = new THREE.Texture( States.resources.getImage('orange').media );
+    this.texture2.wrapS = THREE.ClampToEdgeWrapping;
+    this.texture2.wrapT = THREE.ClampToEdgeWrapping;
+    // texture.minFilter = THREE.LinearMipMapNearestFilter;
+    // this.texture2.minFilter = THREE.LinearFilter;
+    // texture.magFilter = THREE.LinearMipMapNearestFilter;
+    this.texture2.magFilter = THREE.NearestFilter;
+    this.texture2.needsUpdate = true;
+
+    document.body.appendChild(this.texture2.image);
 
     this.text = new Text({
-      texture,
+      texture: this.texture2,
     });
 
     this.add(this.text);

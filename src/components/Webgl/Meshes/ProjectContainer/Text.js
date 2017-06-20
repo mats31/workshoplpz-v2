@@ -22,7 +22,9 @@ class Mask extends THREE.Object3D {
 
   setupText() {
 
-    this.geometry = new THREE.PlaneBufferGeometry( 50, 50, 1, 1);
+    // this.geometry = new THREE.PlaneBufferGeometry( 20, 20, 1, 1);
+    this.geometry = new THREE.PlaneBufferGeometry( 20, 20, 1, 1);
+    // this.geometry = new THREE.PlaneBufferGeometry( 100, 25.55555556, 1, 1);
 
     this.material = new THREE.ShaderMaterial({
       vertexShader: vertexTextShader,
@@ -38,6 +40,9 @@ class Mask extends THREE.Object3D {
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.add(this.mesh);
+
+    const xScale = this.texture.image.width / this.texture.image.height;
+    this.mesh.scale.set( xScale, 1, 1 );
   }
 
   setupEvent() {
