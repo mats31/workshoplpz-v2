@@ -62,7 +62,7 @@ class ProjectContainer extends THREE.Object3D {
     // texture.minFilter = THREE.LinearMipMapNearestFilter;
     // this.texture2.minFilter = THREE.LinearFilter;
     // texture.magFilter = THREE.LinearMipMapNearestFilter;
-    this.texture2.magFilter = THREE.NearestFilter;
+    // this.texture2.magFilter = THREE.NearestFilter;
     this.texture2.needsUpdate = true;
 
     document.body.appendChild(this.texture2.image);

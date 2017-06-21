@@ -177,10 +177,18 @@ export default function (options) {
       // img.naturalHeight = height;
       img.style.height = height;
 
-      // document.body.appendChild(img);
-      document.body.appendChild(svg);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const context = canvas.getContext('2d');
 
-      callback(img, null);
+      context.drawImage( img, 0, 0 );
+
+      document.body.appendChild(img);
+      document.body.appendChild(svg);
+      document.body.appendChild(canvas);
+
+      callback(canvas, null);
     };
 
     img.onerror = () => {

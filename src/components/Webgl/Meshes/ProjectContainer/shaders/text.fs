@@ -9,6 +9,11 @@ void main() {
   vec3 color = texture.rgb;
   float alpha = texture.a;
 
-  gl_FragColor = vec4(color, 1.);
+  if(alpha < 0.1)
+  {
+      discard;
+  }
+
+  gl_FragColor = vec4(color, alpha);
   // gl_FragColor = vec4(1., 0., 0., 1.);
 }
