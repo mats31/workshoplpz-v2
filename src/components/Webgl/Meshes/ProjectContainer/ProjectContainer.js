@@ -51,7 +51,7 @@ class ProjectContainer extends THREE.Object3D {
     // this.mask.rotation.x = 0.5;
     // this.mask.rotation.y = 0.5;
 
-    // this.add(this.mask);
+    this.add(this.mask);
   }
 
   setupDescription() {

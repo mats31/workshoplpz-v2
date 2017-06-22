@@ -269,27 +269,28 @@ class AssetLoader {
 
     return new Promise( ( resolve, reject ) => {
 
-      // html2canvas(document.body.querySelector('#container'), {
-      //   onrendered: (canvas) => {
-      //     document.body.appendChild(canvas);
-      //     resolve( { id: resource.id, media: canvas } );
+      html2canvas(document.body.querySelector('.svgs__size'), {
+        onrendered: (canvas) => {
+          document.body.appendChild(canvas);
+          resolve( { id: resource.id, media: canvas } );
+        },
+      });
+
+      // svgToImage({
+      //   selector: resource.selector,
+      //   callback: (img, error) => {
+      //     console.log(img.width);
+      //     console.log(img.height);
+      //     if (error) {
+      //       reject(error);
+      //
+      //       return;
+      //     }
+      //
+      //     resolve( { id: resource.id, media: img } );
       //   },
       // });
 
-      svgToImage({
-        selector: resource.selector,
-        callback: (img, error) => {
-          console.log(img.width);
-          console.log(img.height);
-          if (error) {
-            reject(error);
-
-            return;
-          }
-
-          resolve( { id: resource.id, media: img } );
-        },
-      });
     });
   }
 }
