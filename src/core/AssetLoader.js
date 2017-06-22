@@ -3,6 +3,7 @@ import resources from 'config/resources';
 import OBJLoader from 'helpers/OBJLoader';
 import { TextureLoader } from 'three';
 import svgToImage from 'utils/svgToImage';
+import html2canvas from 'html2canvas';
 
 // require('helpers/OBJLoader')(THREE);
 
@@ -267,6 +268,13 @@ class AssetLoader {
   loadSVG(resource) {
 
     return new Promise( ( resolve, reject ) => {
+
+      // html2canvas(document.body.querySelector('#container'), {
+      //   onrendered: (canvas) => {
+      //     document.body.appendChild(canvas);
+      //     resolve( { id: resource.id, media: canvas } );
+      //   },
+      // });
 
       svgToImage({
         selector: resource.selector,

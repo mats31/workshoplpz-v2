@@ -31,6 +31,7 @@
     "base64-js": "^1.2.0",
     "domready": "^1.0.8",
     "gsap": "^1.19.0",
+    "html2canvas": "^0.5.0-beta4",
     "min-signal": "0.0.6",
     "mobile-detect": "*",
     "raf": "^3.3.0",
