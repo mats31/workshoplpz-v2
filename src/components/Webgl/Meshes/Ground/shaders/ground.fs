@@ -6,6 +6,8 @@ uniform vec3 specular;
 uniform float shininess;
 uniform float opacity;
 
+varying vec3 vPosition;
+
 #include <common>
 #include <packing>
 #include <color_pars_fragment>
@@ -33,7 +35,8 @@ void main() {
 
 	#include <clipping_planes_fragment>
 
-	vec4 diffuseColor = vec4( diffuse, opacity );
+	// vec4 diffuseColor = vec4( diffuse * ( vPosition.y * 0.007 ), opacity );
+	vec4 diffuseColor = vec4( diffuse * ( abs( vPosition.y - 250. ) * 0.01 ) * ( vPosition.z * 0.07 ), opacity );
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 	vec3 totalEmissiveRadiance = emissive;
 

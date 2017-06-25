@@ -4,6 +4,8 @@ import raf from 'raf';
 
 import Clock from 'helpers/Clock';
 
+import Background from './Meshes/Background/Background';
+import Grain from './Meshes/Grain/Grain';
 import Ground from './Meshes/Ground/Ground';
 import ProjectContainer from './Meshes/ProjectContainer/ProjectContainer';
 
@@ -45,8 +47,8 @@ export default Vue.extend({
     setup() {
 
       this.xStep = 50;
-      this.zDepth = -150;
-      this.cameraTarget = new THREE.Vector3(0, 20, this.zDepth);
+      this.zDepth = -50;
+      this.cameraTarget = new THREE.Vector3(0, 20, -150);
       this.cameraPos = new THREE.Vector3(0, 20, 0);
 
       this.translationTarget = 0;
@@ -76,7 +78,7 @@ export default Vue.extend({
       this.camera.lookAt(this.cameraTarget);
 
       const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
-      const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 2.5;
+      const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 3.5;
 
       this.xStep = xStep;
 
@@ -131,35 +133,57 @@ export default Vue.extend({
 
     setupLight() {
 
-      const step = 50;
+      // const step = 50;
+      //
+      // for (let i = 0; i < 3; i += 1) {
+      //
+      //   for (let j = 0; j < 5; j += 1) {
+      //
+      //     const light = new THREE.PointLight( 0x303030, 0.16, 1000 );
+      //     light.position.set( ( step * i ) - step, 40, ( step * j ) - ( step * 2 ) );
+      //     light.castShadow = true;
+      //     light.shadow.camera.fov = 50;
+      //     light.shadow.mapSize.width = 2048;
+      //     light.shadow.mapSize.height = 2048;
+      //     light.shadow.bias = 0;
+      //
+      //     // const cloneLight = light.clone();
+      //     // cloneLight.position.set( 0, 20, 15 );
+      //
+      //     // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.01 );
+      //     // directionalLight.position.set(-20, 100, -100);
+      //     // this.orthographicScene.add( directionalLight );
+      //
+      //     this.scene.add( light );
+      //     // this.orthographicScene.add( cloneLight );
+      //
+      //     const sphereSize = 1;
+      //     const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
+      //     this.scene.add( pointLightHelper );
+      //   }
+      // }
 
-      for (let i = 0; i < 3; i += 1) {
+      // const directionalLight = new THREE.DirectionalLight( 0x303030, 2 );
+      // directionalLight.position.set( -30, 50, this.zDepth );
+      // // directionalLight.position.set( -50, 10, 0 );
+      // directionalLight.target.position.set( 0, -10, 0 );
+      // this.scene.add( directionalLight );
+      // this.scene.add( directionalLight.target );
 
-        for (let j = 0; j < 5; j += 1) {
+      const spotLight = new THREE.SpotLight( 0xffffff, 1, 1000, Math.PI, 0, 1.1 );
+      spotLight.position.set( -300, 50, -100 );
+      // spotLight.position.set( 0, 10, 10 );
+      this.scene.add( spotLight );
+      this.scene.add( spotLight.target );
 
-          const light = new THREE.PointLight( 0x303030, 0.11, 0 );
-          light.position.set( ( step * i ) - step, 40, ( step * j ) - ( step * 2 ) );
-          light.castShadow = true;
-          light.shadow.camera.fov = 50;
-          light.shadow.mapSize.width = 2048;
-          light.shadow.mapSize.height = 2048;
-          light.shadow.bias = 0;
-
-          // const cloneLight = light.clone();
-          // cloneLight.position.set( 0, 20, 15 );
-
-          // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.01 );
-          // directionalLight.position.set(-20, 100, -100);
-          // this.orthographicScene.add( directionalLight );
-
-          this.scene.add( light );
-          // this.orthographicScene.add( cloneLight );
-
-          const sphereSize = 1;
-          const pointLightHelper = new THREE.PointLightHelper( light, sphereSize );
-          this.scene.add( pointLightHelper );
-        }
-      }
+      // const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+      // this.scene.add( spotLightHelper );
+      //
+      const spotLight2 = new THREE.SpotLight( 0x282828, 0.3, 1000, Math.PI, 0, 1.1 );
+      spotLight2.position.set( 300, 50, 0 );
+      // spotLight2.position.set( 0, 10, 10 );
+      this.scene.add( spotLight2 );
+      this.scene.add( spotLight2.target );
     },
 
     setupProject() {
@@ -181,7 +205,7 @@ export default Vue.extend({
 
         // const angle = ( ( Math.PI * 2 ) / length ) * i;
         const x = this.xStep * i;
-        const y = i % 2 === 0 ? 25 : 40;
+        const y = i % 2 === 0 ? 15 : 22;
         const z = this.zDepth;
         const initialPosition = new THREE.Vector3(x, y, z);
         previousX = x - width;
@@ -201,8 +225,39 @@ export default Vue.extend({
     setupGround() {
 
       this.ground = new Ground();
+      this.ground.position.setY( -10 );
       this.ground.rotation.x = Math.PI * -0.5;
       this.scene.add(this.ground);
+    },
+
+    setupBackground() {
+
+      const depth = -300;
+
+      this.background = new Background();
+      this.background.position.setY( this.camera.position.y );
+      this.background.position.setZ( depth );
+      const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
+      const height = ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * depth ) * 3.5;
+      const width = ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( depth ) ) * 3.5;
+
+      this.background.scaleGrain( width, height );
+      this.scene.add(this.background);
+    },
+
+    setupGrain() {
+
+      const depth = -10;
+
+      this.grain = new Grain();
+      this.grain.position.setY( this.camera.position.y );
+      this.grain.position.setZ( depth );
+      const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
+      const height = ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * depth ) * 3.5;
+      const width = ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( depth ) ) * 3.5;
+
+      this.grain.scaleGrain( width, height );
+      this.scene.add(this.grain);
     },
 
     // STATE -------------------------------------------------------------------
@@ -212,14 +267,14 @@ export default Vue.extend({
       this.$router.push({ name: 'project', params: { id } });
       States.application.activateProject = true;
 
-      TweenLite.to(
-        this.orthographicCamera.position,
-        3.5,
-        {
-          y: y + window.innerHeight * 2,
-          ease: 'Power4.easeInOut',
-        },
-      );
+      // TweenLite.to(
+      //   this.orthographicCamera.position,
+      //   3.5,
+      //   {
+      //     y: y + window.innerHeight * 2,
+      //     ease: 'Power4.easeInOut',
+      //   },
+      // );
 
       TweenLite.to(
         this.ground.position,
@@ -245,6 +300,8 @@ export default Vue.extend({
       this.camera.aspect = this.width / this.height;
       this.camera.updateProjectionMatrix();
 
+      this.renderer.setSize( this.width, this.height );
+
       const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
       const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 2.5;
 
@@ -257,9 +314,11 @@ export default Vue.extend({
 
       this.clock = new Clock();
 
+      this.setupBackground();
       this.setupGround();
       this.setupProject();
       this.setupLight();
+      this.setupGrain();
       this.animate();
 
       this.checkRoute();
@@ -331,7 +390,8 @@ export default Vue.extend({
       this.updateRaycast();
 
       this.updateProjectContainers();
-      this.ground.update( this.clock.time );
+      this.ground.update( this.clock.time, this.translationEase );
+      this.grain.update( this.clock.time );
       // this.renderer.clear();
       this.renderer.render(this.scene, this.camera);
 

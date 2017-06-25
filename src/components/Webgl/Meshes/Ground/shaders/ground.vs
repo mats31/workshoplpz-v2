@@ -95,10 +95,12 @@ float snoise(vec2 v)
 }
 
 uniform float u_time;
+uniform float u_translation;
 
 // varying vec2 vUV;
 // varying vec3 vNormal;
 varying vec3 vWorldPosition;
+varying vec3 vPosition;
 
 void main() {
 
@@ -120,8 +122,10 @@ void main() {
 
 	#include <begin_vertex>
 
-  float offset = snoise(transformed.xy * 0.005 + u_time * 0.05) * 20.;
+  float offset = snoise( vec2( transformed.x * 0.007, transformed.y * 0.01 ) + u_translation ) * 20.;
   transformed.z += abs( offset );
+
+	vPosition = transformed;
 
 	#include <displacementmap_vertex>
 	#include <morphtarget_vertex>

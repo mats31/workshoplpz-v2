@@ -271,7 +271,8 @@ class AssetLoader {
 
       html2canvas(document.body.querySelector('.svgs__size'), {
         onrendered: (canvas) => {
-          document.body.appendChild(canvas);
+          // document.body.appendChild(canvas);
+          document.body.querySelector('#container').style.display = 'none';
           resolve( { id: resource.id, media: canvas } );
         },
       });

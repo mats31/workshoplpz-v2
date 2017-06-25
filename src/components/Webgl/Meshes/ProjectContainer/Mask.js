@@ -32,7 +32,6 @@ class Mask extends THREE.Object3D {
 
     const startModel = States.resources.getModel('forme1-start').media;
     const finalModel = States.resources.getModel('forme1-final').media;
-    // console.log(startModel);
 
     // this.maskGeometry = new THREE.IcosahedronGeometry( 2.5, 0 );
     // this.maskGeometry = new THREE.IcosahedronGeometry( 200, 0 );

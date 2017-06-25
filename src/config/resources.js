@@ -16,6 +16,8 @@ const ressources = {
     { id: 'project-preview-noise', url: 'textures/project-preview-noise.jpg', description: '' },
     { id: 'project-preview-circle', url: 'textures/project-preview-circle.png', description: '' },
     { id: 'project-preview-voronoi', url: 'textures/project-preview-voronoi2.png', description: '' },
+    { id: 'background', url: 'textures/background.png', description: '' },
+    { id: 'grain', url: 'textures/grain-2.png', description: '' },
   ],
 
   models: [

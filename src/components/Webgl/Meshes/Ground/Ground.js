@@ -14,7 +14,9 @@ class Ground extends THREE.Object3D {
     // map.needsUpdate = true;
     // map.LinearFilter = THREE.LinearFilter;
 
-    this.geometry = new THREE.PlaneGeometry( 300, 300, 100, 100 );
+    this.translation = 0;
+
+    this.geometry = new THREE.PlaneGeometry( 550, 550, 200, 200 );
 
 
     const baseShader = THREE.ShaderLib.phong;
@@ -22,8 +24,10 @@ class Ground extends THREE.Object3D {
     this.uniforms = {
       ...baseUniforms,
       u_time: { type: 'f', value: 0 },
-      emissive: { value: new THREE.Color( 0x000000 ) },
-      specular: { value: new THREE.Color( 0x111111 ) },
+      u_translation: { type: 'f', value: 0 },
+      emissive: { value: new THREE.Color( 0x080808 ) },
+      // specular: { value: new THREE.Color( 0x111111 ) },
+      specular: { value: new THREE.Color( 0x000000 ) },
     };
 
     this.material = new THREE.ShaderMaterial({
@@ -64,9 +68,12 @@ class Ground extends THREE.Object3D {
 
   /* ****************** RENDER ****************** */
 
-  update(time) {
+  update(time, translationEase) {
+
+    this.translation += translationEase * 0.0035;
 
     this.material.uniforms.u_time.value = time;
+    this.material.uniforms.u_translation.value = this.translation;
   }
 
   // addGUI() {

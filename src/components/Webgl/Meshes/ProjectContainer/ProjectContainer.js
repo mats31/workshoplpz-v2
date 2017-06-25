@@ -45,7 +45,7 @@ class ProjectContainer extends THREE.Object3D {
       color: this.maskColor,
     });
 
-    this.mask.scale.set( 0.5, 0.5, 0.5 );
+    // this.mask.scale.set( 0.5, 0.5, 0.5 );
     // this.mask.position.set(this.getMaskWidth() * 0.5, 20, 100);
     // this.mask.position.set(0, 20, 100) ;
     // this.mask.rotation.x = 0.5;
@@ -65,11 +65,13 @@ class ProjectContainer extends THREE.Object3D {
     // this.texture2.magFilter = THREE.NearestFilter;
     this.texture2.needsUpdate = true;
 
-    document.body.appendChild(this.texture2.image);
-
     this.text = new Text({
       texture: this.texture2,
     });
+
+    this.text.position.setY( this.index % 2 === 0 ? 13 : -13 );
+    // this.text.position.setZ( this.index % 2 === 0 ? -40 : 30 );
+    this.text.position.setZ( -10 );
 
     this.add(this.text);
   }
@@ -120,7 +122,7 @@ class ProjectContainer extends THREE.Object3D {
   setInitialPosition( pos ) {
 
     this.initialPosition.copy( pos );
-    this.mask.position.copy( pos );
+    // this.mask.position.copy( pos );
   }
 
   activeFocus() {
@@ -214,10 +216,10 @@ class ProjectContainer extends THREE.Object3D {
     }
   }
 
-  update( time, translationEase, camera, i ) {
+  update( time, translationEase, camera, length, i ) {
 
     // this.updateDOM(i);
-    this.updatePosition( translationEase, camera, i );
+    this.updatePosition( translationEase, camera, length, i );
     // this.checkFocus(point);
     this.mask.update( time );
     this.text.update( time );
@@ -235,19 +237,23 @@ class ProjectContainer extends THREE.Object3D {
   updatePosition( translationEase, camera, length, i ) {
 
     const hFOV = 2 * Math.atan( Math.tan( camera.fov / 2 ) * camera.aspect );
-    const width = 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.mask.position.z );
+    const width = 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.initialPosition.z );
     const moduloLength = length + ( this.getMaskWidth() * 0.5 );
     const extraMargin = 15;
     const offset = Math.abs(width * 2) + ( this.getMaskWidth() * 0.5 ) + extraMargin;
 
     this.initialPosition.setX( this.initialPosition.x + translationEase );
     const x = modulo( this.initialPosition.x, moduloLength ) - offset;
+    const y = this.initialPosition.y;
+    const z = this.initialPosition.z;
 
-    this.mask.position.setX( x );
-    this.text.position.setX( x );
-    this.text.position.setY( 40 );
-    this.text.position.setZ( -150 );
-    // this.position.setX( x );
+    // this.mask.position.setX( x );
+    // this.text.position.setX( x );
+    // this.text.position.setY( 40 );
+    // this.text.position.setZ( -150 );
+    this.position.set( x, y, z );
+    // this.mask.lookAt( camera.position );
+    // this.text.lookAt( camera.position );
   }
 
   checkFocus( mousePoint ) {
