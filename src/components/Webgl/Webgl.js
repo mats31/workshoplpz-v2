@@ -59,6 +59,9 @@ export default Vue.extend({
       this.widthProjects = null;
 
       this.mouse = new THREE.Vector2( 9999, 9999 );
+      this.previousMouse = new THREE.Vector2( 9999, 9999 );
+
+      this.drag = false;
 
       this.setupWebGL(window.innerWidth, window.innerHeight);
 
@@ -120,7 +123,11 @@ export default Vue.extend({
       Signals.onProjectClick.add(this.onProjectClick);
 
       this.$el.addEventListener('click', this.onWebGLClick.bind(this));
+      this.$el.addEventListener('mousedown', this.onWebGLMousedown.bind(this));
+      this.$el.addEventListener('mouseup', this.onWebGLMouseup.bind(this));
       window.addEventListener('resize', this.onResize.bind(this));
+      window.addEventListener('mousewheel', this.onScroll.bind(this));
+      window.addEventListener('DOMMouseScroll', this.onScroll.bind(this));
     },
 
     checkRoute() {
@@ -330,28 +337,43 @@ export default Vue.extend({
       this.resize();
     },
 
+    onScroll(event) {
+
+      let deltaY = event.deltaY;
+
+      if (Math.abs(deltaY) <= 1) { deltaY = 0; }
+
+      this.translationTarget = deltaY * 0.1;
+    },
+
     onWeblGLMousemove(event) {
 
       if (!States.application.activateProject) {
-
-        // this.mouse.x = ( ( event.clientX / window.innerWidth ) * 2 ) - 1;
-        // this.mouse.y = ( -( event.clientY / window.innerHeight ) * 2 ) + 1;
 
         const step = 0.65;
 
         this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         this.mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
 
-        if ( Math.abs(this.mouse.x) > step ) {
+        if (!this.clicked) {
 
-          this.translationTarget = map( Math.abs( this.mouse.x ), 0.7, 1, 0, 2 ) * Math.sign( this.mouse.x * -1 );
+          if ( Math.abs(this.mouse.x) > step ) {
 
+            this.translationTarget = map( Math.abs( this.mouse.x ), 0.7, 1, 0, 2 ) * Math.sign( this.mouse.x * -1 );
+
+          } else {
+
+            this.translationTarget = 0;
+          }
+
+          this.drag = false;
         } else {
 
-          this.translationTarget = 0;
+          this.drag = true;
+          this.translationTarget = ( this.mouse.x - this.previousMouse.x ) * 100;
         }
 
-        // this.checkMouseFocus();
+        this.previousMouse.x = this.mouse.x;
       }
     },
 
@@ -368,11 +390,24 @@ export default Vue.extend({
       this.translationEase = 0;
     },
 
+    onWebGLMouseup() {
+
+      this.clicked = false;
+    },
+
+    onWebGLMousedown() {
+
+      this.clicked = true;
+    },
+
     onWebGLClick() {
 
-      for (let i = 0; i < this.projectContainers.length; i++) {
+      if (!this.drag) {
 
-        this.projectContainers[i].onClick();
+        for (let i = 0; i < this.projectContainers.length; i++) {
+
+          this.projectContainers[i].onClick();
+        }
       }
     },
 

@@ -17,10 +17,20 @@ export default Vue.extend({
 
   mounted() {
 
+    this.checkRoute(this.$route.name);
     this.setupEvent();
   },
 
   ready() {},
+
+  watch: {
+
+    $route: (to, from) => {
+
+      this.checkRoute(to.name);
+    },
+
+  },
 
   methods: {
 
@@ -31,7 +41,20 @@ export default Vue.extend({
       Signals.onAssetsLoaded.add(this.onAssetsLoaded);
     },
 
-    // Events
+    // State -------------------------------------------------------------------
+
+    checkRoute(name) {
+
+      switch (name) {
+        case 'projects':
+          document.body.style.overflow = 'hidden';
+          break;
+        default:
+          document.body.style.overflow = 'hidden';
+      }
+    },
+
+    // Events ------------------------------------------------------------------
 
     onAssetsLoaded() {
 
