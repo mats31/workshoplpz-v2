@@ -10,7 +10,7 @@ export default class Router extends VueRouter {
   constructor() {
 
     super({
-      mode: 'history',
+      // mode: 'history',
       routes: [
         {
           component: HomeComponent,
