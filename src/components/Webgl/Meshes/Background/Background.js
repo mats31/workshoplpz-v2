@@ -34,7 +34,7 @@ class Background extends THREE.Object3D {
     // this.addGUI()
   }
 
-  scaleGrain( width, height ) {
+  scaleBackground( width, height ) {
 
     this.scale.set( width, height, 1 );
   }

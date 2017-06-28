@@ -100,10 +100,10 @@ class ProjectContainer extends THREE.Object3D {
     return this.mask.getMaskWidth();
   }
 
-  getProjectPlane() {
-
-    return this.projectPlane;
-  }
+  // getProjectPlane() {
+  //
+  //   return this.projectPlane;
+  // }
 
   // State -----------------------------------------------
 
@@ -165,14 +165,7 @@ class ProjectContainer extends THREE.Object3D {
 
   hideText() {
 
-    TweenLite.to(
-      this.box,
-      0.55,
-      {
-        opacity: 0,
-        ease: 'Power2.easeIn',
-      },
-    );
+    this.text.hide();
   }
 
   // Events -----------------------------------------------
@@ -194,10 +187,11 @@ class ProjectContainer extends THREE.Object3D {
       Signals.onProjectClick.dispatch( this.projectID, this.position.y );
 
       const x = 0;
-      const y = this.position.y + window.innerHeight * 2;
+      const y = 0;
+      // const y = this.position.y + window.innerHeight * 2;
 
       this.mask.activateProject();
-      this.projectPlane.activateProject();
+      // this.projectPlane.activateProject();
 
       TweenLite.to(
         this.position,
@@ -211,7 +205,7 @@ class ProjectContainer extends THREE.Object3D {
 
       // TweenLite.delayedCall( 0.8, () => {
 
-      this.projectPlane.displayPlane();
+      // this.projectPlane.displayPlane();
       // });
     }
   }

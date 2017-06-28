@@ -30,6 +30,7 @@ class Mask extends THREE.Object3D {
       vertexShader: vertexTextShader,
       fragmentShader: fragmentTextShader,
       uniforms: {
+        u_alpha: { type: 'f', value: 1 },
         u_map: { type: 't', value: this.texture },
       },
       side: THREE.DoubleSide,
@@ -51,6 +52,18 @@ class Mask extends THREE.Object3D {
   }
 
   // State ---------------------------------------------------------------------
+
+  hide() {
+
+    TweenLite.to(
+      this.material.uniforms.u_alpha,
+      0.55,
+      {
+        value: 0,
+        ease: 'Power2.easeIn',
+      }
+    );
+  }
 
   // Getters -------------------------------------------------------------------
 

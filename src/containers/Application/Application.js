@@ -25,7 +25,7 @@ export default Vue.extend({
 
   watch: {
 
-    $route: (to, from) => {
+    $route: function(to, from) {
 
       this.checkRoute(to.name);
     },

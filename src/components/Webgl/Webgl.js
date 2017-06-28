@@ -29,6 +29,12 @@ export default Vue.extend({
 
   created() {
 
+    this.background = null;
+    this.grain = null;
+
+    this.baseY = 20;
+    this.highY = 150;
+
     this.setup();
   },
 
@@ -48,15 +54,14 @@ export default Vue.extend({
 
       this.xStep = 50;
       this.zDepth = -50;
-      this.cameraTarget = new THREE.Vector3(0, 20, -150);
-      this.cameraPos = new THREE.Vector3(0, 20, 0);
+      this.cameraTarget = new THREE.Vector3(0, this.baseY, -150);
+      this.cameraPos = new THREE.Vector3(0, this.baseY, 0);
 
       this.translationTarget = 0;
       this.translationEase = 0;
       this.mainAngle = 0;
 
       this.projectContainers = [];
-      this.widthProjects = null;
 
       this.mouse = new THREE.Vector2( 9999, 9999 );
       this.previousMouse = new THREE.Vector2( 9999, 9999 );
@@ -89,7 +94,7 @@ export default Vue.extend({
         antialias: true,
       });
       this.renderer.setSize(width, height);
-      this.renderer.setClearColor(0x1a1a1a);
+      this.renderer.setClearColor(0x282828);
       // this.renderer.autoClear = false;
       // this.renderer.shadowMap.enabled = true;
       // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -197,7 +202,6 @@ export default Vue.extend({
 
       const projectList = projects.projectList;
       const length = projectList.length;
-      let previousX = window.innerWidth * 0.5;
 
       for (let i = 0; i < length; i += 1) {
 
@@ -206,16 +210,11 @@ export default Vue.extend({
           index: i,
         });
 
-        const width = projectContainer.getMaskWidth();
-
-        if ( i === 0) { previousX += width; }
-
         // const angle = ( ( Math.PI * 2 ) / length ) * i;
         const x = this.xStep * i;
         const y = i % 2 === 0 ? 15 : 22;
         const z = this.zDepth;
         const initialPosition = new THREE.Vector3(x, y, z);
-        previousX = x - width;
         projectContainer.setInitialPosition(initialPosition);
 
         // this.orthographicScene.add(projectContainer);
@@ -225,8 +224,6 @@ export default Vue.extend({
         if ( i === 0 ) { this.startProject = projectContainer; }
         if ( i === projectList.length - 1 ) { this.endProject = projectContainer; }
       }
-
-      this.widthProjects = previousX;
     },
 
     setupGround() {
@@ -245,10 +242,10 @@ export default Vue.extend({
       this.background.position.setY( this.camera.position.y );
       this.background.position.setZ( depth );
       const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
-      const height = ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * depth ) * 3.5;
-      const width = ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( depth ) ) * 3.5;
+      const height = Math.abs( ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * Math.abs( depth ) ) * 3.5 );
+      const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( depth ) ) * 3.5 );
 
-      this.background.scaleGrain( width, height );
+      this.background.scaleBackground( width, height );
       this.scene.add(this.background);
     },
 
@@ -260,8 +257,8 @@ export default Vue.extend({
       this.grain.position.setY( this.camera.position.y );
       this.grain.position.setZ( depth );
       const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
-      const height = ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * depth ) * 3.5;
-      const width = ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( depth ) ) * 3.5;
+      const height = Math.abs( ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * Math.abs( depth ) ) * 3.5 );
+      const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( depth ) ) * 3.5 );
 
       this.grain.scaleGrain( width, height );
       this.scene.add(this.grain);
@@ -274,23 +271,33 @@ export default Vue.extend({
       this.$router.push({ name: 'project', params: { id } });
       States.application.activateProject = true;
 
-      // TweenLite.to(
-      //   this.orthographicCamera.position,
-      //   3.5,
-      //   {
-      //     y: y + window.innerHeight * 2,
-      //     ease: 'Power4.easeInOut',
-      //   },
-      // );
-
       TweenLite.to(
-        this.ground.position,
+        this.camera.position,
         3.5,
         {
-          y: -90,
+          y: this.highY,
           ease: 'Power4.easeInOut',
         },
       );
+
+      TweenLite.to(
+        this.grain.position,
+        3.5,
+        {
+          y: this.highY,
+          ease: 'Power4.easeInOut',
+        },
+      );
+
+      // TweenLite.to(
+      //   this.ground.position,
+      //   3.5,
+      //   {
+      //     y: -90,
+      //     // y: -90,
+      //     ease: 'Power4.easeInOut',
+      //   },
+      // );
 
       for (let i = 0; i < this.projectContainers.length; i++) {
 
@@ -311,8 +318,32 @@ export default Vue.extend({
 
       const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
       const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 2.5;
-
       this.xStep = xStep;
+
+      for (let i = 0; i < this.projectContainers.length; i += 1) {
+
+        const x = this.xStep * i;
+        const y = i % 2 === 0 ? 15 : 22;
+        const z = this.zDepth;
+        const initialPosition = new THREE.Vector3(x, y, z);
+        this.projectContainers[i].setInitialPosition(initialPosition);
+      }
+
+      if (this.grain) {
+
+        const grainDepth = Math.abs( this.grain.position.z );
+        const grainHeight = Math.abs( ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * grainDepth ) * 3.5 );
+        const grainWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * grainDepth ) * 3.5 );
+        this.grain.scaleGrain( grainWidth, grainHeight );
+      }
+
+      if (this.background) {
+
+        const backgroundDepth = Math.abs( this.background.position.z );
+        const backgroundHeight = Math.abs( ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * backgroundDepth ) * 3.5 );
+        const backgroundWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * backgroundDepth ) * 3.5 );
+        this.background.scaleBackground( backgroundWidth, backgroundHeight );
+      }
     },
 
     // EVENTS ------------------------------------------------------------------
@@ -370,7 +401,7 @@ export default Vue.extend({
         } else {
 
           this.drag = true;
-          this.translationTarget = ( this.mouse.x - this.previousMouse.x ) * 100;
+          this.translationTarget = ( this.mouse.x - this.previousMouse.x ) * 60;
         }
 
         this.previousMouse.x = this.mouse.x;
