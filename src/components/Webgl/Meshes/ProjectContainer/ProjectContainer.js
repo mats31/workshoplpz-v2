@@ -10,6 +10,10 @@ class ProjectContainer extends THREE.Object3D {
 
     super();
 
+    this.initialPosition = new THREE.Vector3();
+    this.offsetCenter = new THREE.Vector2();
+    this.offsetSide = new THREE.Vector2();
+
     this.setup(options);
   }
 
@@ -19,6 +23,7 @@ class ProjectContainer extends THREE.Object3D {
     this.isFocus = false;
 
 
+    this.topPosition = options.topPosition;
     this.projectID = options.project.id;
     this.previewID = options.project.previewId;
     this.title = options.project.title;
@@ -26,8 +31,6 @@ class ProjectContainer extends THREE.Object3D {
     this.statut = options.project.statut;
     this.index = options.index;
     this.maskColor = options.project.color;
-
-    this.initialPosition = new THREE.Vector3();
 
     const texture = States.resources.getTexture(this.previewID).media;
     texture.minFilter = THREE.LinearFilter;
@@ -168,7 +171,22 @@ class ProjectContainer extends THREE.Object3D {
     this.text.hide();
   }
 
-  // Events -----------------------------------------------
+  goToProjectMode() {
+
+    this.mask.activateProject();
+
+    TweenLite.to(
+      this.offsetSide,
+      1.5,
+      {
+        x: this.perspectiveWidth * 0.99,
+        ease: 'Power4.easeInOut',
+        delay: 4,
+      },
+    );
+  }
+
+  // Events --------------------------------------------------------------------
 
   onDOMMouseover() {
 
@@ -184,31 +202,22 @@ class ProjectContainer extends THREE.Object3D {
 
     if (this.isFocus) {
 
-      Signals.onProjectClick.dispatch( this.projectID, this.position.y );
+      Signals.onProjectClick.dispatch( this.projectID, this.index );
 
-      const x = 0;
-      const y = 0;
-      // const y = this.position.y + window.innerHeight * 2;
-
-      this.mask.activateProject();
-      // this.projectPlane.activateProject();
-
-      TweenLite.to(
-        this.position,
-        3.5,
-        {
-          x,
-          y,
-          ease: 'Power4.easeInOut',
-        },
-      );
-
-      // TweenLite.delayedCall( 0.8, () => {
-
-      // this.projectPlane.displayPlane();
-      // });
+      this.goToProjectMode();
     }
   }
+
+  resize( fov, aspect ) {
+
+    const depth = Math.abs( this.position.z );
+    const hFOV = 2 * Math.atan( Math.tan( fov / 2 ) * aspect );
+    this.perspectiveHeight = Math.abs( ( 2 * Math.tan( ( fov / 2 ) ) * depth ) * 3.5 );
+    this.perspectiveWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) * 3.5 );
+    this.mask.resize( this.perspectiveWidth, this.perspectiveHeight );
+  }
+
+  // Update --------------------------------------------------------------------
 
   update( time, translationEase, camera, length, i ) {
 
@@ -237,8 +246,8 @@ class ProjectContainer extends THREE.Object3D {
     const offset = Math.abs(width * 2) + ( this.getMaskWidth() * 0.5 ) + extraMargin;
 
     this.initialPosition.setX( this.initialPosition.x + translationEase );
-    const x = modulo( this.initialPosition.x, moduloLength ) - offset;
-    const y = this.initialPosition.y;
+    const x = ( modulo( this.initialPosition.x, moduloLength ) - offset )  * ( 1 - this.offsetCenter.x ) - this.offsetSide.x;
+    const y = this.initialPosition.y + ( ( this.topPosition - this.initialPosition.y ) * this.offsetCenter.y );
     const z = this.initialPosition.z;
 
     // this.mask.position.setX( x );

@@ -10,6 +10,9 @@ class Mask extends THREE.Object3D {
 
     super();
 
+    this.squareScale = new THREE.Vector2();
+    this.perspectiveWidth = null;
+    this.perspectiveHeight = null;
     this.projectState = false;
     this.isMasking = false;
     this.maskRender = false;
@@ -114,7 +117,7 @@ class Mask extends THREE.Object3D {
 
   setupEvent() {
 
-    Signals.onResize.add( this.onResize.bind(this) );
+    // Signals.onResize.add( this.onResize.bind(this) );
   }
 
   // State ---------------------------------------------------------------------
@@ -183,26 +186,26 @@ class Mask extends THREE.Object3D {
     this.rotation.x = 0;
     this.rotation.y = 0;
 
-    const scaleX = this.wW / this.getMaskWidth();
-    const scaleY = this.wH / this.getMaskHeight();
+    const scaleX = this.squareScale.x;
+    const scaleY = this.squareScale.y;
 
     this.rotation.x = previousX;
     this.rotation.y = previousY;
 
     this.projectState = true;
 
-    TweenLite.to(
-      this,
-      1,
-      {
-        scaleValue: 0,
-        // ease: 'Power4.easeOut',
-        onComplete: () => {
-          // this.maskRender = false;
-          Signals.onProjectAnimationDone.dispatch();
-        },
-      },
-    );
+    // TweenLite.to(
+    //   this,
+    //   1,
+    //   {
+    //     scaleValue: 0,
+    //     // ease: 'Power4.easeOut',
+    //     onComplete: () => {
+    //       // this.maskRender = false;
+    //       Signals.onProjectAnimationDone.dispatch();
+    //     },
+    //   },
+    // );
 
     TweenLite.to(
       this.scale,
@@ -215,16 +218,16 @@ class Mask extends THREE.Object3D {
       },
     );
 
-    TweenLite.to(
-      this.rotation,
-      3.5,
-      {
-        delay: 1,
-        x: 0,
-        y: 0,
-        ease: 'Power4.easeInOut',
-      },
-    );
+    // TweenLite.to(
+    //   this.rotation,
+    //   3.5,
+    //   {
+    //     delay: 1,
+    //     x: 0,
+    //     y: 0,
+    //     ease: 'Power4.easeInOut',
+    //   },
+    // );
 
     TweenLite.to(
       this.maskMaterial.uniforms.u_morph,
@@ -269,14 +272,14 @@ class Mask extends THREE.Object3D {
       //   },
       // );
 
-      TweenLite.to(
-        this.maskMesh.position,
-        1.5,
-        {
-          x: ( window.innerWidth * 0.9921875 ) / scaleX,
-          ease: 'Power4.easeInOut',
-        },
-      );
+      // TweenLite.to(
+      //   this.maskMesh.position,
+      //   1.5,
+      //   {
+      //     x: this.perspectiveWidth / -3.6,
+      //     ease: 'Power4.easeInOut',
+      //   },
+      // );
 
       // this.maskRender = true;
 
@@ -384,10 +387,12 @@ class Mask extends THREE.Object3D {
 
   // Events --------------------------------------------------------------------
 
-  onResize( wW, wH ) {
+  resize( perspectiveWidth, perspectiveHeight ) {
 
-    this.wW = wW;
-    this.wH = wH;
+    this.perspectiveWidth = perspectiveWidth;
+    this.perspectiveHeight = perspectiveHeight;
+
+    this.squareScale.set( perspectiveWidth / this.getMaskWidth(), perspectiveHeight / this.getMaskHeight() );
   }
 
   // addGUI() {

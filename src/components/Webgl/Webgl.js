@@ -33,7 +33,7 @@ export default Vue.extend({
     this.grain = null;
 
     this.baseY = 20;
-    this.highY = 150;
+    this.topPosition = 150;
 
     this.setup();
   },
@@ -208,6 +208,7 @@ export default Vue.extend({
         const projectContainer = new ProjectContainer({
           project: projectList[i],
           index: i,
+          topPosition: this.topPosition,
         });
 
         // const angle = ( ( Math.PI * 2 ) / length ) * i;
@@ -266,7 +267,7 @@ export default Vue.extend({
 
     // STATE -------------------------------------------------------------------
 
-    goToProject( id, y ) {
+    goToProject( id, index ) {
 
       this.$router.push({ name: 'project', params: { id } });
       States.application.activateProject = true;
@@ -275,7 +276,7 @@ export default Vue.extend({
         this.camera.position,
         3.5,
         {
-          y: this.highY,
+          y: this.topPosition,
           ease: 'Power4.easeInOut',
         },
       );
@@ -284,7 +285,17 @@ export default Vue.extend({
         this.grain.position,
         3.5,
         {
-          y: this.highY,
+          y: this.topPosition,
+          ease: 'Power4.easeInOut',
+        },
+      );
+
+      TweenLite.to(
+        this.projectContainers[index].offsetCenter,
+        3.5,
+        {
+          x: 1,
+          y: 1,
           ease: 'Power4.easeInOut',
         },
       );
@@ -327,6 +338,7 @@ export default Vue.extend({
         const z = this.zDepth;
         const initialPosition = new THREE.Vector3(x, y, z);
         this.projectContainers[i].setInitialPosition(initialPosition);
+        this.projectContainers[i].resize( this.camera.fov, this.camera.aspect );
       }
 
       if (this.grain) {
@@ -360,7 +372,7 @@ export default Vue.extend({
       this.animate();
 
       this.checkRoute();
-
+      this.resize();
     },
 
     onResize() {

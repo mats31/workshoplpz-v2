@@ -69,10 +69,10 @@ void main() {
 
 	transformed.x += ( cos( u_time * u_speed ) * 1. ) * u_direction.x;
 	transformed.y += ( sin( u_time * u_speed ) * 1. ) * u_direction.y;
-	// vec3 finalPosition = a_finalPosition;
+	vec3 finalPosition = a_finalPosition;
 	// finalPosition.x += u_resolution.x * 0.4 * u_translationOffset;
 	// finalPosition.x += 100. / 1.997700021202425;
-	// transformed = mix( transformed, finalPosition, u_morph );
+	transformed = mix( transformed, finalPosition, u_morph );
 
   // float offset = snoise(transformed.xy * 0.015 + u_time * 0.05) * 10.;
   // transformed.z += abs( offset );
