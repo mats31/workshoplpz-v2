@@ -1,5 +1,6 @@
 import States from 'core/States';
 import MaskTexture from './MaskTexture';
+import lerp from 'utils/lerp';
 
 import vertexMaskShader from './shaders/maskMesh.vs';
 import fragmentMaskShader from './shaders/maskMesh.fs';
@@ -10,7 +11,9 @@ class Mask extends THREE.Object3D {
 
     super();
 
-    this.squareScale = new THREE.Vector2();
+    this.defaultScale = new THREE.Vector3(1, 1, 1);
+    this.squareScale = new THREE.Vector3();
+    this.squareScaleEase = 0;
     this.perspectiveWidth = null;
     this.perspectiveHeight = null;
     this.projectState = false;
@@ -20,6 +23,8 @@ class Mask extends THREE.Object3D {
     this.easeValue = 0;
     this.morphValue = 0;
     this.scaleValue = 0;
+    this.initalMaskWidth = 0;
+    this.initalMaskHeight = 0;
     this.color = options.color;
 
     this.setup();
@@ -105,13 +110,16 @@ class Mask extends THREE.Object3D {
       // side: THREE.DoubleSide,
     });
 
-    this.maskMesh = new THREE.Mesh(this.maskGeometry, this.maskMaterial);
-    // this.maskMesh.scale.set( 0.5, 0.5, 0.5 );
-    // this.maskMesh.castShadow = true;
-    // this.maskMesh.receiveShadow = true;
-    // this.maskMesh.rotation.x = 0.8;
-    // setInterval(()=>{this.maskMesh.rotation.x += 0.01;}, 2);
-    this.add(this.maskMesh);
+    this.mesh = new THREE.Mesh(this.maskGeometry, this.maskMaterial);
+    // this.mesh.scale.set( 0.5, 0.5, 0.5 );
+    // this.mesh.castShadow = true;
+    // this.mesh.receiveShadow = true;
+    // this.mesh.rotation.x = 0.8;
+    // setInterval(()=>{this.mesh.rotation.x += 0.01;}, 2);
+    this.add(this.mesh);
+
+    this.initalMaskWidth = this.getMaskWidth();
+    this.initalMaskHeight = this.getMaskHeight();
     // this.addGUI()
   }
 
@@ -208,12 +216,11 @@ class Mask extends THREE.Object3D {
     // );
 
     TweenLite.to(
-      this.scale,
+      this,
       3.5,
       {
         delay: 1,
-        x: scaleX,
-        y: scaleY,
+        squareScaleEase: 1,
         ease: 'Power4.easeInOut',
       },
     );
@@ -261,7 +268,7 @@ class Mask extends THREE.Object3D {
 
     TweenLite.delayedCall(4.5, () => {
 
-      // console.info(this.maskMesh);
+      // console.info(this.mesh);
 
       // TweenLite.to(
       //   this.maskUniforms.u_translationOffset,
@@ -273,7 +280,7 @@ class Mask extends THREE.Object3D {
       // );
 
       // TweenLite.to(
-      //   this.maskMesh.position,
+      //   this.mesh.position,
       //   1.5,
       //   {
       //     x: this.perspectiveWidth / -3.6,
@@ -325,7 +332,7 @@ class Mask extends THREE.Object3D {
 
   getMaskMesh() {
 
-    return this.maskMesh;
+    return this.mesh;
   }
 
   getMaskWidth() {
@@ -378,21 +385,29 @@ class Mask extends THREE.Object3D {
     // this.maskTexture.update();
     // this.maskTextuteCanvas.needsUpdate = true;
     this.maskMaterial.uniforms.u_time.value = time;
-    // this.maskMesh.rotation.y += 0.01;
+    // this.mesh.rotation.y += 0.01;
 
 
-    this.maskMesh.rotation.x = time * 0.01 * this.maskUniforms.u_speed.value * this.activeRotation;
-    this.maskMesh.rotation.z = time * 0.01 * this.maskUniforms.u_speed.value * this.activeRotation;
+    this.mesh.rotation.x = time * 0.01 * this.maskUniforms.u_speed.value * this.activeRotation;
+    this.mesh.rotation.z = time * 0.01 * this.maskUniforms.u_speed.value * this.activeRotation;
+
+    const scaleX = lerp( this.squareScaleEase, this.defaultScale.x, this.squareScale.x);
+    const scaleY = lerp( this.squareScaleEase, this.defaultScale.y, this.squareScale.y);
+    const scaleZ = lerp( this.squareScaleEase, this.defaultScale.z, this.squareScale.z);
+
+    this.scale.set( scaleX, scaleY, scaleZ );
   }
 
   // Events --------------------------------------------------------------------
 
   resize( perspectiveWidth, perspectiveHeight ) {
 
+    // console.info(perspectiveWidth);
+
     this.perspectiveWidth = perspectiveWidth;
     this.perspectiveHeight = perspectiveHeight;
 
-    this.squareScale.set( perspectiveWidth / this.getMaskWidth(), perspectiveHeight / this.getMaskHeight() );
+    this.squareScale.set( perspectiveWidth / this.initalMaskWidth, perspectiveHeight / this.initalMaskHeight, 1 );
   }
 
   // addGUI() {

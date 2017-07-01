@@ -14,6 +14,9 @@ class ProjectContainer extends THREE.Object3D {
     this.offsetCenter = new THREE.Vector2();
     this.offsetSide = new THREE.Vector2();
 
+    this.perspectiveWidth = 0;
+    this.scaleFactor = 1;
+
     this.setup(options);
   }
 
@@ -176,10 +179,19 @@ class ProjectContainer extends THREE.Object3D {
     this.mask.activateProject();
 
     TweenLite.to(
+      this,
+      3.5,
+      {
+        scaleFactor: 1,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    TweenLite.to(
       this.offsetSide,
       1.5,
       {
-        x: this.perspectiveWidth * 0.99,
+        x: 1,
         ease: 'Power4.easeInOut',
         delay: 4,
       },
@@ -208,13 +220,18 @@ class ProjectContainer extends THREE.Object3D {
     }
   }
 
-  resize( fov, aspect ) {
+  resize( fov, aspect, scaleFactor ) {
 
     const depth = Math.abs( this.position.z );
     const hFOV = 2 * Math.atan( Math.tan( fov / 2 ) * aspect );
     this.perspectiveHeight = Math.abs( ( 2 * Math.tan( ( fov / 2 ) ) * depth ) * 3.5 );
     this.perspectiveWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) * 3.5 );
     this.mask.resize( this.perspectiveWidth, this.perspectiveHeight );
+
+    if (!States.application.activateProject) {
+
+      this.scaleFactor = scaleFactor;
+    }
   }
 
   // Update --------------------------------------------------------------------
@@ -246,9 +263,15 @@ class ProjectContainer extends THREE.Object3D {
     const offset = Math.abs(width * 2) + ( this.getMaskWidth() * 0.5 ) + extraMargin;
 
     this.initialPosition.setX( this.initialPosition.x + translationEase );
-    const x = ( modulo( this.initialPosition.x, moduloLength ) - offset )  * ( 1 - this.offsetCenter.x ) - this.offsetSide.x;
+    const x = ( modulo( this.initialPosition.x, moduloLength ) - offset )  * ( 1 - this.offsetCenter.x ) - ( this.perspectiveWidth * 0.99 * this.offsetSide.x );
     const y = this.initialPosition.y + ( ( this.topPosition - this.initialPosition.y ) * this.offsetCenter.y );
     const z = this.initialPosition.z;
+
+    // if (i === 0 ) { console.info(this.perspectiveWidth); }
+    // if (i === 0 ) { console.info(this.mask.scale); }
+    // if (i === 0 ) { console.info(this.position.z); }
+    // if (i === 0 ) { console.info(this.mask.position.z); }
+    // if (i === 0 ) { console.info(x); }
 
     // this.mask.position.setX( x );
     // this.text.position.setX( x );
@@ -257,6 +280,8 @@ class ProjectContainer extends THREE.Object3D {
     this.position.set( x, y, z );
     // this.mask.lookAt( camera.position );
     // this.text.lookAt( camera.position );
+
+    this.scale.set( this.scaleFactor, this.scaleFactor, this.scaleFactor );
   }
 
   checkFocus( mousePoint ) {

@@ -35,6 +35,8 @@ export default Vue.extend({
     this.baseY = 20;
     this.topPosition = 150;
 
+    this.scaleStep = 1024;
+
     this.setup();
   },
 
@@ -331,6 +333,8 @@ export default Vue.extend({
       const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 2.5;
       this.xStep = xStep;
 
+      const scaleFactor = Math.min( 1, this.width / this.scaleStep );
+
       for (let i = 0; i < this.projectContainers.length; i += 1) {
 
         const x = this.xStep * i;
@@ -338,7 +342,7 @@ export default Vue.extend({
         const z = this.zDepth;
         const initialPosition = new THREE.Vector3(x, y, z);
         this.projectContainers[i].setInitialPosition(initialPosition);
-        this.projectContainers[i].resize( this.camera.fov, this.camera.aspect );
+        this.projectContainers[i].resize( this.camera.fov, this.camera.aspect, scaleFactor );
       }
 
       if (this.grain) {
