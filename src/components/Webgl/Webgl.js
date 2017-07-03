@@ -37,6 +37,10 @@ export default Vue.extend({
 
     this.scaleStep = 1024;
 
+    this.cameraTarget = new THREE.Vector3( 0, this.baseY, -150 );
+    this.cameraPosition = new THREE.Vector3( 0, this.baseY, 0 );
+    this.grainPosition = new THREE.Vector3( 0, this.baseY, -10 );
+
     this.setup();
   },
 
@@ -56,8 +60,7 @@ export default Vue.extend({
 
       this.xStep = 50;
       this.zDepth = -50;
-      this.cameraTarget = new THREE.Vector3(0, this.baseY, -150);
-      this.cameraPos = new THREE.Vector3(0, this.baseY, 0);
+
 
       this.translationTarget = 0;
       this.translationEase = 0;
@@ -83,13 +86,12 @@ export default Vue.extend({
 
       this.scene = window.scene = new THREE.Scene();
 
-      this.camera = window.camera = new THREE.PerspectiveCamera(50, width / height, 1, 10000);
-      this.camera.position.copy(this.cameraPos);
+      this.camera = window.camera = new THREE.PerspectiveCamera(this.initialFov, width / height, 1, 10000);
+      this.camera.position.copy(this.cameraPosition);
       this.camera.lookAt(this.cameraTarget);
 
       const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
       const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 3.5;
-
       this.xStep = xStep;
 
       this.renderer = window.renderer = new THREE.WebGLRenderer({
@@ -114,7 +116,7 @@ export default Vue.extend({
       //   -10000,
       //   10000,
       // );
-      // this.orthographicCamera.position.copy(this.cameraPos);
+      // this.orthographicCamera.position.copy(this.cameraPosition);
       // this.orthographicCamera.lookAt(this.cameraTarget);
 
       // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -141,7 +143,13 @@ export default Vue.extend({
 
       if ( this.$route.name === 'project' ) {
 
-        this.goToProject( this.$route.params.id, 0 );
+        for (let i = 0; i < this.projectContainers.length; i++) {
+
+          if ( this.$route.params.id === this.projectContainers[i].projectID ) {
+
+            this.goToProject( this.$route.params.id, i );
+          }
+        }
       }
     },
 
@@ -254,14 +262,11 @@ export default Vue.extend({
 
     setupGrain() {
 
-      const depth = -10;
-
       this.grain = new Grain();
-      this.grain.position.setY( this.camera.position.y );
-      this.grain.position.setZ( depth );
+      this.grain.position.copy( this.grainPosition );
       const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
-      const height = Math.abs( ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * Math.abs( depth ) ) * 3.5 );
-      const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( depth ) ) * 3.5 );
+      const height = Math.abs( ( 2 * Math.tan( ( this.camera.fov / 2 ) ) * Math.abs( this.grain.position.z ) ) * 3.5 );
+      const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.grain.position.z ) ) * 3.5 );
 
       this.grain.scaleGrain( width, height );
       this.scene.add(this.grain);
@@ -271,12 +276,9 @@ export default Vue.extend({
 
     goToProject( id, index ) {
 
-      this.$router.push({ name: 'project', params: { id } });
-      States.application.activateProject = true;
-
       TweenLite.to(
         this.camera.position,
-        3.5,
+        1.5,
         {
           y: this.topPosition,
           ease: 'Power4.easeInOut',
@@ -285,7 +287,7 @@ export default Vue.extend({
 
       TweenLite.to(
         this.grain.position,
-        3.5,
+        1.5,
         {
           y: this.topPosition,
           ease: 'Power4.easeInOut',
@@ -294,7 +296,7 @@ export default Vue.extend({
 
       TweenLite.to(
         this.projectContainers[index].offsetCenter,
-        3.5,
+        1.5,
         {
           x: 1,
           y: 1,
@@ -302,15 +304,7 @@ export default Vue.extend({
         },
       );
 
-      // TweenLite.to(
-      //   this.ground.position,
-      //   3.5,
-      //   {
-      //     y: -90,
-      //     // y: -90,
-      //     ease: 'Power4.easeInOut',
-      //   },
-      // );
+      this.projectContainers[index].goToProjectMode();
 
       for (let i = 0; i < this.projectContainers.length; i++) {
 
@@ -362,7 +356,62 @@ export default Vue.extend({
       }
     },
 
+    zoomFov() {
+
+      TweenLite.killTweensOf([this.camera, this.grain]);
+
+      TweenLite.to(
+        this.camera.position,
+        1,
+        {
+          z: 0,
+          ease: 'Power4.easeOut',
+        }
+      );
+
+      TweenLite.to(
+        this.grain.position,
+        1,
+        {
+          z: this.grainPosition.z,
+          ease: 'Power4.easeOut',
+        }
+      );
+    },
+
+    dezoomFov() {
+
+      TweenLite.killTweensOf([this.camera, this.grain]);
+
+      TweenLite.to(
+        this.camera.position,
+        1,
+        {
+          z: 10,
+          ease: 'Power4.easeOut',
+        }
+      );
+
+      TweenLite.to(
+        this.grain.position,
+        1,
+        {
+          z: this.grainPosition.z + 10,
+          ease: 'Power4.easeOut',
+        }
+      );
+    },
+
     // EVENTS ------------------------------------------------------------------
+
+    onUpdateFov() {
+
+      const hFOV = 2 * Math.atan( Math.tan( this.camera.fov / 2 ) * this.camera.aspect );
+      const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this.zDepth ) ) * 2.5;
+      this.xStep = xStep;
+
+      this.camera.updateProjectionMatrix();
+    },
 
     onAssetsLoaded() {
 
@@ -440,11 +489,13 @@ export default Vue.extend({
     onWebGLMouseup() {
 
       this.clicked = false;
+      this.zoomFov();
     },
 
     onWebGLMousedown() {
 
       this.clicked = true;
+      this.dezoomFov();
     },
 
     onWebGLClick() {
@@ -460,7 +511,10 @@ export default Vue.extend({
 
     onProjectClick( id, y ) {
 
-      this.goToProject( id, y );
+      console.log(id);
+      this.$router.push({ name: 'project', params: { id } });
+      States.application.activateProject = true;
+      // this.goToProject( id, y );
     },
 
     // UPDATE -------------------------------------------------------------------
@@ -470,7 +524,7 @@ export default Vue.extend({
       raf(this.animate);
 
       this.updateRaycast();
-
+      // this.updateCamera();
       this.updateProjectContainers();
       this.ground.update( this.clock.time, this.translationEase );
       this.grain.update( this.clock.time );
@@ -513,6 +567,12 @@ export default Vue.extend({
       // ));
     },
 
+    updateCamera() {
+
+      this.camera.fov += ( this.targetFov - this.camera.fov ) * 0.1;
+      this.camera.updateProjectionMatrix();
+    },
+
     updateProjectContainers() {
 
       const length = this.projectContainers.length * this.xStep;
@@ -527,6 +587,15 @@ export default Vue.extend({
           // console.log(project.mask.position.x);
         }
       }
+    },
+
+  },
+
+  watch: {
+
+    $route: function(to, from) {
+
+      this.checkRoute();
     },
 
   },

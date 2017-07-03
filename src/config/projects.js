@@ -2,7 +2,7 @@ const projects = {
 
   projectList: [
     {
-      id: 'orange',
+      id: 'skyfall',
       previewId: 'project-preview',
       title: 'Skyfall',
       client: 'Orange Customer',
@@ -16,10 +16,10 @@ const projects = {
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
       ],
-      color: 0xffc86b,
+      color: 'rgb(255, 200, 107)',
     },
     {
-      id: 'bouygues',
+      id: 'fuse',
       previewId: 'project-preview',
       title: 'Fuse',
       client: 'Orange Customer',
@@ -33,10 +33,10 @@ const projects = {
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
       ],
-      color: 0x6bffd7,
+      color: 'rgb(107, 255, 215)',
     },
     {
-      id: 'sfr',
+      id: 'orange',
       previewId: 'project-preview',
       title: 'Parcea',
       client: 'Orange Customer',
@@ -50,10 +50,10 @@ const projects = {
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
       ],
-      color: 0x816bff,
+      color: 'rgb(129, 107, 255)',
     },
     {
-      id: 'sfr',
+      id: 'retrograph',
       previewId: 'project-preview',
       title: 'Retrograph',
       client: 'Orange Customer',
@@ -67,7 +67,7 @@ const projects = {
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
         'I realized a serie of 3d images in order to improve myself on Cinema4D and begin to think about some WebGL productions.',
       ],
-      color: 0xff0000,
+      color: 'rgb(255, 0, 0)',
     },
   ],
 };

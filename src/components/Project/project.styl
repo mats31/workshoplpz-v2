@@ -1,6 +1,9 @@
 .project
   display none
-  position relative
+  left 0
+  position absolute
+  top 0
+  // position relative
   z-index 10
 
 .project__container
@@ -26,6 +29,15 @@
   bottom 0
   transform translate3d(-50%, 0, 0)
   background-color #ffffff
+
+.project__preview
+  background-repeat none
+  background-size cover
+  position absolute
+  left 50%
+  top 50%
+  width 50%
+  transform translate3d(-50%, -50%, 0)
 
 .project__title
   font-family 'majesti-medium'

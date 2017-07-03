@@ -2,6 +2,7 @@ const ressources = {
 
   images: [
     { id: 'twitter', url: 'images/twitter.png', description: 'Twitter' },
+    { id: 'orange-preview', url: 'images/orange-0.png', description: 'Orange preview' },
     { id: 'orange-0', url: 'images/orange-0.png', description: 'First orange picture' },
     { id: 'test', url: 'images/test.png', description: 'test' },
   ],

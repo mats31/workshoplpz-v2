@@ -1,3 +1,4 @@
+import States from 'core/States';
 import './project.styl';
 
 import projects from 'config/projects';
@@ -34,23 +35,30 @@ export default Vue.extend({
 
     checkRoute() {
 
-      for (var i = 0; i < projects.projectList.length; i++) {
+      for (let i = 0; i < projects.projectList.length; i++) {
 
         if ( projects.projectList[i].id === this.$route.params.id ) {
+
+          this.currentProject = projects.projectList[i];
 
           this.populateProject( projects.projectList[i] );
           this.show();
 
-          return;
-        } else {
-
-          this.$router.push({ name: 'home' });
+          return true;
         }
       }
+
+      this.$router.push({ name: 'home' });
+
+      return false;
     },
 
     populateProject( currentProject ) {
 
+      // const previewID = `${currentProject.id}-preview`;
+      // this.$refs.projectPreview.style.backgroundImage = `url(images/${States.resources.getImage(previewID).media})`;
+
+      this.$refs.projectTitleContainer.style.background = currentProject.color;
       this.$refs.projectName.innerHTML = currentProject.title;
       this.$refs.clientName.innerHTML = currentProject.client;
       this.$refs.projectDescription.innerHTML = currentProject.description;
@@ -61,7 +69,12 @@ export default Vue.extend({
 
     show() {
 
-      this.$refs.container.style.display = 'block';
+      TweenLite.delayedCall(
+        1.5,
+        () => {
+          this.$refs.container.style.display = 'block';
+        },
+      );
     },
 
     /* Events */
@@ -73,6 +86,15 @@ export default Vue.extend({
     onAssetsLoaded() {
 
     },
+  },
+
+  watch: {
+
+    $route: function(to, from) {
+
+      this.checkRoute(to.name);
+    },
+
   },
 
   components: {},

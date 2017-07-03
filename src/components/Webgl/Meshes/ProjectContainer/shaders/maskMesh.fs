@@ -117,7 +117,9 @@ void main() {
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-  vec3 totalEmissiveRadiance = emissive * min( 1., vRandomColor * u_ease );
+    // vec3 totalEmissiveRadiance = emissive * min( 1., vRandomColor * u_ease );
+    vec3 totalEmissiveRadiance = emissive * (vRandomColor * u_ease );
+  // vec3 totalEmissiveRadiance = emissive * max( 0., ( (vRandomColor * u_ease ) - 0.2 ) );
 	// vec3 totalEmissiveRadiance = emissive * u_ease * vRandomColor;
 
 	#include <logdepthbuf_fragment>

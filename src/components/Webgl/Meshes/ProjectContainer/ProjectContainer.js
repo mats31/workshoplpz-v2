@@ -82,7 +82,7 @@ class ProjectContainer extends THREE.Object3D {
     this.add(this.text);
   }
 
-  // Getter -----------------------------------------------
+  // Getters --------------------------------------------------------------------
 
   getMask() {
 
@@ -106,12 +106,7 @@ class ProjectContainer extends THREE.Object3D {
     return this.mask.getMaskWidth();
   }
 
-  // getProjectPlane() {
-  //
-  //   return this.projectPlane;
-  // }
-
-  // State -----------------------------------------------
+  // State ---------------------------------------------------------------------
 
   deActiveRaycast() {
 
@@ -128,7 +123,6 @@ class ProjectContainer extends THREE.Object3D {
   setInitialPosition( pos ) {
 
     this.initialPosition.copy( pos );
-    // this.mask.position.copy( pos );
   }
 
   activeFocus() {
@@ -137,36 +131,19 @@ class ProjectContainer extends THREE.Object3D {
 
     document.body.style.cursor = 'pointer';
 
-    // TweenLite.killTweensOf(this.box);
-    // TweenLite.to(
-    //   this.box,
-    //   0.55,
-    //   {
-    //     opacity: 1,
-    //     ease: 'Power2.easeIn',
-    //   },
-    // );
-
     this.mask.activateMask();
   }
 
   deactiveFocus() {
 
-    this.isFocus = false;
+    if (this.isFocus) {
 
-    document.body.style.cursor = 'initial';
+      this.isFocus = false;
 
-    // TweenLite.killTweensOf(this.box);
-    // TweenLite.to(
-    //   this.box,
-    //   0.5,
-    //   {
-    //     opacity: 0.5,
-    //     ease: 'Power2.easeIn',
-    //   },
-    // );
+      document.body.style.cursor = 'initial';
 
-    this.mask.deactivateMask();
+      this.mask.deactivateMask();
+    }
   }
 
   hideText() {
@@ -180,22 +157,22 @@ class ProjectContainer extends THREE.Object3D {
 
     TweenLite.to(
       this,
-      3.5,
+      1.5,
       {
         scaleFactor: 1,
         ease: 'Power4.easeInOut',
       },
     );
 
-    TweenLite.to(
-      this.offsetSide,
-      1.5,
-      {
-        x: 1,
-        ease: 'Power4.easeInOut',
-        delay: 4,
-      },
-    );
+    // TweenLite.to(
+    //   this.offsetSide,
+    //   1.5,
+    //   {
+    //     x: 1,
+    //     ease: 'Power4.easeInOut',
+    //     delay: 2,
+    //   },
+    // );
   }
 
   // Events --------------------------------------------------------------------

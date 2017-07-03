@@ -22,7 +22,6 @@ class Mask extends THREE.Object3D {
     this.activeRotation = 1;
     this.easeValue = 0;
     this.morphValue = 0;
-    this.scaleValue = 0;
     this.initalMaskWidth = 0;
     this.initalMaskHeight = 0;
     this.color = options.color;
@@ -135,22 +134,12 @@ class Mask extends THREE.Object3D {
     if (!this.isMasking && !this.projectState) {
 
       this.isMasking = true;
-      // this.maskRender = true;
 
       TweenLite.to(
         this.maskUniforms.u_ease,
-        1.15,
+        0.25,
         {
           value: 1,
-          ease: 'Power2.easeInOut',
-        },
-      );
-
-      TweenLite.to(
-        this,
-        1.15,
-        {
-          scaleValue: 0.65,
           ease: 'Power2.easeInOut',
         },
       );
@@ -164,24 +153,11 @@ class Mask extends THREE.Object3D {
       this.isMasking = false;
 
       TweenLite.to(
-        this,
-        0.7,
-        {
-          scaleValue: 0,
-          ease: 'Power2.easeOut',
-        },
-      );
-
-      TweenLite.to(
         this.maskUniforms.u_ease,
         0.7,
         {
           value: 0,
           ease: 'Power2.easeOut',
-          // onComplete: () => {
-
-          //   this.maskRender = false;
-          // },
         },
       );
     }
@@ -217,9 +193,9 @@ class Mask extends THREE.Object3D {
 
     TweenLite.to(
       this,
-      3.5,
+      1.5,
       {
-        delay: 1,
+        delay: 0.34,
         squareScaleEase: 1,
         ease: 'Power4.easeInOut',
       },
@@ -238,9 +214,9 @@ class Mask extends THREE.Object3D {
 
     TweenLite.to(
       this.maskMaterial.uniforms.u_morph,
-      3.5,
+      1.5,
       {
-        delay: 1,
+        delay: 0.34,
         value: 1,
         ease: 'Power4.easeInOut',
       },
@@ -248,9 +224,9 @@ class Mask extends THREE.Object3D {
 
     TweenLite.to(
       this.maskUniforms.u_fullColor,
-      3.5,
+      1.5,
       {
-        delay: 1,
+        delay: 0.34,
         value: 1,
         ease: 'Power4.easeInOut',
       },
@@ -258,9 +234,9 @@ class Mask extends THREE.Object3D {
 
     TweenLite.to(
       this,
-      3.5,
+      1.5,
       {
-        delay: 1,
+        // delay: 0.34,
         activeRotation: 0,
         ease: 'Power4.easeInOut',
       },
