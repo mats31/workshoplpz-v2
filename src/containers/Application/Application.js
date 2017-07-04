@@ -49,6 +49,9 @@ export default Vue.extend({
         case 'projects':
           document.body.style.overflow = 'hidden';
           break;
+        case 'project':
+          document.body.style.overflow = 'visible';
+          break;
         default:
           document.body.style.overflow = 'hidden';
       }

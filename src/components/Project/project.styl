@@ -1,14 +1,15 @@
+@import '../../stylesheets/mixins'
+
 .project
   display none
   left 0
   position absolute
   top 0
-  // position relative
   z-index 10
 
 .project__container
   color #ffffff
-  font-family 'gotham-medium'
+  font-body()
 
 .project__titleContainer
   height 100vh
@@ -36,16 +37,18 @@
   position absolute
   left 50%
   top 50%
+  height 50%
   width 50%
+  opacity 0
   transform translate3d(-50%, -50%, 0)
 
 .project__title
-  font-family 'majesti-medium'
-  font-size 10rem
+  font-title()
   position absolute
   left 50%
   top 50%
   width 23.17708333vw
+  opacity 0
   transform: translate3d(-50%, -50%, 0);
   text-align: center;
   min-width: 450px;
@@ -105,8 +108,7 @@
   width: 17.1%;
 
 .project__category
-  font-family 'gotham-medium'
-  font-size 2rem
+  font-subtitle()
   margin 0 0 6rem 0
 
 .project__clientName

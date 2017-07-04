@@ -16,14 +16,14 @@ export default Vue.extend({
 
   created() {
 
+    this.currentColor = 'rgb(0, 0, 0)';
+    this.projectID = null;
+
     Signals.onAssetLoaded.add(this.onAssetLoaded);
     Signals.onAssetsLoaded.add(this.onAssetsLoaded);
   },
 
-  mounted() {
-
-    this.checkRoute();
-  },
+  mounted() {},
 
   methods: {
 
@@ -42,7 +42,7 @@ export default Vue.extend({
           this.currentProject = projects.projectList[i];
 
           this.populateProject( projects.projectList[i] );
-          this.show();
+          this.waitForShow();
 
           return true;
         }
@@ -55,10 +55,9 @@ export default Vue.extend({
 
     populateProject( currentProject ) {
 
-      // const previewID = `${currentProject.id}-preview`;
-      // this.$refs.projectPreview.style.backgroundImage = `url(images/${States.resources.getImage(previewID).media})`;
+      this.projectID = currentProject.id;
+      this.currentColor = currentProject.color;
 
-      this.$refs.projectTitleContainer.style.background = currentProject.color;
       this.$refs.projectName.innerHTML = currentProject.title;
       this.$refs.clientName.innerHTML = currentProject.client;
       this.$refs.projectDescription.innerHTML = currentProject.description;
@@ -67,24 +66,53 @@ export default Vue.extend({
       this.$refs.projectChapterText.innerHTML = currentProject.chapters[0];
     },
 
+    waitForShow() {
+
+      TweenLite.delayedCall( 1.2, this.show.bind(this) );
+    },
+
     show() {
 
-      TweenLite.delayedCall(
-        1.5,
-        () => {
-          this.$refs.container.style.display = 'block';
+      const previewID = `${this.projectID}-preview`;
+
+      this.$refs.container.style.display = 'block';
+      this.$refs.projectPreview.style.backgroundImage = `url(${States.resources.getImage(previewID).media.src})`;
+
+      TweenLite.fromTo(
+        this.$refs.projectPreview,
+        0.5,
+        {
+          autoAlpha: 0,
+          scaleY: 0.8,
+          y: '-30%',
+        },
+        {
+          autoAlpha: 1,
+          scaleY: 1,
+          y: '-50%',
+          ease: 'Power4.easeOt',
         },
       );
+
+      TweenLite.to(
+        this.$refs.projectName,
+        0.6,
+        {
+          autoAlpha: 1,
+          ease: 'Power2.easeOt',
+        },
+      );
+
+      // this.$refs.projectTitleContainer.style.background = this.currentColor;
     },
 
     /* Events */
 
-    onAssetLoaded(percent) {
-
-    },
+    onAssetLoaded(percent) {},
 
     onAssetsLoaded() {
 
+      this.checkRoute();
     },
   },
 

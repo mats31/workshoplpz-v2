@@ -1,6 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const Config = {
@@ -50,7 +51,8 @@ const Config = {
       },
       {
         test: /\.styl$/,
-        loader: 'style-loader!css-loader!stylus-loader?resolve url',
+        loader: ExtractTextPlugin.extract('css-loader?sourceMap!resolve-url-loader!stylus-loader'),
+        // loader: 'style-loader!css-loader!stylus-loader?resolve url',
       },
       {
         test: /\.(glsl|vs|fs)$/,
@@ -71,6 +73,7 @@ const Config = {
       inject: 'body',
       template: 'src/template/index.tpl.html',
     }),
+    new ExtractTextPlugin('[name]-[hash].min.css', { allChunks: true }),
     new webpack.ProvidePlugin({
       THREE: 'three',
       Vue: 'vue/dist/vue',
