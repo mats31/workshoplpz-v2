@@ -5,6 +5,7 @@
   left 0
   position absolute
   top 0
+  width 100%
   z-index 10
 
 .project__container
@@ -57,42 +58,10 @@
   background #191919
   position relative
 
-.project__lines
-  position absolute
-  height 100%
-  width 100%
-
-.project__line
-  position absolute
-
-.project__firstLine
-  background rgba(255, 255, 255, 0.1)
-  left 19.7916666667%
-  height 100%
-  width 1px
-
-.project__secondLine
-  background rgba(255, 255, 255, 0.1)
-  left 49.9479166667%
-  height 100%
-  width 1px
-
-.project__thirdLine
-  background rgba(255, 255, 255, 0.1)
-  left 80.15625%
-  height 100%
-  width 1px
-
-.project__firstContainer
-  height 100vh
-  min-height 69.5rem
-  position relative
-  width: 100%
-
 .project__flexContainer
   display flex
-  padding-left 19.79166667%
-  width 80.20833333%
+  padding 0 5.45%
+  width 89.1%
 
 .project__firstFlex
   position absolute
@@ -182,5 +151,4 @@
 .project__pitchDescription,
 .project__roleDescription,
 .project__rewardDescription
-  font-family 'gotham-light'
-  font-size 2.4rem
+  font-body()

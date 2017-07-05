@@ -59,11 +59,10 @@ export default Vue.extend({
       this.currentColor = currentProject.color;
 
       this.$refs.projectName.innerHTML = currentProject.title;
-      this.$refs.clientName.innerHTML = currentProject.client;
+      this.$refs.dateYear.innerHTML = currentProject.date;
       this.$refs.projectDescription.innerHTML = currentProject.description;
-      this.$refs.projectStatut.innerHTML = currentProject.statut;
-      this.$refs.projectReward.innerHTML = currentProject.reward;
-      this.$refs.projectChapterText.innerHTML = currentProject.chapters[0];
+      this.$refs.projectTeam.innerHTML = currentProject.team;
+      this.$refs.projectRole.innerHTML = currentProject.role;
     },
 
     waitForShow() {
