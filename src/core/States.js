@@ -22,8 +22,6 @@ class States {
       videos: [],
       models: [],
       getImage(id) {
-        console.log(id);
-        console.log(this.images);
         return this.images.find( image => image.id === id );
       },
       getTexture(id) {

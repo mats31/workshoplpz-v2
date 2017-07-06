@@ -23,15 +23,6 @@
   right 70px
   top 70px
 
-.project__scroll
-  height 8.25vh
-  width 5px
-  position absolute
-  left 50%
-  bottom 0
-  transform translate3d(-50%, 0, 0)
-  background-color #ffffff
-
 .project__preview
   background-repeat none
   background-size cover
@@ -59,46 +50,42 @@
   position relative
 
 .project__flexContainer
-  display flex
+  // display flex
   padding 0 5.45%
   width 89.1%
 
-.project__firstFlex
-  position absolute
-  top 50%
-  transform translate3d( 0, -50%, 0 )
+// .project__firstFlex
+//   position absolute
+//   top 50%
+//   transform translate3d( 0, -50%, 0 )
 
 .project__column
-  padding: 0 5% 0 1.64%;
-  width: 31%;
+  display inline-block
+  margin-left -0.4rem
+  vertical-align top
+  width 25%
 
-.project__lastColumn
-  padding: 0 6% 0 1.64%;
-  width: 17.1%;
+.project__team
+  // transform translate(50%, 0)
+  padding-left 12.5%
+  width 12.5%
+
+
+.project__role
+  // transform translate(50%, 0)
+  padding-left 12.5%
+  width 12.5%
 
 .project__category
   font-subtitle()
   margin 0 0 6rem 0
 
-.project__clientName
-  font-family 'majesti-medium'
-  font-size 10rem
-  margin 0 0 10rem 0
-
-.project__clientVisit
-  border-bottom 4px solid #ffffff
-  display inline-block
-  font-family 'gotham-medium'
-  font-size 2rem
-  margin 0
-  padding-bottom: 1.6rem
-
 .project__role
   margin-bottom 9rem
 
 .project__secondContainer
-  position relative
-  width: 100%
+  padding 0 5.45%
+  width 89.1%
 
 .project__backTop
   height 7.65rem

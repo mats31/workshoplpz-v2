@@ -16,14 +16,20 @@ export default Vue.extend({
 
   created() {
 
-    this.currentColor = 'rgb(0, 0, 0)';
-    this.projectID = null;
+    this.assetsLoaded = true;
+    this.currentProject = null;
 
     Signals.onAssetLoaded.add(this.onAssetLoaded);
     Signals.onAssetsLoaded.add(this.onAssetsLoaded);
   },
 
-  mounted() {},
+  mounted() {
+
+    if (this.assetsLoaded) {
+
+      this.checkRoute();
+    }
+  },
 
   methods: {
 
@@ -55,7 +61,7 @@ export default Vue.extend({
 
     populateProject( currentProject ) {
 
-      this.projectID = currentProject.id;
+      this.currentProject = currentProject;
       this.currentColor = currentProject.color;
 
       this.$refs.projectName.innerHTML = currentProject.title;
@@ -72,10 +78,19 @@ export default Vue.extend({
 
     show() {
 
-      const previewID = `${this.projectID}-preview`;
+      const previewID = `${this.currentProject.id}-preview`;
 
       this.$refs.container.style.display = 'block';
       this.$refs.projectPreview.style.backgroundImage = `url(${States.resources.getImage(previewID).media.src})`;
+
+      for (let i = 0; i < this.currentProject.pictures.length; i++) {
+
+        const pictureContainer = document.createElement('div');
+        const img = States.resources.getImage(this.currentProject.pictures[i]).media;
+
+        pictureContainer.appendChild(img);
+        this.$refs.projectSecondContainer.appendChild(pictureContainer);
+      }
 
       TweenLite.fromTo(
         this.$refs.projectPreview,
@@ -110,6 +125,8 @@ export default Vue.extend({
     onAssetLoaded(percent) {},
 
     onAssetsLoaded() {
+
+      this.assetsLoaded = true;
 
       this.checkRoute();
     },
