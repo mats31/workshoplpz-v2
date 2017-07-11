@@ -1,8 +1,9 @@
 import States from 'core/States';
 import './project.styl';
 
+import raf from 'raf';
+import Preview from './objects/Preview/Preview';
 import projects from 'config/projects';
-
 import template from './project.html';
 
 export default Vue.extend({
@@ -18,6 +19,13 @@ export default Vue.extend({
 
     this.assetsLoaded = true;
     this.currentProject = null;
+    this.width = null;
+    this.height = null;
+    this.webGLState = false;
+    this.render = false;
+    this.previews = [];
+
+    this.setupWebGL();
 
     Signals.onAssetLoaded.add(this.onAssetLoaded);
     Signals.onAssetsLoaded.add(this.onAssetsLoaded);
@@ -32,6 +40,14 @@ export default Vue.extend({
   },
 
   methods: {
+
+    setupWebGL() {
+
+      this.section = 0.890625;
+      this.heightPicture = 620;
+      this.margin = 130;
+      this.width = window.innerWidth * this.section;
+    },
 
     setPercentLoading(value) {
 
@@ -83,14 +99,20 @@ export default Vue.extend({
       this.$refs.container.style.display = 'block';
       this.$refs.projectPreview.style.backgroundImage = `url(${States.resources.getImage(previewID).media.src})`;
 
-      for (let i = 0; i < this.currentProject.pictures.length; i++) {
+      if (this.currentProject.pictures.length > 0 && !this.webGLState) {
 
-        const pictureContainer = document.createElement('div');
-        const img = States.resources.getImage(this.currentProject.pictures[i]).media;
-
-        pictureContainer.appendChild(img);
-        this.$refs.projectSecondContainer.appendChild(pictureContainer);
+        this.settingWebGLPreview();
+        this.webGLState = true;
       }
+
+      // for (let i = 0; i < this.currentProject.pictures.length; i++) {
+      //
+      //   const pictureContainer = document.createElement('div');
+      //   const img = States.resources.getImage(this.currentProject.pictures[i]).media;
+      //
+      //   pictureContainer.appendChild(img);
+      //   this.$refs.projectSecondContainer.appendChild(pictureContainer);
+      // }
 
       TweenLite.fromTo(
         this.$refs.projectPreview,
@@ -117,10 +139,61 @@ export default Vue.extend({
         },
       );
 
+      this.render = true;
+      this.update();
+
       // this.$refs.projectTitleContainer.style.background = this.currentColor;
     },
 
-    /* Events */
+    settingWebGLPreview() {
+
+      const length = this.currentProject.pictures.length;
+      const texture = States.resources.getTexture(this.currentProject.pictures[0]).media;
+
+      this.ratio = texture.image.naturalHeight / texture.image.naturalWidth;
+      this.width = window.innerWidth * 0.890625;
+      this.heightPicture = this.width * this.ratio;
+      this.height = this.heightPicture * length + this.margin * length;
+
+      this.scene = new THREE.Scene();
+      this.camera = new THREE.OrthographicCamera( this.width / -2, this.width / 2, this.height / 2, this.height / -2, 1, 1000 );
+      this.camera.position.z = 1;
+      this.renderer = new THREE.WebGLRenderer({});
+      this.renderer.setSize(this.width, this.height);
+      this.renderer.setClearColor(0x000000, 0);
+
+      for (let i = 0; i < length; i++) {
+
+        const preview = new Preview({
+          texture: States.resources.getTexture(this.currentProject.pictures[i]).media,
+          width: this.width,
+          height: this.heightPicture,
+          fullHeight: this.height,
+          length,
+          margin: this.margin,
+          index: i,
+        });
+
+        this.scene.add(preview);
+        this.previews.push(preview);
+      }
+
+      this.$refs.projectSecondContainer.appendChild(this.renderer.domElement);
+    },
+
+    // Update ------------------------------------------------------------------
+
+    update() {
+
+      raf(this.update);
+
+      if (this.render) {
+
+        this.renderer.render( this.scene, this.camera );
+      }
+    },
+
+    // Events ------------------------------------------------------------------
 
     onAssetLoaded(percent) {},
 

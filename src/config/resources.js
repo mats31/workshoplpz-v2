@@ -26,6 +26,10 @@ const ressources = {
     { id: 'project-preview-voronoi', url: 'textures/project-preview-voronoi2.png', description: '' },
     { id: 'background', url: 'textures/background.png', description: '' },
     { id: 'grain', url: 'textures/grain-2.png', description: '' },
+    { id: 'picture-skyfall-0', url: 'textures/picture-skyfall-0.png', description: 'First orange picture' },
+    { id: 'picture-skyfall-1', url: 'textures/picture-skyfall-1.png', description: 'First orange picture' },
+    { id: 'picture-skyfall-2', url: 'textures/picture-skyfall-2.png', description: 'First orange picture' },
+    { id: 'picture-skyfall-3', url: 'textures/picture-skyfall-3.png', description: 'First orange picture' },
   ],
 
   models: [
