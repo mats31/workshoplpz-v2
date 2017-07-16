@@ -152,12 +152,15 @@ export default Vue.extend({
 
       this.ratio = texture.image.naturalHeight / texture.image.naturalWidth;
       this.width = window.innerWidth * 0.890625;
+      // this.width = window.innerWidth;
       this.heightPicture = this.width * this.ratio;
       this.height = this.heightPicture * length + this.margin * length;
+      // this.height = window.innerHeight;
 
       this.scene = new THREE.Scene();
-      this.camera = new THREE.OrthographicCamera( this.width / -2, this.width / 2, this.height / 2, this.height / -2, 1, 1000 );
-      this.camera.position.z = 1;
+      // this.camera = new THREE.OrthographicCamera( this.width / -2, this.width / 2, this.height / 2, this.height / -2, 1, 1000 );
+      this.camera = new THREE.PerspectiveCamera( 45, this.width / this.height, 1, 10000 );
+      this.camera.position.z = 50;
       this.renderer = new THREE.WebGLRenderer({});
       this.renderer.setSize(this.width, this.height);
       this.renderer.setClearColor(0x000000, 0);
@@ -172,6 +175,8 @@ export default Vue.extend({
           length,
           margin: this.margin,
           index: i,
+          camera: this.camera,
+          ratio: this.ratio,
         });
 
         this.scene.add(preview);
