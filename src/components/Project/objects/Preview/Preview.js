@@ -41,18 +41,21 @@ class Preview extends THREE.Object3D {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.add(this.mesh);
 
+    // console.log(this.perspectiveSize.width);
+    // console.log(this.perspectiveSize.height);
+
+    const customWidth = this.perspectiveSize.width * 0.2115;
+    const customHeight = ( customWidth * this.ratio );
+
+    const xScale = customWidth / this.initialWidth;
+    const yScale = customHeight / this.initialHeight;
+    const zScale = 1;
+    this.scale.set( xScale, yScale, zScale );
+
     // const x = 0;
     // const y = ( this.fullHeight * 0.5 - this.height * 0.5 ) - ( ( this.margin + this.height ) * this.index);
     // const z = 0;
     // this.position.set( x, y, z );
-
-    console.log(this.perspectiveSize.width);
-    console.log(this.perspectiveSize.height);
-
-    const xScale = this.perspectiveSize.width / this.initialWidth;
-    const yScale = ( this.perspectiveSize.width * this.ratio ) / this.initialHeight;
-    const zScale = 1;
-    // this.scale.set( xScale, yScale, zScale );
     // Signals.onAssetsLoaded.add(this.onAssetsLoaded.bind(this));
   }
 
@@ -60,10 +63,10 @@ class Preview extends THREE.Object3D {
 
   getPerspectiveSize( camera ) {
 
-    const depth = Math.abs( camera.position.z - this.position.z );
+    const depth = camera.position.z - this.position.z;
     const hFOV = 2 * Math.atan( Math.tan( camera.fov / 2 ) * camera.aspect );
-    const height = Math.abs( ( 2 * Math.tan( ( camera.fov / 2 ) ) * depth ) * 3.5 );
-    const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) * 3.5 );
+    const height = Math.abs( ( 2 * Math.tan( ( camera.fov / 2 ) ) * depth ) ) * 3.5;
+    const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) ) * 3.5;
 
     return { width, height };
   }
