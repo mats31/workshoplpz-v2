@@ -158,12 +158,12 @@ export default Vue.extend({
       // this.height = window.innerHeight;
 
       this.scene = new THREE.Scene();
-      // this.camera = new THREE.OrthographicCamera( this.width / -2, this.width / 2, this.height / 2, this.height / -2, 1, 1000 );
       this.camera = new THREE.PerspectiveCamera( 45, this.width / this.height, 1, 10000 );
       this.camera.position.z = 50;
       this.renderer = new THREE.WebGLRenderer({});
       this.renderer.setSize(this.width, this.height);
-      this.renderer.setClearColor(0x000000, 0);
+      this.renderer.setClearColor(0x191919, 1);
+      this.clock = new THREE.Clock();
 
       for (let i = 0; i < length; i++) {
 
@@ -177,6 +177,7 @@ export default Vue.extend({
           index: i,
           camera: this.camera,
           ratio: this.ratio,
+          parent: this.$refs.projectSecondContainer,
         });
 
         this.scene.add(preview);
@@ -193,6 +194,13 @@ export default Vue.extend({
       raf(this.update);
 
       if (this.render) {
+
+        const time = this.clock.getElapsedTime();
+
+        for (let i = 0; i < this.previews.length; i++) {
+
+          this.previews[i].update( time );
+        }
 
         this.renderer.render( this.scene, this.camera );
       }

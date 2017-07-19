@@ -16,6 +16,7 @@ class Preview extends THREE.Object3D {
     this.length = options.length;
     this.camera = options.camera;
     this.ratio = options.ratio;
+    this._parent = options.parent;
 
     this.perspectiveSize = this.getPerspectiveSize( this.camera );
 
@@ -25,14 +26,29 @@ class Preview extends THREE.Object3D {
     this.initialWidth = 10;
     this.initialHeight = 10;
 
-    this.geometry = new THREE.PlaneBufferGeometry( this.initialWidth, this.initialHeight, 30, 30);
+    const customWidth = this.perspectiveSize.width;
+    const customHeight = ( customWidth * this.ratio );
+    const fullHeight = this.perspectiveSize.height;
+
+    this.geometry = new THREE.PlaneBufferGeometry( this.initialWidth, this.initialHeight, 70, 70);
     // this.geometry = new THREE.PlaneBufferGeometry( 70, 70, 30, 30);
 
+    const previewWind = States.resources.getTexture('preview-wind').media;
+    previewWind.needsUpdate = true;
+    previewWind.wrapS = THREE.RepeatWrapping;
+    previewWind.wrapT = THREE.RepeatWrapping;
+
+    const previewMask = States.resources.getTexture('preview-mask').media;
+    previewMask.needsUpdate = true;
     this.material = new THREE.ShaderMaterial({
       wireframe: false,
       uniforms: {
         u_time: { type: 'f', value: 0 },
+        u_resolution: { type: 'v2', value: new THREE.Vector2( window.innerWidth, window.innerHeight ) },
+        u_translation: { type: 'v3', value: new THREE.Vector3(0, 0, 0) },
         u_map: { type: 't', value: this.texture },
+        u_map_wind: { type: 't', value: previewWind },
+        u_map_mask: { type: 't', value: previewMask },
       },
       vertexShader,
       fragmentShader,
@@ -41,35 +57,38 @@ class Preview extends THREE.Object3D {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.add(this.mesh);
 
-    // console.log(this.perspectiveSize.width);
-    // console.log(this.perspectiveSize.height);
-
-    const customWidth = this.perspectiveSize.width * 0.2115;
-    const customHeight = ( customWidth * this.ratio );
-
     const xScale = customWidth / this.initialWidth;
     const yScale = customHeight / this.initialHeight;
     const zScale = 1;
     this.scale.set( xScale, yScale, zScale );
 
-    // const x = 0;
-    // const y = ( this.fullHeight * 0.5 - this.height * 0.5 ) - ( ( this.margin + this.height ) * this.index);
-    // const z = 0;
-    // this.position.set( x, y, z );
+
+    const x = 0;
+    const y = fullHeight / 2 - ( fullHeight / this.length ) * this.index - ( fullHeight * 0.5 / this.length );
+    const z = 0;
+    this.position.set( x, y, z );
+
+    this.setupEvents();
     // Signals.onAssetsLoaded.add(this.onAssetsLoaded.bind(this));
   }
 
-  // States --------------------------------------------------------------------
+  setupEvents() {
+    Signals.onScroll.add(this.onScroll.bind(this));
+  }
+
+  // State ---------------------------------------------------------------------
 
   getPerspectiveSize( camera ) {
 
-    const depth = camera.position.z - this.position.z;
-    const hFOV = 2 * Math.atan( Math.tan( camera.fov / 2 ) * camera.aspect );
-    const height = Math.abs( ( 2 * Math.tan( ( camera.fov / 2 ) ) * depth ) ) * 3.5;
-    const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) ) * 3.5;
+    const vFOV = camera.fov * Math.PI / 180;
+    const height = 2 * Math.tan( vFOV / 2 ) * ( camera.position.z - this.position.z );
+    const aspect = camera.aspect;
+    const width = height * aspect;
 
     return { width, height };
   }
+
+  // Events --------------------------------------------------------------------
 
   onAssetsLoaded() {
 
@@ -80,9 +99,41 @@ class Preview extends THREE.Object3D {
     this.material.uniforms.map.value = texture;
   }
 
+  onScroll() {
+
+    const wH = window.innerHeight;
+    const top = this._parent.getBoundingClientRect().top - wH * 0.7;
+
+    // console.log(top);
+
+    if (top < 0) {
+      TweenLite.to(
+        this.material.uniforms.u_translation.value,
+        3,
+        {
+          y: 1,
+          ease: 'Expo.easeOut',
+        },
+      );
+
+      this.material.uniforms.u_translation.value.z = 1;
+      // TweenLite.to(
+      //   this.material.uniforms.u_translation.value,
+      //   0.2,
+      //   {
+      //     z: 1,
+      //     ease: 'Expo.easeIn',
+      //   },
+      // );
+    }
+  }
+
+  // Update --------------------------------------------------------------------
+
   update(time) {
 
     this.material.uniforms.u_time.value = time;
+    // if (this.index === 0 ) console.log(this.material.uniforms.u_translation.value.z);
   }
 }
 

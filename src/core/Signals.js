@@ -10,6 +10,7 @@ class Signals {
 
     // General
     this.onResize = new Signal();
+    this.onScroll = new Signal();
 
     // Webgl
     this.onWeblGLMousemove = new Signal();

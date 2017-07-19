@@ -37,6 +37,7 @@ export default Vue.extend({
     setupEvent() {
 
       window.addEventListener('resize', this.onResize.bind(this));
+      window.addEventListener('scroll', this.onScroll.bind(this));
 
       Signals.onAssetsLoaded.add(this.onAssetsLoaded);
     },
@@ -67,6 +68,11 @@ export default Vue.extend({
     onResize() {
 
       Signals.onResize.dispatch( window.innerWidth, window.innerHeight );
+    },
+
+    onScroll() {
+
+      Signals.onScroll.dispatch();
     },
   },
 
