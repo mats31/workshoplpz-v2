@@ -10,6 +10,7 @@ const projects = {
       date: '2016',
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
+      reward: 'Award 2016 Design for all of the Orange young designer competition',
       pictures: [
         'picture-skyfall-0',
         'picture-skyfall-1',
@@ -27,6 +28,7 @@ const projects = {
       date: '2016',
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
+      reward: 'Award 2016 Design for all of the Orange young designer competition',
       pictures: [
         'picture-skyfall-0',
         'picture-skyfall-1',
@@ -44,6 +46,7 @@ const projects = {
       date: '2016',
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
+      reward: 'Award 2016 Design for all of the Orange young designer competition',
       pictures: [
         'picture-skyfall-0',
         'picture-skyfall-1',
@@ -61,6 +64,7 @@ const projects = {
       date: '2016',
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
+      reward: 'Award 2016 Design for all of the Orange young designer competition',
       pictures: [
         'picture-skyfall-0',
         'picture-skyfall-1',

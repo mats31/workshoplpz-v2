@@ -46,6 +46,7 @@ class Preview extends THREE.Object3D {
         u_time: { type: 'f', value: 0 },
         u_resolution: { type: 'v2', value: new THREE.Vector2( window.innerWidth, window.innerHeight ) },
         u_translation: { type: 'v3', value: new THREE.Vector3(0, 0, 0) },
+        u_color: { type: 'f', value: 0 },
         u_map: { type: 't', value: this.texture },
         u_map_wind: { type: 't', value: previewWind },
         u_map_mask: { type: 't', value: previewMask },
@@ -102,7 +103,7 @@ class Preview extends THREE.Object3D {
   onScroll() {
 
     const wH = window.innerHeight;
-    const top = this._parent.getBoundingClientRect().top - wH * 0.7;
+    const top = ( this._parent.getBoundingClientRect().top + ( this._parent.offsetHeight / this.length ) * this.index ) - wH * 0.7;
 
     // console.log(top);
 
@@ -116,15 +117,14 @@ class Preview extends THREE.Object3D {
         },
       );
 
-      this.material.uniforms.u_translation.value.z = 1;
-      // TweenLite.to(
-      //   this.material.uniforms.u_translation.value,
-      //   0.2,
-      //   {
-      //     z: 1,
-      //     ease: 'Expo.easeIn',
-      //   },
-      // );
+      TweenLite.to(
+        this.material.uniforms.u_color,
+        0.5,
+        {
+          value: 1,
+          ease: 'Power4.easeIn',
+        },
+      );
     }
   }
 

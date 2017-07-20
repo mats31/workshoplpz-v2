@@ -16,6 +16,13 @@
   height 100vh
   position relative
 
+.project__titleContent
+  left 50%
+  position absolute
+  top 50%
+  width 46.875%
+  transform translate3d(-50%, -50%, 0)
+
 .project__back
   font-family 'gotham-medium'
   font-size 2rem
@@ -26,33 +33,61 @@
 .project__preview
   background-repeat none
   background-size cover
-  position absolute
-  left 50%
-  top 50%
-  height 50%
-  width 50%
+  // position absolute
+  // left 50%
+  // top 50%
+  width 100%
   opacity 0
-  transform translate3d(-50%, -50%, 0)
+  // transform translate3d(-50%, -50%, 0)
+
+.project__preview img
+  display block
+  width 100%
 
 .project__title
   font-title()
-  position absolute
-  left 50%
-  top 50%
-  width 23.17708333vw
+  // position absolute
+  // left 50%
+  // top 50%
+  // width 23.17708333vw
   opacity 0
-  transform: translate3d(-50%, -50%, 0);
+  // transform: translate3d(-50%, -50%, 0);
   text-align: center;
   min-width: 450px;
+  transform translate3d( 0, 40%, 0)
 
 .project__sections
   background #191919
+  margin-bottom 100vh
   position relative
 
 .project__flexContainer
   // display flex
-  padding 0 5.45%
+  padding 200px 5.45% 0 5.45%
   width 89.1%
+
+.project__header
+  padding 0 0 100px 0
+  margin-bottom 45px
+  position relative
+
+.project__header::after
+  background white
+  content ''
+  display block
+  height 1px
+  width 55px
+  position absolute
+  left 50%
+  transform translate3d(-50%, 0, 0)
+  bottom 0
+
+.project__header-title
+  font-title()
+
+.project__header-reward
+  font-size 1.623rem
+  font-family 'soleil-light-italic'
 
 // .project__firstFlex
 //   position absolute

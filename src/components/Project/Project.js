@@ -81,6 +81,8 @@ export default Vue.extend({
       this.currentColor = currentProject.color;
 
       this.$refs.projectName.innerHTML = currentProject.title;
+      this.$refs.projectHeaderTitle.innerHTML = currentProject.title;
+      this.$refs.projectHeaderReward.innerHTML = currentProject.reward;
       this.$refs.dateYear.innerHTML = currentProject.date;
       this.$refs.projectDescription.innerHTML = currentProject.description;
       this.$refs.projectTeam.innerHTML = currentProject.team;
@@ -97,7 +99,8 @@ export default Vue.extend({
       const previewID = `${this.currentProject.id}-preview`;
 
       this.$refs.container.style.display = 'block';
-      this.$refs.projectPreview.style.backgroundImage = `url(${States.resources.getImage(previewID).media.src})`;
+      // this.$refs.projectPreview.style.backgroundImage = `url(${States.resources.getImage(previewID).media.src})`;
+      this.$refs.projectPreview.appendChild(States.resources.getImage(previewID).media);
 
       if (this.currentProject.pictures.length > 0 && !this.webGLState) {
 
@@ -125,7 +128,7 @@ export default Vue.extend({
         {
           autoAlpha: 1,
           scaleY: 1,
-          y: '-50%',
+          y: '0%',
           ease: 'Power4.easeOt',
         },
       );
