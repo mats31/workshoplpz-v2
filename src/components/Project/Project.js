@@ -165,7 +165,8 @@ export default Vue.extend({
       this.camera.position.z = 50;
       this.renderer = new THREE.WebGLRenderer({});
       this.renderer.setSize(this.width, this.height);
-      this.renderer.setClearColor(0x191919, 1);
+      // this.renderer.setClearColor(0x191919, 1);
+      this.renderer.setClearColor(0xffffff, 1);
       this.clock = new THREE.Clock();
 
       for (let i = 0; i < length; i++) {

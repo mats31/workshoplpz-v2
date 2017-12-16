@@ -19,8 +19,8 @@ void main() {
 
   // pos.x += ( ( 100. * abs( u_translation.y - 1. ) ) * windTexture2.r );
   // pos.x -= ( ( 100. * abs( u_translation.y - 1. ) ) * windTexture3.r );
-  pos.y -= ( u_resolution.y * 0.5 ) * abs( u_translation.y - 1. );
-  pos.z += ( ( .7 + ( 3000. * abs( u_translation.y - 1. ) ) ) * windTexture.r ) * maskTexture.r;
+  // pos.y -= ( u_resolution.y * 0.5 ) * abs( u_translation.x - 1. );
+  // pos.z += ( ( .7 + ( 250. * abs( u_translation.y - 1. ) ) ) * windTexture.r ) * maskTexture.r;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }

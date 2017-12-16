@@ -108,11 +108,21 @@ class Preview extends THREE.Object3D {
     // console.log(top);
 
     if (top < 0) {
+
       TweenLite.to(
         this.material.uniforms.u_translation.value,
         3,
         {
           y: 1,
+          ease: 'Expo.easeOut',
+        },
+      );
+
+      TweenLite.to(
+        this.material.uniforms.u_translation.value,
+        0.8,
+        {
+          x: 1,
           ease: 'Expo.easeOut',
         },
       );
