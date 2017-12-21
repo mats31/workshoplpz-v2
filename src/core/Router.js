@@ -1,38 +1,68 @@
-import VueRouter from 'vue-router';
+import { autobind } from 'core-decorators';
+import * as pages from 'core/pages';
+import Navigo from 'navigo';
 
-import HomeComponent from '../containers/Home/Home';
-import ProjectComponent from 'components/Project/Project';
+export default class Router {
 
-Vue.use( VueRouter );
+  // Setup ---------------------------------------------------------------------
 
-export default class Router extends VueRouter {
+  constructor(options) {
+    this.updatePageCallback = options.updatePageCallback;
+    this.assetsLoaded = false;
 
-  constructor() {
+    this.setupRouter();
+    this.setupEvents();
+  }
 
-    super({
-      // mode: 'history',
-      routes: [
-        {
-          component: HomeComponent,
-          name: 'home',
-          path: '/',
-          children: [
-            {
-              name: 'projects',
-              path: 'projects',
-            },
-            {
-              name: 'everydays',
-              path: 'everydays',
-            },
-            {
-              component: ProjectComponent,
-              name: 'project',
-              path: 'projects/:id',
-            },
-          ],
-        },
-      ],
+  setupRouter() {
+    const root = `${window.location.protocol}//${window.location.host}`;
+    const useHash = true;
+    this.navigo = new Navigo(root, useHash);
+
+    this.navigo.notFound(this.onRouteNotFound);
+    this.navigo.on({
+      '/': { as: pages.HOME, uses: this.onRouteHome },
+      '/everydays': { as: pages.EVERYDAYS, uses: this.onRouteEverydays },
+      '/project/:id': { as: pages.PROJECT, uses: this.onRouteProject },
     });
   }
+
+  setupEvents() {
+    Signals.onAssetsLoaded.add(this.onAssetsLoaded);
+  }
+
+  // State ---------------------------------------------------------------------
+
+  navigateTo(id, options = {}) {
+    this.navigo.navigate(this.navigo.generate(id, options));
+  }
+
+  // Events --------------------------------------------------------------------
+
+  @autobind
+  onAssetsLoaded() {
+    this.assetsLoaded = true;
+  }
+
+  @autobind
+  onRouteNotFound() {
+    this.updatePageCallback(pages.HOME);
+  }
+
+  @autobind
+  onRouteHome() {
+    this.updatePageCallback(pages.HOME);
+  }
+
+
+  @autobind
+  onRouteEverydays() {
+    this.updatePageCallback(pages.EVERYDAYS);
+  }
+
+  @autobind
+  onRouteProject() {
+    this.updatePageCallback(pages.PROJECT);
+  }
+
 }

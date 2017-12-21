@@ -1,0 +1,65 @@
+@import '~stylesheets/common/global-imports';
+
+.menu {
+  @include font-bold();
+  font-size: 1.4rem;
+  padding: 0 5%;
+  position: fixed;
+  top: 6.7rem;
+  width: 90%;
+  z-index: 100;
+}
+
+.menu__container {
+  position: relative;
+  width: 100%;
+}
+
+.menu__celia.menu__item:hover {
+  color: rgba( 255, 255, 255, 0.2 );
+  cursor: initial;
+}
+
+.menu__toggle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d( -50%, -50%, 0 );
+}
+
+.menu__everydays {
+  position: relative;
+}
+
+.menu__projects {
+  margin-left: 1.5rem;
+}
+
+.menu__everydays::after {
+  content: '';
+  display: inline-block;
+  background: white;
+  width: 1px;
+  height: 1.2rem;
+  margin-left: 1.5rem;
+  transform: translate3d(0, 0, 0) rotate(20deg);
+}
+
+.menu__about {
+  position: absolute;
+  right: 0;
+}
+
+
+.menu__item {
+  color: rgba( 255, 255, 255, 0.2 );
+  display: inline-block;
+  transition: color 0.25s;
+  &:hover {
+    color: rgba( 255, 255, 255, 0.6 );
+    cursor: pointer;
+  }
+  &.is-active {
+    color: rgba( 255, 255, 255, 1 );
+  }
+}

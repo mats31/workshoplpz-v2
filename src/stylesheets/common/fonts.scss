@@ -1,0 +1,46 @@
+// Font configuration
+// ------------------
+
+@mixin fontSmoothing() {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+// Font faces
+// ----------
+
+$fallbackFonts: Helvetica, Arial, sans-serif;
+
+@mixin font-bold() {
+    font-family: 'soleil', $fallbackFonts;
+    font-weight: 600;
+    font-size: 1rem;
+    @include fontSmoothing();
+}
+
+@mixin font-title() {
+    font-family: 'majesti', $fallbackFonts;
+    font-weight: 300;
+    font-size: 11.684rem;
+    letter-spacing: 0.15rem;
+    line-height: 0.8rem;
+    @include fontSmoothing();
+}
+
+@mixin font-subtitle() {
+    font-family: 'soleil', $fallbackFonts;
+    font-weight: 300;
+    font-size: 1.352rem;
+    letter-spacing: 0.15rem;
+    line-height: 0.8rem;
+    @include fontSmoothing();
+}
+
+@mixin font-body() {
+    font-family: 'soleil', $fallbackFonts;
+    font-weight: 400;
+    font-size: 1.623rem;
+    letter-spacing: 0.7rem;
+    line-height: 2.3rem;
+    @include fontSmoothing();
+}

@@ -1,11 +1,6 @@
 import States from 'core/States';
 import resources from 'config/resources';
-import OBJLoader from 'helpers/OBJLoader';
-import { TextureLoader } from 'three';
-import svgToImage from 'utils/svgToImage';
-import html2canvas from 'html2canvas';
-
-// require('helpers/OBJLoader')(THREE);
+// import { TextureLoader } from 'three';
 
 class AssetLoader {
 
@@ -22,20 +17,9 @@ class AssetLoader {
       this.assetsToLoad += resources.textures.length;
       this.loadTextures();
     }
-
     if (typeof resources.videos !== 'undefined' && resources.videos.length > 0) {
       this.assetsToLoad += resources.videos.length;
       this.loadVideos();
-    }
-
-    if (typeof resources.models !== 'undefined' && resources.models.length > 0) {
-      this.assetsToLoad += resources.models.length;
-      this.loadModels();
-    }
-
-    if (typeof resources.svgs !== 'undefined' && resources.svgs.length > 0) {
-      this.assetsToLoad += resources.svgs.length;
-      this.loadSVGS();
     }
 
     if (this.assetsToLoad === 0) Signals.onAssetsLoaded.dispatch(100);
@@ -53,6 +37,7 @@ class AssetLoader {
 
         const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
         Signals.onAssetLoaded.dispatch(percent);
+        console.log(percent);
         if (percent === 100) Signals.onAssetsLoaded.dispatch(percent);
       }, (err) => {
         console.log(err);
@@ -98,16 +83,14 @@ class AssetLoader {
   }
 
   loadTexture(media) {
-
     return new Promise( ( resolve, reject ) => {
-
       new TextureLoader().load(
         media.url,
         ( texture ) => {
           resolve( { id: media.id, media: texture } );
         },
         ( xhr ) => {
-          // console.log( `${( ( xhr.loaded / xhr.total ) * 100)} % loaded` );
+          console.log( `${( ( xhr.loaded / xhr.total ) * 100)} % loaded` );
         },
         ( xhr ) => {
           reject( `Une erreur est survenue lors du chargement de la texture : ${xhr}` );
@@ -166,131 +149,6 @@ class AssetLoader {
       };
 
       video.src = media.url;
-
-    });
-  }
-
-  loadModels() {
-
-    const models = resources.models;
-
-    for ( let i = 0; i < models.length; i += 1 ) {
-
-      this.loadModel( models[i] ).then( (model) => {
-
-        States.resources.models.push( model );
-        this.assetsLoaded += 1;
-
-        const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
-        Signals.onAssetLoaded.dispatch(percent);
-        if (percent === 100) Signals.onAssetsLoaded.dispatch(percent);
-      }, (err) => {
-        console.error(err);
-      });
-
-    }
-  }
-
-  loadModel(model) {
-
-    return new Promise( ( resolve, reject ) => {
-
-      const ext = model.url.split('.').pop();
-
-
-      switch (ext) {
-
-        case 'obj': {
-          const loader = new THREE.OBJLoader();
-
-          // load a resource
-          loader.load(
-            // resource URL
-            model.url,
-            // Function when resource is loaded
-            ( object ) => {
-
-              resolve( { id: model.id, media: object, type: 'obj' } );
-            },
-
-            () => {},
-            () => {
-              reject('An error happened with the model import.');
-            },
-          );
-          break;
-        }
-
-        default: {
-          const loader = new OBJLoader();
-
-          // load a resource
-          loader.load(
-            // resource URL
-            model.url,
-            // Function when resource is loaded
-            ( object ) => {
-              resolve( { id: model.id, media: object, type: 'obj' } );
-            },
-
-            () => {},
-            () => {
-              reject('An error happened with the model import.');
-            },
-          );
-        }
-      }
-
-    });
-  }
-
-  loadSVGS() {
-
-    const svgs = resources.svgs;
-
-    for ( let i = 0; i < svgs.length; i += 1 ) {
-
-      this.loadSVG( svgs[i] ).then( (svg) => {
-
-        States.resources.images.push( svg );
-        this.assetsLoaded += 1;
-
-        const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
-        Signals.onAssetLoaded.dispatch(percent);
-        if (percent === 100) Signals.onAssetsLoaded.dispatch(percent);
-      }, (err) => {
-        console.error(err);
-      });
-
-    }
-  }
-
-  loadSVG(resource) {
-
-    return new Promise( ( resolve, reject ) => {
-
-      html2canvas(document.body.querySelector('.svgs__size'), {
-        onrendered: (canvas) => {
-          // document.body.appendChild(canvas);
-          document.body.querySelector('#container').style.display = 'none';
-          resolve( { id: resource.id, media: canvas } );
-        },
-      });
-
-      // svgToImage({
-      //   selector: resource.selector,
-      //   callback: (img, error) => {
-      //     console.log(img.width);
-      //     console.log(img.height);
-      //     if (error) {
-      //       reject(error);
-      //
-      //       return;
-      //     }
-      //
-      //     resolve( { id: resource.id, media: img } );
-      //   },
-      // });
 
     });
   }
