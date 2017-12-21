@@ -1,5 +1,5 @@
 import States from 'core/States';
-import { HOME, EVERYDAYS } from 'core/pages';
+import * as pages from 'core/pages';
 import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible } from 'core/decorators';
@@ -70,12 +70,12 @@ export default class HomeMenuView {
   // Events --------------------------------------------------------------------
   @autobind
   onProjectClick() {
-    States.router.navigateTo(HOME);
+    States.router.navigateTo(pages.HOME);
   }
 
   @autobind
   onEverydayClick() {
-    States.router.navigateTo(EVERYDAYS);
+    States.router.navigateTo(pages.EVERYDAYS);
   }
 
 }

@@ -1,5 +1,5 @@
 import States from 'core/States';
-import { HOME, EVERYDAYS } from 'core/pages';
+import * as pages from 'core/pages';
 import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible } from 'core/decorators';
@@ -46,10 +46,10 @@ export default class DesktopHomeView {
 
   updatePage(page) {
     switch (page) {
-      case HOME:
+      case pages.HOME:
         this._homeMenu.setState('projects');
         break;
-      case EVERYDAYS:
+      case pages.EVERYDAYS:
         this._homeMenu.setState('everydays');
         break;
       default:
