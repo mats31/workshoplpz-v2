@@ -20,6 +20,7 @@ class States {
       images: [],
       textures: [],
       videos: [],
+      models: [],
       getImage(id) {
         return this.images.find( image => image.id === id );
       },
@@ -29,6 +30,13 @@ class States {
       getVideo(id) {
         return this.videos.find( video => video.id === id );
       },
+      getModel(id) {
+        return this.models.find( model => model.id === id );
+      },
+    };
+
+    this.application = {
+      projectActived: false,
     };
   }
 }

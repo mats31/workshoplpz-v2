@@ -1,4 +1,5 @@
 import States from 'core/States';
+import OBJLoader from 'helpers/OBJLoader';
 import resources from 'config/resources';
 
 class AssetLoader {
@@ -21,6 +22,11 @@ class AssetLoader {
       this.loadVideos();
     }
 
+    if (typeof resources.models !== 'undefined' && resources.models.length > 0) {
+      this.assetsToLoad += resources.models.length;
+      this.loadModels();
+    }
+
     if (this.assetsToLoad === 0) Signals.onAssetsLoaded.dispatch(100);
   }
 
@@ -36,7 +42,6 @@ class AssetLoader {
 
         const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
         Signals.onAssetLoaded.dispatch(percent);
-        console.log(percent);
         if (percent === 100) Signals.onAssetsLoaded.dispatch(percent);
       }, (err) => {
         console.log(err);
@@ -148,6 +153,80 @@ class AssetLoader {
       };
 
       video.src = media.url;
+
+    });
+  }
+
+  loadModels() {
+
+    const models = resources.models;
+
+    for ( let i = 0; i < models.length; i += 1 ) {
+
+      this.loadModel( models[i] ).then( (model) => {
+
+        States.resources.models.push( model );
+        this.assetsLoaded += 1;
+
+        const percent = (this.assetsLoaded / this.assetsToLoad) * 100;
+        Signals.onAssetLoaded.dispatch(percent);
+        if (percent === 100) Signals.onAssetsLoaded.dispatch(percent);
+      }, (err) => {
+        console.error(err);
+      });
+
+    }
+  }
+
+  loadModel(model) {
+
+    return new Promise( ( resolve, reject ) => {
+
+      const ext = model.url.split('.').pop();
+
+
+      switch (ext) {
+
+        case 'obj': {
+          const loader = new THREE.OBJLoader();
+
+          // load a resource
+          loader.load(
+            // resource URL
+            model.url,
+            // Function when resource is loaded
+            ( object ) => {
+
+              resolve( { id: model.id, media: object, type: 'obj' } );
+            },
+
+            () => {},
+            () => {
+              reject('An error happened with the model import.');
+            },
+          );
+          break;
+        }
+
+        default: {
+          const loader = new THREE.OBJLoader();
+
+          // load a resource
+          loader.load(
+            // resource URL
+            model.url,
+            // Function when resource is loaded
+            ( object ) => {
+              resolve( { id: model.id, media: object, type: 'obj' } );
+            },
+
+            () => {},
+            () => {
+              reject('An error happened with the model import.');
+            },
+          );
+        }
+      }
 
     });
   }

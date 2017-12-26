@@ -1,13 +1,21 @@
-
 #define PHONG
 
 uniform vec3 diffuse;
 uniform vec3 emissive;
 uniform vec3 specular;
+uniform vec3 u_color;
+varying vec2 vUV;
 uniform float shininess;
 uniform float opacity;
+uniform float u_fullColor;
+uniform float u_time;
+uniform float u_ease;
+uniform float u_alpha;
+uniform sampler2D u_mapNoise;
+uniform sampler2D u_mapDisplacement;
+uniform sampler2D u_mapCircle;
 
-varying vec3 vPosition;
+varying float vRandomColor;
 
 #include <common>
 #include <packing>
@@ -36,10 +44,10 @@ void main() {
 
 	#include <clipping_planes_fragment>
 
-	// vec4 diffuseColor = vec4( diffuse * ( vPosition.y * 0.007 ), opacity );
-	vec4 diffuseColor = vec4( diffuse * ( abs( vPosition.y - 250. ) * 0.01 ) * ( vPosition.z * 0.07 ), opacity );
+	vec4 diffuseColor = vec4( diffuse, opacity );
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
-	vec3 totalEmissiveRadiance = emissive;
+
+  vec3 totalEmissiveRadiance = emissive * (vRandomColor * u_ease );
 
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
@@ -61,7 +69,9 @@ void main() {
 
 	#include <envmap_fragment>
 
-	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+  float alpha = 1.;
+  gl_FragColor = vec4( mix( outgoingLight, emissive, u_fullColor ), alpha );
 
 	#include <premultiplied_alpha_fragment>
 	#include <tonemapping_fragment>

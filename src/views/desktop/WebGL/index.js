@@ -19,7 +19,7 @@ export default class WebGL {
 
   constructor(options) {
 
-    this.el = options.parent.appendChild(
+    this._el = options.parent.appendChild(
       createDOM(template()),
     );
 
@@ -49,13 +49,13 @@ export default class WebGL {
     this._setupWebGL(window.innerWidth, window.innerHeight);
     this._setupBackground();
     this._setupGround();
-    // this._setupProjects();
-    // this._setupLight();
-    // this._setupGrain();
+    this._setupProjects();
+    this._setupLight();
+    this._setupGrain();
 
-    // this._setupEvents();
+    this._setupEvents();
 
-    // this._animate();
+    this._animate();
   }
 
   _setupWebGL(width, height) {
@@ -77,6 +77,9 @@ export default class WebGL {
     this._renderer.setClearColor(0x282828);
 
     this._raycaster = new THREE.Raycaster();
+
+    this._renderer.domElement.style.position = 'absolute';
+    this._el.appendChild(this._renderer.domElement);
   }
 
   _setupBackground() {
@@ -141,8 +144,8 @@ export default class WebGL {
   _setupGrain() {
     this._grain = new Grain();
     this._grain.position.copy( this._grainPosition );
-    const hFOV = 2 * Math.atan( Math.tan( this._ecamera.fov / 2 ) * this._ecamera.aspect );
-    const height = Math.abs( ( 2 * Math.tan( ( this._ecamera.fov / 2 ) ) * Math.abs( this._grain.position.z ) ) * 3.5 );
+    const hFOV = 2 * Math.atan( Math.tan( this._camera.fov / 2 ) * this._camera.aspect );
+    const height = Math.abs( ( 2 * Math.tan( ( this._camera.fov / 2 ) ) * Math.abs( this._grain.position.z ) ) * 3.5 );
     const width = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._grain.position.z ) ) * 3.5 );
 
     this._grain.scaleGrain( width, height );
@@ -150,23 +153,97 @@ export default class WebGL {
   }
 
   _setupEvents() {
-    Signals.onWeblGLMousemove.add(this._onWeblGLMousemove);
-    Signals.onWeblGLMouseleave.add(this._onWeblGLMouseleave);
-    Signals.onScrollWheel.add(this._onScrollWheel);
+    this._el.addEventListener('click', this._onWebGLClick);
+    this._el.addEventListener('mousedown', this._onWebGLMousedown);
+    this._el.addEventListener('mouseup', this._onWebGLMouseup);
+    this._el.addEventListener('mousemove', this._onWeblGLMousemove);
+    this._el.addEventListener('mouseleave', this._onWeblGLMouseleave);
 
-    this.el.addEventListener('click', this._onWebGLClick);
-    this.el.addEventListener('mousedown', this._onWebGLMousedown);
-    this.el.addEventListener('mouseup', this._onWebGLMouseup);
+    Signals.onScrollWheel.add(this._onScrollWheel);
+    Signals.onResize.add(this._onResize);
+    Signals.onProjectClick.add(this.onProjectClick);
   }
 
   // State ---------------------------------------------------------------------
 
+  _goToProject( id, index ) {
+
+    TweenLite.to(
+      this._camera.position,
+      1.5,
+      {
+        y: this._topPosition,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    TweenLite.to(
+      this._grain.position,
+      1.5,
+      {
+        y: this._topPosition,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    for (let i = 0; i < this._projectContainers.length; i++) {
+
+      this._projectContainers[i].hideText();
+    }
+  }
+
   show({ delay = 0 } = {}) {
-    this.el.style.display = 'block';
+    this._el.style.display = 'block';
   }
 
   hide({ delay = 0 } = {}) {
-    this.el.style.display = 'none';
+    this._el.style.display = 'none';
+  }
+
+  _zoomFov() {
+
+    TweenLite.killTweensOf([this._camera, this._grain]);
+
+    TweenLite.to(
+      this._camera.position,
+      1,
+      {
+        z: 0,
+        ease: 'Power4.easeOut',
+      }
+    );
+
+    TweenLite.to(
+      this._grain.position,
+      1,
+      {
+        z: this._grainPosition.z,
+        ease: 'Power4.easeOut',
+      }
+    );
+  }
+
+  _dezoomFov() {
+
+    TweenLite.killTweensOf([this._camera, this._grain]);
+
+    TweenLite.to(
+      this._camera.position,
+      1,
+      {
+        z: 10,
+        ease: 'Power4.easeOut',
+      }
+    );
+
+    TweenLite.to(
+      this._grain.position,
+      1,
+      {
+        z: this._grainPosition.z + 10,
+        ease: 'Power4.easeOut',
+      }
+    );
   }
 
   updatePage(page) {
@@ -174,9 +251,9 @@ export default class WebGL {
       case pages.PROJECT:
         const lastRouteResolved = States.router.getLastRouteResolved();
 
-        for (let i = 0; i < this.projectContainers.length; i++) {
-          if (lastRouteResolved.params.id === this.projectContainers[i].projectID) {
-            this.goToProject(lastRouteResolved.params.id, i);
+        for (let i = 0; i < this._projectContainers.length; i++) {
+          if (lastRouteResolved.params.id === this._projectContainers[i].projectID) {
+            this._goToProject(lastRouteResolved.params.id, i);
           }
         }
         break;
@@ -185,11 +262,182 @@ export default class WebGL {
   }
 
   // Events --------------------------------------------------------------------
-  @autobind
-  onAssetsLoaded() {
 
-    const image = States.resources.getImage('twitter').media;
-    this.el.appendChild(image);
+  onUpdateFov() {
+
+    const hFOV = 2 * Math.atan( Math.tan( this._camera.fov / 2 ) * this._camera.aspect );
+    const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._zDepth ) ) * 2.5;
+    this._xStep = xStep;
+
+    this._camera.updateProjectionMatrix();
+  }
+
+  @autobind
+  _onScrollWheel(event) {
+
+    let deltaY = event.deltaY;
+
+    if (Math.abs(deltaY) <= 1) { deltaY = 0; }
+
+    this._translationTarget = deltaY * 0.1;
+  }
+
+  @autobind
+  _onWeblGLMousemove(event) {
+    if (!States.application.activateProject) {
+
+      const step = 0.65;
+
+      this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      this._mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+
+      if (!this._clicked) {
+
+        if ( Math.abs(this._mouse.x) > step ) {
+
+          this._translationTarget = map( Math.abs( this._mouse.x ), 0.7, 1, 0, 2 ) * Math.sign( this._mouse.x * -1 );
+
+        } else {
+
+          this._translationTarget = 0;
+        }
+
+        this._drag = false;
+      } else {
+
+        this._drag = true;
+        this._translationTarget = ( this._mouse.x - this._previousMouse.x ) * 60;
+      }
+
+      this._previousMouse.x = this._mouse.x;
+    }
+  }
+
+  @autobind
+  _onWeblGLMouseleave() {
+    this._translationEase = 0;
+  }
+
+  @autobind
+  _onWebGLMouseup() {
+    this._clicked = false;
+    this._zoomFov();
+  }
+
+  @autobind
+  _onWebGLMousedown() {
+    this._clicked = true;
+    this._dezoomFov();
+  }
+
+  @autobind
+  _onWebGLClick() {
+    if (!this._drag) {
+
+      for (let i = 0; i < this._projectContainers.length; i++) {
+
+        this._projectContainers[i].onClick();
+      }
+    }
+  }
+
+  @autobind
+  onProjectClick( id, y ) {
+    States.router.navigateTo( pages.PROJECT, { id } );
+    States.application.activateProject = true;
+  }
+
+  @autobind
+  _onResize() {
+    this._width = window.innerWidth;
+    this._height = window.innerHeight;
+
+    this._renderer.setViewport(0, 0, this._width, this._height);
+    this._camera.aspect = this._width / this._height;
+    this._camera.updateProjectionMatrix();
+
+    this._renderer.setSize( this._width, this._height );
+
+    const hFOV = 2 * Math.atan( Math.tan( this._camera.fov / 2 ) * this._camera.aspect );
+    const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._zDepth ) ) * 2.5;
+    this._xStep = xStep;
+
+    const scaleFactor = Math.min( 1, this._width / this._scaleStep );
+
+    for (let i = 0; i < this._projectContainers.length; i += 1) {
+
+      const x = this._xStep * i;
+      const y = i % 2 === 0 ? 15 : 22;
+      const z = this._zDepth;
+      const initialPosition = new THREE.Vector3(x, y, z);
+      this._projectContainers[i].setInitialPosition(initialPosition);
+      this._projectContainers[i].resize( this._camera.fov, this._camera.aspect, scaleFactor );
+    }
+
+    if (this._grain) {
+
+      const grainDepth = Math.abs( this._grain.position.z );
+      const grainHeight = Math.abs( ( 2 * Math.tan( ( this._camera.fov / 2 ) ) * grainDepth ) * 3.5 );
+      const grainWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * grainDepth ) * 3.5 );
+      this._grain.scaleGrain( grainWidth, grainHeight );
+    }
+
+    if (this._background) {
+
+      const backgroundDepth = Math.abs( this._background.position.z );
+      const backgroundHeight = Math.abs( ( 2 * Math.tan( ( this._camera.fov / 2 ) ) * backgroundDepth ) * 3.5 );
+      const backgroundWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * backgroundDepth ) * 3.5 );
+      this._background.scaleBackground( backgroundWidth, backgroundHeight );
+    }
+  }
+
+  // UPDATE -------------------------------------------------------------------
+
+  @autobind
+  _animate() {
+    raf(this._animate);
+
+    const time = this._clock.getElapsedTime();
+
+    this._updateRaycast();
+    this._updateProjectContainers(time);
+    this._ground.update(time, this._translationEase );
+    this._grain.update(time);
+    this._renderer.render(this._scene, this._camera);
+  }
+
+  _updateRaycast() {
+    this._raycaster.setFromCamera( this._mouse, this._camera );
+
+    for (let i = 0; i < this._projectContainers.length; i++) {
+
+      const intersects = this._raycaster.intersectObjects( this._projectContainers[i].getMask().children );
+
+      if (intersects.length > 0) {
+        this._projectContainers[i].activeRaycast();
+      } else {
+        this._projectContainers[i].deActiveRaycast();
+      }
+
+    }
+  }
+
+  _updateCamera() {
+
+    this._camera.fov += ( this._targetFov - this._camera.fov ) * 0.1;
+    this._camera.updateProjectionMatrix();
+  }
+
+  _updateProjectContainers(time) {
+
+    const length = this._projectContainers.length * this._xStep;
+    this._translationEase += ( this._translationTarget - this._translationEase ) * 0.05;
+
+    for ( let i = 0; i < this._projectContainers.length; i++ ) {
+
+      const project = this._projectContainers[i];
+      project.update( time, this._translationEase, this._camera, length, i );
+    }
   }
 
 }

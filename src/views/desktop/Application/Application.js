@@ -64,9 +64,6 @@ export default class DesktopAppView {
         this._home.show();
         this._webgl.show();
         break;
-      case pages.PROJECT:
-        this._webgl.updatePage(page);
-        break;
       default:
         this._home.hide();
     }
@@ -81,13 +78,13 @@ export default class DesktopAppView {
   }
 
   @autobind
-  onScroll() {
-    Signals.onScroll.dispatch();
+  onScroll(event) {
+    Signals.onScroll.dispatch(event);
   }
 
   @autobind
-  onScrollWheel() {
-    Signals.onScrollWheel.dispatch();
+  onScrollWheel(event) {
+    Signals.onScrollWheel.dispatch(event);
   }
 
 }

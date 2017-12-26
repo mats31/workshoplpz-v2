@@ -53,7 +53,7 @@ export default class DesktopHomeView {
         this._homeMenu.setState('everydays');
         break;
       default:
-        this.home.hide();
+        // this._home.hide();
     }
   }
 
