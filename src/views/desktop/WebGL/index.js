@@ -46,9 +46,9 @@ export default class WebGL {
     this._cameraPosition = new THREE.Vector3( 0, this._baseY, 0 );
     this._grainPosition = new THREE.Vector3( 0, this._baseY, -10 );
 
-    // this._setupWebGL(window.innerWidth, window.innerHeight);
-    // this._setupBackground();
-    // this._setupGround();
+    this._setupWebGL(window.innerWidth, window.innerHeight);
+    this._setupBackground();
+    this._setupGround();
     // this._setupProjects();
     // this._setupLight();
     // this._setupGrain();

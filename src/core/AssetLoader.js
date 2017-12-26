@@ -1,6 +1,5 @@
 import States from 'core/States';
 import resources from 'config/resources';
-// import { TextureLoader } from 'three';
 
 class AssetLoader {
 
@@ -84,7 +83,7 @@ class AssetLoader {
 
   loadTexture(media) {
     return new Promise( ( resolve, reject ) => {
-      new TextureLoader().load(
+      new THREE.TextureLoader().load(
         media.url,
         ( texture ) => {
           resolve( { id: media.id, media: texture } );
