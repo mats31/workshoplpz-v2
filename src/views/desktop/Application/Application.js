@@ -2,6 +2,7 @@ import * as pages from 'core/pages';
 import { autobind } from 'core-decorators';
 import LoaderView from 'views/common/Loader/Loader';
 import HomeView from 'views/desktop/Home';
+import WebGLView from 'views/desktop/WebGL';
 
 export default class DesktopAppView {
 
@@ -11,10 +12,11 @@ export default class DesktopAppView {
     this.el = document.getElementById('application');
 
     this.views = [];
-    this.loader = this._setupLoader();
-    this.home = this._setupHome();
+    this._loader = this._setupLoader();
+    this._home = this._setupHome();
+    this._webgl = this._setupWebGL();
 
-    this.views.push(this.loader, this.home);
+    this.views.push(this._loader, this._home);
 
     this._setupEvents();
   }
@@ -35,9 +37,19 @@ export default class DesktopAppView {
     return view;
   }
 
+  _setupWebGL() {
+    const view = new WebGLView({
+      parent: this.el,
+    });
+
+    return view;
+  }
+
   _setupEvents() {
     window.addEventListener('resize', this.onResize);
     window.addEventListener('scroll', this.onScroll);
+    window.addEventListener('mousewheel', this.onScrollWheel);
+    window.addEventListener('DOMMouseScroll', this.onScrollWheel);
 
     this.onResize();
   }
@@ -48,14 +60,19 @@ export default class DesktopAppView {
 
     switch (page) {
       case pages.HOME:
-        this.loader.hide();
-        this.home.show();
+        this._loader.hide();
+        this._home.show();
+        this._webgl.show();
+        break;
+      case pages.PROJECT:
+        this._webgl.updatePage(page);
         break;
       default:
-        this.home.hide();
+        this._home.hide();
     }
 
-    this.home.updatePage(page);
+    this._home.updatePage(page);
+    this._webgl.updatePage(page);
   }
 
   @autobind
@@ -66,6 +83,11 @@ export default class DesktopAppView {
   @autobind
   onScroll() {
     Signals.onScroll.dispatch();
+  }
+
+  @autobind
+  onScrollWheel() {
+    Signals.onScrollWheel.dispatch();
   }
 
 }
