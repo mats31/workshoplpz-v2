@@ -22,6 +22,7 @@ class ProjectContainer extends THREE.Object3D {
     this._offsetCenter = new THREE.Vector2();
     this._offsetSide = new THREE.Vector2();
 
+    this._depthTranslation = 0;
     this._perspectiveWidth = 0;
     this._scaleFactor = 1;
 
@@ -102,7 +103,6 @@ class ProjectContainer extends THREE.Object3D {
   }
 
   setInitialPosition( pos ) {
-
     this._initialPosition.copy( pos );
   }
 
@@ -204,10 +204,10 @@ class ProjectContainer extends THREE.Object3D {
 
   // Update --------------------------------------------------------------------
 
-  update( time, translationEase, camera, length, i ) {
+  update( time, translationEase, maxTranslation, camera, length, i ) {
 
     // this._updateDOM(i);
-    this._updatePosition( translationEase, camera, length, i );
+    this._updatePosition( translationEase, maxTranslation, camera, length, i );
     // this._checkFocus(point);
     this._mask.update( time );
     // this._text.update( time );
@@ -222,18 +222,20 @@ class ProjectContainer extends THREE.Object3D {
     // if (i===1) console.log(this._getMaskPosition().left);
   }
 
-  _updatePosition( translationEase, camera, length, i ) {
+  _updatePosition( translationEase, maxTranslation, camera, length, i ) {
+
+    this._depthTranslation += ( maxTranslation * 5 - this._depthTranslation ) * 0.2;
 
     const hFOV = 2 * Math.atan( Math.tan( camera.fov / 2 ) * camera.aspect );
     const width = 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._initialPosition.z );
     const moduloLength = length + ( this.getMaskWidth() * 0.5 );
     const extraMargin = 15;
-    const offset = Math.abs(width * 2) + ( this.getMaskWidth() * 0.5 ) + extraMargin;
+    const offset = Math.abs(width * 2);
 
-    this._initialPosition.setX( this._initialPosition.x + translationEase );
-    const x = ( modulo( this._initialPosition.x, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x ) - ( this._perspectiveWidth * 0.99 * this._offsetSide.x );
+    const xTranslation = this._initialPosition.x + translationEase;
+    const x = ( modulo( xTranslation, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x ) - ( this._perspectiveWidth * 0.99 * this._offsetSide.x );
     const y = this._initialPosition.y + ( ( this._topPosition - this._initialPosition.y ) * this._offsetCenter.y );
-    const z = this._initialPosition.z;
+    const z = this._initialPosition.z - this._depthTranslation;
 
     this.position.set( x, y, z );
 

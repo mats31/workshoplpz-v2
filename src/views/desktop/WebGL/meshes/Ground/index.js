@@ -43,7 +43,7 @@ class Ground extends THREE.Object3D {
 
   update(time, translationEase) {
 
-    this.translation += translationEase * 0.0035;
+    this.translation = translationEase * 0.0035;
 
     this.material.uniforms.u_time.value = time;
     this.material.uniforms.u_translation.value = this.translation;

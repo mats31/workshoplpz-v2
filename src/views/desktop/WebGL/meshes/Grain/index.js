@@ -9,8 +9,8 @@ class Grain extends THREE.Object3D {
     super();
 
     const map = States.resources.getTexture('grain').media;
-    map.LinearFilter = THREE.LinearFilter;
-    map.repeat.set( 0.001, 0.001 );
+    // map.LinearFilter = THREE.LinearFilter;
+    // map.repeat.set( 0.001, 0.001 );
     map.wrapS = map.wrapT = THREE.RepeatWrapping;
     map.needsUpdate = true;
 

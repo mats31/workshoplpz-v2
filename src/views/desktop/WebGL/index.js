@@ -3,6 +3,7 @@ import * as pages from 'core/pages';
 import raf from 'raf';
 import createDOM from 'utils/dom/createDOM';
 import { map } from 'utils/math';
+import { getPerspectiveSize } from 'utils/3d';
 import { autobind } from 'core-decorators';
 import projects from 'config/projects';
 import Background from './meshes/Background';
@@ -31,8 +32,9 @@ export default class WebGL {
     this._baseY = 20;
     this._topPosition = 150;
     this._scaleStep = 1024;
-    this._translationTarget = 0;
     this._translationEase = 0;
+    this._translationDelta = 0;
+    this._translationWheel = 0;
     this._mainAngle = 0;
 
     this._projectContainers = [];
@@ -66,9 +68,8 @@ export default class WebGL {
     this._camera.position.copy(this._cameraPosition);
     this._camera.lookAt(this._cameraTarget);
 
-    const hFOV = 2 * Math.atan( Math.tan( this._camera.fov / 2 ) * this._camera.aspect );
-    const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._zDepth ) ) * 3.5;
-    this._xStep = xStep;
+    const perspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
+    this._xStep = perspectiveSize.width;
 
     this._renderer = window.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -277,9 +278,7 @@ export default class WebGL {
 
     let deltaY = event.deltaY;
 
-    if (Math.abs(deltaY) <= 1) { deltaY = 0; }
-
-    this._translationTarget = deltaY * 0.1;
+    this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
   }
 
   @autobind
@@ -306,7 +305,7 @@ export default class WebGL {
       } else {
 
         this._drag = true;
-        this._translationTarget = ( this._mouse.x - this._previousMouse.x ) * 60;
+        this._translationDelta = Math.min( 5, Math.max( -5, ( this._mouse.x - this._previousMouse.x ) * 20 ) );
       }
 
       this._previousMouse.x = this._mouse.x;
@@ -321,13 +320,13 @@ export default class WebGL {
   @autobind
   _onWebGLMouseup() {
     this._clicked = false;
-    this._zoomFov();
+    // this._zoomFov();
   }
 
   @autobind
   _onWebGLMousedown() {
     this._clicked = true;
-    this._dezoomFov();
+    // this._dezoomFov();
   }
 
   @autobind
@@ -358,9 +357,8 @@ export default class WebGL {
 
     this._renderer.setSize( this._width, this._height );
 
-    const hFOV = 2 * Math.atan( Math.tan( this._camera.fov / 2 ) * this._camera.aspect );
-    const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._zDepth ) ) * 2.5;
-    this._xStep = xStep;
+    const perspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
+    this._xStep = perspectiveSize.width;
 
     const scaleFactor = Math.min( 1, this._width / this._scaleStep );
 
@@ -376,18 +374,13 @@ export default class WebGL {
 
     if (this._grain) {
 
-      const grainDepth = Math.abs( this._grain.position.z );
-      const grainHeight = Math.abs( ( 2 * Math.tan( ( this._camera.fov / 2 ) ) * grainDepth ) * 3.5 );
-      const grainWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * grainDepth ) * 3.5 );
-      this._grain.scaleGrain( grainWidth, grainHeight );
+      const grainPerspectiveSize = getPerspectiveSize(this._camera, this._grain.position.z);
+      this._grain.scaleGrain( grainPerspectiveSize.width, grainPerspectiveSize.height );
     }
 
     if (this._background) {
-
-      const backgroundDepth = Math.abs( this._background.position.z );
-      const backgroundHeight = Math.abs( ( 2 * Math.tan( ( this._camera.fov / 2 ) ) * backgroundDepth ) * 3.5 );
-      const backgroundWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * backgroundDepth ) * 3.5 );
-      this._background.scaleBackground( backgroundWidth, backgroundHeight );
+      const backgroundPerspectiveSize = getPerspectiveSize(this._camera, this._background.position.z);
+      this._background.scaleBackground( backgroundPerspectiveSize.width * 1.1, backgroundPerspectiveSize.height * 1.1 );
     }
   }
 
@@ -431,12 +424,16 @@ export default class WebGL {
   _updateProjectContainers(time) {
 
     const length = this._projectContainers.length * this._xStep;
-    this._translationEase += ( this._translationTarget - this._translationEase ) * 0.05;
+    const maxTranslation = Math.max( Math.abs(this._translationDelta), Math.abs(this._translationWheel) );
+    // this._translationEase += ( this._translationTarget - this._translationEase ) * 0.05;
+    this._translationDelta += -this._translationDelta * 0.05;
+    this._translationWheel += -this._translationWheel * 0.05;
+    this._translationEase += this._translationDelta + this._translationWheel;
 
     for ( let i = 0; i < this._projectContainers.length; i++ ) {
 
       const project = this._projectContainers[i];
-      project.update( time, this._translationEase, this._camera, length, i );
+      project.update( time, this._translationEase, maxTranslation, this._camera, length, i );
     }
   }
 
