@@ -1,5 +1,6 @@
 import States from 'core/States';
 import { modulo } from 'utils/math';
+import { getPerspectiveSize } from 'utils/3d';
 import Mask from './meshes/Mask';
 import Text from './meshes/Text';
 
@@ -136,14 +137,14 @@ class ProjectContainer extends THREE.Object3D {
 
     this._mask.activateProject();
 
-    TweenLite.to(
-      this,
-      1.5,
-      {
-        _scaleFactor: 1,
-        ease: 'Power4.easeInOut',
-      },
-    );
+    // TweenLite.to(
+    //   this,
+    //   1.5,
+    //   {
+    //     _scaleFactor: 1,
+    //     ease: 'Power4.easeInOut',
+    //   },
+    // );
 
     TweenLite.to(
       this._offsetCenter,
@@ -188,18 +189,20 @@ class ProjectContainer extends THREE.Object3D {
     }
   }
 
-  resize( fov, aspect, _scaleFactor ) {
+  resize( camera ) {
 
-    const depth = Math.abs( this.position.z );
-    const hFOV = 2 * Math.atan( Math.tan( fov / 2 ) * aspect );
-    this._perspectiveHeight = Math.abs( ( 2 * Math.tan( ( fov / 2 ) ) * depth ) * 3.5 );
-    this._perspectiveWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) * 3.5 );
-    this._mask.resize( this._perspectiveWidth, this._perspectiveHeight );
+    // const perspectiveSize = getPerspectiveSize( camera, this.position.z );
+    //
+    // const depth = Math.abs( this.position.z );
+    // const hFOV = 2 * Math.atan( Math.tan( fov / 2 ) * aspect );
+    // this._perspectiveHeight = Math.abs( ( 2 * Math.tan( ( fov / 2 ) ) * depth ) * 3.5 );
+    // this._perspectiveWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) * 3.5 );
+    this._mask.resize( camera, this.position.z );
 
-    if (!States.application.activateProject) {
-
-      this._scaleFactor = _scaleFactor;
-    }
+    // if (!States.application.activateProject) {
+    //
+    //   this._scaleFactor = _scaleFactor;
+    // }
   }
 
   // Update --------------------------------------------------------------------

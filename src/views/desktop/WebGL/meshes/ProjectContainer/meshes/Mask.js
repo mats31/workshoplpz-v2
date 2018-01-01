@@ -1,5 +1,6 @@
 import States from 'core/States';
 import { lerp } from 'utils/math';
+import { getPerspectiveSize } from 'utils/3d';
 
 import vertexShader from '../shaders/mask.vs';
 import fragmentShader from '../shaders/mask.fs';
@@ -23,6 +24,7 @@ class Mask extends THREE.Object3D {
     this._initalMaskWidth = 0;
     this._initalMaskHeight = 0;
     this._color = options.color;
+    console.log(this._color);
 
     this._createMask();
   }
@@ -118,16 +120,16 @@ class Mask extends THREE.Object3D {
 
   activateProject() {
 
-    const previousX = this.rotation.x;
-    const previousY = this.rotation.y;
-    this.rotation.x = 0;
-    this.rotation.y = 0;
-
-    // const scaleX = this._squareScale.x;
-    // const scaleY = this._squareScale.y;
-
-    this.rotation.x = previousX;
-    this.rotation.y = previousY;
+    // const previousX = this.rotation.x;
+    // const previousY = this.rotation.y;
+    // this.rotation.x = 0;
+    // this.rotation.y = 0;
+    //
+    // // const scaleX = this._squareScale.x;
+    // // const scaleY = this._squareScale.y;
+    //
+    // this.rotation.x = previousX;
+    // this.rotation.y = previousY;
 
     this._projectState = true;
 
@@ -136,7 +138,7 @@ class Mask extends THREE.Object3D {
       1.5,
       {
         delay: 0.34,
-        squareScaleEase: 1,
+        _squareScaleEase: 1,
         ease: 'Power4.easeInOut',
       },
     );
@@ -165,7 +167,7 @@ class Mask extends THREE.Object3D {
       this,
       1.5,
       {
-        activeRotation: 0,
+        _activeRotation: 0,
         ease: 'Power4.easeInOut',
       },
     );
@@ -210,8 +212,8 @@ class Mask extends THREE.Object3D {
 
     this._maskMaterial.uniforms.u_time.value = time;
 
-    this._mesh.rotation.x = time * 0.01 * this._maskUniforms.u_speed.value * this._activeRotation;
-    this._mesh.rotation.z = time * 0.01 * this._maskUniforms.u_speed.value * this._activeRotation;
+    this._mesh.rotation.x = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
+    this._mesh.rotation.z = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
 
     const scaleX = lerp( this._squareScaleEase, this._defaultScale.x, this._squareScale.x);
     const scaleY = lerp( this._squareScaleEase, this._defaultScale.y, this._squareScale.y);
@@ -222,12 +224,13 @@ class Mask extends THREE.Object3D {
 
   // Events --------------------------------------------------------------------
 
-  resize( perspectiveWidth, perspectiveHeight ) {
+  resize( camera, containerDepth ) {
 
-    this._perspectiveWidth = perspectiveWidth;
-    this._perspectiveHeight = perspectiveHeight;
+    console.log(containerDepth);
 
-    this._squareScale.set( perspectiveWidth / this._initalMaskWidth, perspectiveHeight / this._initalMaskHeight, 1 );
+    const perspectiveSize = getPerspectiveSize( camera, containerDepth );
+
+    this._squareScale.set( perspectiveSize.width / this._initalMaskWidth, perspectiveSize.height / this._initalMaskHeight, 1 );
   }
 
 }

@@ -2,10 +2,10 @@ const ressources = {
 
   images: [
     { id: 'twitter', url: 'images/twitter.png', description: 'Twitter' },
-    { id: 'orange-preview', url: 'images/orange-0.png', description: 'Orange preview' },
-    { id: 'fuse-preview', url: 'images/orange-0.png', description: 'Orange preview' },
-    { id: 'skyfall-preview', url: 'images/orange-0.png', description: 'Orange preview' },
-    { id: 'retrograph-preview', url: 'images/orange-0.png', description: 'Orange preview' },
+    { id: 'orange-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
+    { id: 'fuse-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
+    { id: 'skyfall-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
+    { id: 'retrograph-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
     { id: 'orange-0', url: 'images/orange-0.png', description: 'First orange picture' },
     { id: 'picture-skyfall-0', url: 'images/picture-skyfall-0.png', description: 'First orange picture' },
     { id: 'picture-skyfall-1', url: 'images/picture-skyfall-1.png', description: 'First orange picture' },

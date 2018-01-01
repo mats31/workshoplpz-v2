@@ -1,0 +1,203 @@
+@import '~stylesheets/common/global-imports';
+
+.project {
+  display: none;
+  position: relative;
+  opacity: 0;
+  z-index: 10;
+}
+
+.project__back {
+  position: absolute;
+  right: 70px;
+  top: 70px;
+}
+
+.project__container {
+  color: #ffffff;
+}
+
+.project__titleContainer {
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: $zindex-1;
+}
+
+.project__previewContainer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  min-width: 450px;
+  width: 48.671875%;
+}
+
+.project__title {
+  @include font-title();
+  text-align: center;
+  position: relative;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  display: inline-block;
+}
+
+.project__preview {
+  // width: 48.671875%;
+  // transform: translate3d(-50%, 0, 0);
+  margin-top: -9rem;
+  position: relative;
+  z-index: $zindex-1;
+}
+
+.project__preview img {
+  display: block;
+  width: 100%;
+}
+
+.project__titleLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.project__sections {
+  background: #191919;
+  position: relative;
+  padding-top: 31rem;
+}
+
+.project__subtitleContainer {
+  padding: 0 5.46875%;
+  margin-bottom: 9.5rem;
+}
+
+.project__subtitle {
+  @include font-title();
+  margin-bottom: 5rem;
+  opacity: 0;
+}
+
+.project__description {
+  @include font-description();
+  opacity: 0;
+}
+
+.project__firstContainer {
+  height: 100vh;
+  min-height: 69.5rem;
+  position: relative;
+  width: 100%
+}
+
+.project__flexContainer {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+
+.project__firstFlex {
+  padding-top: 4.5rem;
+}
+
+// .project__firstFlex::before {
+//   content: '';
+//   display: block;
+//   background: white;
+//   width: 55px;
+//   height: 1px;
+//   position: absolute;
+//   left: 50%;
+//   top: 0;
+//   transform: translate3d(-50%, -50%, 0);
+// }
+
+.project__column {
+  // padding: 0 5% 0 1.64%;
+  width: 23.4375%;
+}
+
+.project__firstColumn {
+  // padding: 0 6% 0 1.64%;
+  padding-left: 5.46875%;
+  width: 21.09375%;
+}
+
+.project__lastColumn {
+  // padding: 0 6% 0 1.64%;
+  padding-right: 5.46875%;
+  width: 21.09375%;
+}
+
+.project__category {
+  margin: 0 0 6rem 0;
+  @include font-subtitle();
+  opacity: 0;
+}
+
+.project__divider {
+  width: 50%;
+}
+
+.project__date {
+  @include font-body();
+  margin: 0;
+  margin-bottom: 7rem;
+}
+
+.project__content {
+  opacity: 0;
+}
+
+.project__clientName {
+  margin: 0 0 10rem 0;
+  opacity: 0;
+}
+
+.project__clientVisit {
+  @include font-subtitle();
+  border-bottom: 1px solid #ffffff;
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 1rem;
+  opacity: 0;
+}
+
+.project__role {
+  margin-bottom: 9rem;
+}
+
+.project__roleDescription {
+  opacity: 0;
+}
+
+.project__pitchDescription {
+  opacity: 0;
+}
+
+.project__secondContainer {
+  position: relative;
+  width: 100%
+}
+
+.project__medias {
+  padding: 0 5.46875%;
+}
+
+.project__media {
+  margin-bottom: 13rem;
+}
+
+.project__media img {
+  width: 100%;
+  display: block;
+}
+
+// .project__scale, .project__scale img {
+//   transform-origin: 0% 0% 0px !important;
+// }

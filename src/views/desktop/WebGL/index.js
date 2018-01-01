@@ -1,6 +1,5 @@
 import States from 'core/States';
 import * as pages from 'core/pages';
-import raf from 'raf';
 import createDOM from 'utils/dom/createDOM';
 import { map } from 'utils/math';
 import { getPerspectiveSize } from 'utils/3d';
@@ -56,8 +55,6 @@ export default class WebGL {
     this._setupGrain();
 
     this._setupEvents();
-
-    this._animate();
   }
 
   _setupWebGL(width, height) {
@@ -257,8 +254,11 @@ export default class WebGL {
             this._goToProject(lastRouteResolved.params.id, i);
           }
         }
+
+        this._grain.hide();
         break;
       default:
+        this._grain.show();
     }
   }
 
@@ -314,6 +314,7 @@ export default class WebGL {
 
   @autobind
   _onWeblGLMouseleave() {
+    this._clicked = false;
     this._translationEase = 0;
   }
 
@@ -360,7 +361,7 @@ export default class WebGL {
     const perspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
     this._xStep = perspectiveSize.width;
 
-    const scaleFactor = Math.min( 1, this._width / this._scaleStep );
+    // const scaleFactor = Math.min( 1, this._width / this._scaleStep );
 
     for (let i = 0; i < this._projectContainers.length; i += 1) {
 
@@ -369,7 +370,7 @@ export default class WebGL {
       const z = this._zDepth;
       const initialPosition = new THREE.Vector3(x, y, z);
       this._projectContainers[i].setInitialPosition(initialPosition);
-      this._projectContainers[i].resize( this._camera.fov, this._camera.aspect, scaleFactor );
+      this._projectContainers[i].resize( this._camera );
     }
 
     if (this._grain) {
@@ -386,9 +387,7 @@ export default class WebGL {
 
   // UPDATE -------------------------------------------------------------------
 
-  @autobind
-  _animate() {
-    raf(this._animate);
+  update() {
 
     const time = this._clock.getElapsedTime();
 

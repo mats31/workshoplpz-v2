@@ -1,8 +1,10 @@
 import * as pages from 'core/pages';
+import raf from 'raf';
 import { autobind } from 'core-decorators';
 import LoaderView from 'views/common/Loader/Loader';
 import HomeView from 'views/desktop/Home';
 import WebGLView from 'views/desktop/WebGL';
+import ProjectView from 'views/desktop/Project';
 
 export default class DesktopAppView {
 
@@ -11,17 +13,19 @@ export default class DesktopAppView {
   constructor() {
     this.el = document.getElementById('application');
 
-    this.views = [];
-    this._loader = this._setupLoader();
-    this._home = this._setupHome();
-    this._webgl = this._setupWebGL();
+    this._views = [];
+    this._loader = this._setupLoaderView();
+    this._home = this._setupHomeView();
+    this._webgl = this._setupWebGLView();
+    this._project = this._setupProjectView();
 
-    this.views.push(this._loader, this._home);
+    this._views.push(this._loader, this._home);
 
+    this._start();
     this._setupEvents();
   }
 
-  _setupLoader() {
+  _setupLoaderView() {
     const view = new LoaderView({
       parent: this.el,
     });
@@ -29,7 +33,7 @@ export default class DesktopAppView {
     return view;
   }
 
-  _setupHome() {
+  _setupHomeView() {
     const view = new HomeView({
       parent: this.el,
     });
@@ -37,8 +41,16 @@ export default class DesktopAppView {
     return view;
   }
 
-  _setupWebGL() {
+  _setupWebGLView() {
     const view = new WebGLView({
+      parent: this.el,
+    });
+
+    return view;
+  }
+
+  _setupProjectView() {
+    const view = new ProjectView({
       parent: this.el,
     });
 
@@ -54,15 +66,27 @@ export default class DesktopAppView {
     this.onResize();
   }
 
+  _start() {
+    this._render();
+  }
+
   // Events --------------------------------------------------------------------
 
   updatePage(page) {
 
     switch (page) {
       case pages.HOME:
+        document.body.style.overflow = 'hidden';
         this._loader.hide();
         this._home.show();
         this._webgl.show();
+        break;
+      case pages.PROJECT:
+        document.body.style.overflow = 'visible';
+        this._project.fillProjectPage();
+        this._project.show({
+          delay: 1.4,
+        });
         break;
       default:
         this._home.hide();
@@ -87,4 +111,13 @@ export default class DesktopAppView {
     Signals.onScrollWheel.dispatch(event);
   }
 
+  // Update --------------------------------------------------------------------
+
+  @autobind
+  _render() {
+    raf(this._render);
+
+    this._webgl.update();
+    this._project.update();
+  }
 }

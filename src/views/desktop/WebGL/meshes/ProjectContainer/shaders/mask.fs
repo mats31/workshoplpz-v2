@@ -71,7 +71,7 @@ void main() {
 
 
   float alpha = 1.;
-  gl_FragColor = vec4( mix( outgoingLight, emissive, u_fullColor ), alpha );
+	gl_FragColor = vec4( mix( outgoingLight, emissive, u_fullColor ), alpha );
 
 	#include <premultiplied_alpha_fragment>
 	#include <tonemapping_fragment>

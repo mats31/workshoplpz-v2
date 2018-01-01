@@ -1,8 +1,10 @@
 import States from 'core/States';
+import { toggle } from 'core/decorators';
 
 import vertexShader from './shaders/grain.vs';
 import fragmentShader from './shaders/grain.fs';
 
+@toggle('objVisible', 'show', 'hide', true)
 class Grain extends THREE.Object3D {
 
   constructor() {
@@ -23,6 +25,7 @@ class Grain extends THREE.Object3D {
       // side: THREE.DoubleSide,
       uniforms: {
         u_map: { type: 't', value: map },
+        u_alpha: { type: 'f', value: 1 },
       },
       wireframe: false,
     });
@@ -33,6 +36,30 @@ class Grain extends THREE.Object3D {
 
   scaleGrain( width, height ) {
     this.scale.set( width, height, 1 );
+  }
+
+  show({ delay = 0 } = {}) {
+    TweenLite.to(
+      this._material.uniforms.u_alpha,
+      4,
+      {
+        value: 1,
+        delay,
+        ease: 'Power2.easeOut',
+      },
+    );
+  }
+
+  hide({ delay = 0 } = {}) {
+    TweenLite.to(
+      this._material.uniforms.u_alpha,
+      4,
+      {
+        value: 0,
+        delay,
+        ease: 'Power2.easeOut',
+      },
+    );
   }
 
   update(time) {}
