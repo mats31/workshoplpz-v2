@@ -10,6 +10,7 @@ import './project.scss';
 
 @visible()
 @toggle('mediaScalable', '_activateMediaScalable', '_deactivateMediaScalable', false)
+@toggle('layerScalable', '_activateLayerScalable', '_deactivateLayerScalable', true)
 export default class ProjectView {
 
   // Setup ---------------------------------------------------------------------
@@ -52,13 +53,19 @@ export default class ProjectView {
     this._previousScrollY = 0;
     this._firstScale = 0;
     this._secondScale = 0;
+    this._thirdScale = 0;
     this._mediaScalableFactor = 0;
+    this._layerScalableFactor = 1;
     this._currentTransformOriginY = 0;
     this._targetTransformOriginY = 0;
     this._previewY = 0;
+    this._scrollState = 1;
+
+    this._bodyOffsetHeight = document.body.offsetHeight;
   }
 
   _setupEvents() {
+    Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
     Signals.onScrollWheel.add(this._onScrollWheel);
   }
@@ -89,7 +96,7 @@ export default class ProjectView {
     TweenLite.set(
       this._ui.layer,
       {
-        delay: delay + 1,
+        delay: delay,
         backgroundColor: this._project.color,
       },
     );
@@ -214,11 +221,12 @@ export default class ProjectView {
           delay: 0.4,
           opacity: 1,
           ease: 'Power2.easeOut',
+          onComplete: () => {
+            this._revealedSections = true;
+          },
         },
       );
     }
-
-    this._revealedSections = true;
   }
 
   _activateMediaScalable() {
@@ -229,8 +237,26 @@ export default class ProjectView {
     this._mediaScalableFactor = 0;
   }
 
+  _activateLayerScalable() {
+    this._layerScalableFactor = 1;
+  }
+
+  _deactivateLayerScalable() {
+    // this._layerScalableFactor = 0;
+    TweenLite.killTweensOf(this._layerScalableFactor);
+    TweenLite.to(
+      this,
+      0.5,
+      {
+        _layerScalableFactor: 0,
+      },
+    );
+  }
+
   _skipPreview() {
     this._isSkippingPreview = true;
+
+    this._deactivateLayerScalable();
 
     TweenLite.to(
       this._ui.titleContainer,
@@ -242,9 +268,10 @@ export default class ProjectView {
           document.body.style.overflow = 'visible';
           this._ui.preview.classList.remove('js-project__scale');
           this._ui.preview.classList.remove('project__scale');
-          this._ui.layer.classList.remove('js-project__scale');
-          this._ui.layer.classList.remove('project__scale');
+          // this._ui.layer.classList.remove('js-project__scale');
+          // this._ui.layer.classList.remove('project__scale');
           this._ui.scaleElements = this.el.querySelectorAll('.js-project__scale');
+          this.resize();
           this._skippedPreview = true;
         },
       },
@@ -256,6 +283,15 @@ export default class ProjectView {
   // Events --------------------------------------------------------------------
 
   @autobind
+  _onResize() {
+    this.resize();
+  }
+
+  resize() {
+    this._bodyOffsetHeight = document.body.offsetHeight;
+  }
+
+  @autobind
   _onScroll(event) {
 
     if (!this._skippedPreview) {
@@ -263,8 +299,8 @@ export default class ProjectView {
     }
 
     this._currentScrollY = document.documentElement.scrollTop || document.body.scrollTop;
-    // const offsetTopSections = this._ui.sections.offsetTop;
     const offsetTopMedias = this._ui.secondContainer.offsetTop;
+    const offsetBottomMedias = document.body.offsetHeight - window.innerHeight * 1.25;
 
     this._delta = this._currentScrollY - this._previousScrollY;
 
@@ -273,11 +309,7 @@ export default class ProjectView {
     TweenLite.killTweensOf(this._onDelayedEndScroll);
     TweenLite.delayedCall(0.05, this._onDelayedEndScroll);
 
-    // if (!this._revealedSections && this._currentScrollY > offsetTopSections) {
-    //   this._revealSections();
-    // }
-
-    if (this._currentScrollY < offsetTopMedias) {
+    if (this._currentScrollY < offsetTopMedias || this._currentScrollY >= offsetBottomMedias) {
       this._deactivateMediaScalable();
     } else {
       this._activateMediaScalable();
@@ -305,6 +337,7 @@ export default class ProjectView {
   update() {
     if (this._needsUpdate) {
       this._updateScaleElements();
+      this._updateScrollState();
     }
   }
 
@@ -314,6 +347,7 @@ export default class ProjectView {
 
     const firstScale = Math.abs( delta * 0.01 );
     const secondScale = Math.abs( delta * 0.01 ) * this._mediaScalableFactor;
+    const thirdScale = Math.abs( delta * 0.01 ) * this._layerScalableFactor;
 
     if (Math.abs(firstScale - this._firstScale) < 0.0000000001) {
       this._firstScale = firstScale;
@@ -321,10 +355,16 @@ export default class ProjectView {
       this._firstScale += ( firstScale - this._firstScale ) * 0.1;
     }
 
-    if (Math.abs(secondScale - this._secondScale) < 0.0000000001) {
+    if (Math.abs(secondScale - this._secondScale) < 0.0001) {
       this._secondScale = secondScale;
     } else {
       this._secondScale += ( secondScale - this._secondScale ) * 0.05;
+    }
+
+    if (Math.abs(thirdScale - this._thirdScale) < 0.0000000001) {
+      this._thirdScale = thirdScale;
+    } else {
+      this._thirdScale += ( thirdScale - this._thirdScale ) * 0.05;
     }
 
     if (delta < 0) {
@@ -345,18 +385,39 @@ export default class ProjectView {
       let finalScale;
       if (scaleElement.getAttribute('data-scale') === '1') {
         finalScale = this._firstScale;
-      } else {
+      } else if (scaleElement.getAttribute('data-scale') === '2') {
         finalScale = this._secondScale;
+      } else {
+        finalScale = this._thirdScale;
       }
 
       finalScale = 1 + finalScale;
 
-      scaleElement.style.webkitTransform = `scaleY(${finalScale})`;
-      scaleElement.style.MozTransform = `scaleY(${finalScale})`;
-      scaleElement.style.msTransform = `scaleY(${finalScale})`;
-      scaleElement.style.OTransform = `scaleY(${finalScale})`;
-      scaleElement.style.transform = `scaleY(${finalScale})`;
+      scaleElement.style.webkitTransform = `scale3d(1,${finalScale},1)`;
+      scaleElement.style.MozTransform = `scale3d(1,${finalScale},1)`;
+      scaleElement.style.msTransform = `scale3d(1,${finalScale},1)`;
+      scaleElement.style.OTransform = `scale3d(1,${finalScale},1)`;
+      scaleElement.style.transform = `scale3d(1,${finalScale},1)`;
       scaleElement.style.transformOrigin = `0% ${this._currentTransformOriginY}%`;
+    }
+  }
+
+  _updateScrollState() {
+    if (this._revealedSections) {
+      const scrollStateTarget = 1 - this._currentScrollY / ( this._bodyOffsetHeight - window.innerHeight );
+
+      if (Math.abs(scrollStateTarget - this._scrollState) < 0.001) {
+        this._scrollState = scrollStateTarget;
+      } else {
+        this._scrollState += ( scrollStateTarget - this._scrollState ) * 0.1;
+      }
+
+      this._ui.layer.style.webkitTransform = `scale3d(${this._scrollState},1,1)`;
+      this._ui.layer.style.MozTransform = `scale3d(${this._scrollState},1,1)`;
+      this._ui.layer.style.msTransform = `scale3d(${this._scrollState},1,1)`;
+      this._ui.layer.style.OTransform = `scale3d(${this._scrollState},1,1)`;
+      this._ui.layer.style.transform = `scale3d(${this._scrollState},1,1)`;
+      this._ui.layer.style.transformOrigin = '0 0';
     }
   }
 
