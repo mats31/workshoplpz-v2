@@ -9,6 +9,8 @@ class Background extends THREE.Object3D {
 
     super();
 
+    // this.visible = false;
+
     const map = States.resources.getTexture('background').media;
     map.LinearFilter = THREE.LinearFilter;
     map.repeat.set( 0.001, 0.001 );

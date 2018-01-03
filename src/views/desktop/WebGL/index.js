@@ -24,6 +24,7 @@ export default class WebGL {
     );
 
     this._drag = false;
+    this._needsUpdate = true;
     this._grain = null;
 
     this._xStep = 50;
@@ -97,6 +98,8 @@ export default class WebGL {
   _setupGround() {
     this._ground = new Ground();
     this._ground.position.setY( -10 );
+    this._ground.position.setZ( -150 );
+    // this._ground.position.setY( -10 );
     this._ground.rotation.x = Math.PI * -0.5;
     this._scene.add(this._ground);
   }
@@ -181,6 +184,9 @@ export default class WebGL {
       {
         y: this._topPosition,
         ease: 'Power4.easeInOut',
+        onComplete: () => {
+          this._needsUpdate = false;
+        },
       },
     );
 
@@ -389,13 +395,15 @@ export default class WebGL {
 
   update() {
 
-    const time = this._clock.getElapsedTime();
+    if (this._needsUpdate) {
+      const time = this._clock.getElapsedTime();
 
-    this._updateRaycast();
-    this._updateProjectContainers(time);
-    this._ground.update(time, this._translationEase );
-    this._grain.update(time);
-    this._renderer.render(this._scene, this._camera);
+      this._updateRaycast();
+      this._updateProjectContainers(time);
+      this._ground.update(time, this._translationEase );
+      this._grain.update(time);
+      this._renderer.render(this._scene, this._camera);
+    }
   }
 
   _updateRaycast() {

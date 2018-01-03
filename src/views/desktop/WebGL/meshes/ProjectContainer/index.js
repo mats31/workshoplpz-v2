@@ -34,6 +34,8 @@ class ProjectContainer extends THREE.Object3D {
     this._texture.minFilter = THREE.LinearFilter;
     this._texture.needsUpdate = true;
 
+    // this.visible = false;
+
     this._setupMask();
     // this._setupDescription();
   }
@@ -226,6 +228,12 @@ class ProjectContainer extends THREE.Object3D {
   }
 
   _updatePosition( translationEase, maxTranslation, camera, length, i ) {
+
+    // if (i === 0) {
+    //   this.visible = true;
+    // } else {
+    //   this.visible = false;
+    // }
 
     this._depthTranslation += ( maxTranslation * 5 - this._depthTranslation ) * 0.2;
 
