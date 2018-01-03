@@ -62,6 +62,7 @@ export default class ProjectView {
     this._scrollState = 1;
 
     this._bodyOffsetHeight = document.body.offsetHeight;
+    this._distanceToBottom = document.body.offsetHeight;
   }
 
   _setupEvents() {
@@ -96,7 +97,7 @@ export default class ProjectView {
     TweenLite.set(
       this._ui.layer,
       {
-        delay: delay,
+        delay,
         backgroundColor: this._project.color,
       },
     );
@@ -110,7 +111,14 @@ export default class ProjectView {
   }
 
   hide({ delay = 0 } = {}) {
-    this.el.style.display = 'none';
+    TweenLite.to(
+      this.el,
+      1,
+      {
+        y: -window.innerHeight,
+        ease: 'Power4.easeout',
+      },
+    );
   }
 
   fillProjectPage() {
@@ -299,8 +307,9 @@ export default class ProjectView {
     }
 
     this._currentScrollY = document.documentElement.scrollTop || document.body.scrollTop;
+    this._distanceToBottom = this._bodyOffsetHeight - window.innerHeight - this._currentScrollY;
     const offsetTopMedias = this._ui.secondContainer.offsetTop;
-    const offsetBottomMedias = document.body.offsetHeight - window.innerHeight * 1.25;
+    const offsetBottomMedias = this._bodyOffsetHeight - window.innerHeight * 1.25;
 
     this._delta = this._currentScrollY - this._previousScrollY;
 
@@ -313,6 +322,10 @@ export default class ProjectView {
       this._deactivateMediaScalable();
     } else {
       this._activateMediaScalable();
+    }
+
+    if (this._distanceToBottom <= 0 && this._skippedPreview) {
+      States.router.navigateTo( pages.HOME );
     }
   }
 
