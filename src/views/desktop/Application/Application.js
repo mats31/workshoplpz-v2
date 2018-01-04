@@ -1,3 +1,4 @@
+import States from 'core/States';
 import * as pages from 'core/pages';
 import raf from 'raf';
 import { autobind } from 'core-decorators';
@@ -77,13 +78,15 @@ export default class DesktopAppView {
     switch (page) {
       case pages.HOME:
         document.body.style.overflow = 'hidden';
+        States.application.activateProject = false;
         this._loader.hide();
         this._home.show();
-        this._webgl.show();
+        this._webgl.show({ delay: 0 });
         this._project.hide();
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
+        States.application.activateProject = true;
         this._project.fillProjectPage();
         this._project.show({
           delay: 1.4,

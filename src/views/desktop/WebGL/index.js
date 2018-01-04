@@ -23,6 +23,8 @@ export default class WebGL {
       createDOM(template()),
     );
 
+    this._state = 'home';
+
     this._drag = false;
     this._needsUpdate = true;
     this._grain = null;
@@ -35,6 +37,7 @@ export default class WebGL {
     this._translationEase = 0;
     this._translationDelta = 0;
     this._translationWheel = 0;
+    this._translationShow = 0;
     this._mainAngle = 0;
 
     this._projectContainers = [];
@@ -44,9 +47,13 @@ export default class WebGL {
     this._mouse = new THREE.Vector2( 9999, 9999 );
     this._previousMouse = new THREE.Vector2( 9999, 9999 );
 
-    this._cameraTarget = new THREE.Vector3( 0, this._baseY, -150 );
-    this._cameraPosition = new THREE.Vector3( 0, this._baseY, 0 );
-    this._grainPosition = new THREE.Vector3( 0, this._baseY, -10 );
+    // this._cameraTarget = new THREE.Vector3( 0, this._baseY, -150 );
+    // this._cameraPosition = new THREE.Vector3( 0, this._baseY, 0 );
+    // this._grainPosition = new THREE.Vector3( 0, this._baseY, -10 );
+
+    this._cameraTarget = new THREE.Vector3( 0, this._topPosition, -150 );
+    this._cameraPosition = new THREE.Vector3( 0, this._topPosition, 0 );
+    this._grainPosition = new THREE.Vector3( 0, this._topPosition, -10 );
 
     this._setupWebGL(window.innerWidth, window.innerHeight);
     this._setupBackground();
@@ -85,7 +92,7 @@ export default class WebGL {
     const depth = -300;
 
     this._background = new Background();
-    this._background.position.setY( this._camera.position.y );
+    this._background.position.setY( this._baseY );
     this._background.position.setZ( depth );
     const hFOV = 2 * Math.atan( Math.tan( this._camera.fov / 2 ) * this._camera.aspect );
     const height = Math.abs( ( 2 * Math.tan( ( this._camera.fov / 2 ) ) * Math.abs( depth ) ) * 3.5 );
@@ -185,7 +192,7 @@ export default class WebGL {
         y: this._topPosition,
         ease: 'Power4.easeInOut',
         onComplete: () => {
-          this._needsUpdate = false;
+          this.hide();
         },
       },
     );
@@ -197,11 +204,47 @@ export default class WebGL {
   }
 
   show({ delay = 0 } = {}) {
-    this._el.style.display = 'block';
+    this._needsUpdate = true;
+    this.isAnimating = true;
+
+    TweenLite.killTweensOf([this._camera, this._grain]);
+    TweenLite.to(
+      this._camera.position,
+      1.5,
+      {
+        delay,
+        y: this._baseY,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    TweenLite.to(
+      this._grain.position,
+      1.5,
+      {
+        delay,
+        y: this._baseY,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    this._translationShow = -10;
+    TweenLite.to(
+      this,
+      3,
+      {
+        delay,
+        _translationShow: 0,
+        ease: 'Expo.easeOut',
+        onComplete: () => {
+          this.isAnimating = false;
+        },
+      },
+    );
   }
 
   hide({ delay = 0 } = {}) {
-    this._el.style.display = 'none';
+    this._needsUpdate = false;
   }
 
   _zoomFov() {
@@ -252,12 +295,17 @@ export default class WebGL {
 
   updatePage(page) {
     switch (page) {
+      case pages.HOME:
+        this._state = 'home';
+        break;
       case pages.PROJECT:
+        this._state = 'project';
         const lastRouteResolved = States.router.getLastRouteResolved();
 
         for (let i = 0; i < this._projectContainers.length; i++) {
           if (lastRouteResolved.params.id === this._projectContainers[i].projectID) {
             this._goToProject(lastRouteResolved.params.id, i);
+            this._projectContainers[i].goToProjectMode();
           }
         }
 
@@ -282,7 +330,7 @@ export default class WebGL {
   @autobind
   _onScrollWheel(event) {
 
-    let deltaY = event.deltaY;
+    const deltaY = event.deltaY;
 
     this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
   }
@@ -321,7 +369,7 @@ export default class WebGL {
   @autobind
   _onWeblGLMouseleave() {
     this._clicked = false;
-    this._translationEase = 0;
+    // this._translationEase = 0;
   }
 
   @autobind
@@ -350,7 +398,6 @@ export default class WebGL {
   @autobind
   onProjectClick( id, y ) {
     States.router.navigateTo( pages.PROJECT, { id } );
-    States.application.activateProject = true;
   }
 
   @autobind
@@ -435,7 +482,7 @@ export default class WebGL {
     // this._translationEase += ( this._translationTarget - this._translationEase ) * 0.05;
     this._translationDelta += -this._translationDelta * 0.05;
     this._translationWheel += -this._translationWheel * 0.05;
-    this._translationEase += this._translationDelta + this._translationWheel;
+    this._translationEase += this._translationDelta + this._translationWheel + this._translationShow;
 
     for ( let i = 0; i < this._projectContainers.length; i++ ) {
 

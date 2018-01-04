@@ -1,9 +1,11 @@
 import States from 'core/States';
 import { modulo } from 'utils/math';
+import { active } from 'core/decorators';
 import { getPerspectiveSize } from 'utils/3d';
 import Mask from './meshes/Mask';
 import Text from './meshes/Text';
 
+@active()
 class ProjectContainer extends THREE.Object3D {
 
   constructor(options) {
@@ -115,7 +117,7 @@ class ProjectContainer extends THREE.Object3D {
 
     document.body.style.cursor = 'pointer';
 
-    this._mask.activateMask();
+    this._mask.focus();
   }
 
   _deactiveFocus() {
@@ -126,7 +128,7 @@ class ProjectContainer extends THREE.Object3D {
 
       document.body.style.cursor = 'initial';
 
-      this._mask.deactivateMask();
+      this._mask.blur();
     }
   }
 
@@ -135,18 +137,13 @@ class ProjectContainer extends THREE.Object3D {
     // this._text.hide();
   }
 
-  _goToProjectMode() {
+  goToProjectMode() {
 
-    this._mask.activateProject();
+    this.activate();
+  }
 
-    // TweenLite.to(
-    //   this,
-    //   1.5,
-    //   {
-    //     _scaleFactor: 1,
-    //     ease: 'Power4.easeInOut',
-    //   },
-    // );
+  activate() {
+    this._mask.activate();
 
     TweenLite.to(
       this._offsetCenter,
@@ -155,18 +152,17 @@ class ProjectContainer extends THREE.Object3D {
         x: 1,
         y: 1,
         ease: 'Power4.easeInOut',
+        onComplete: () => {
+          this.deactivate();
+        },
       },
     );
+  }
 
-    // TweenLite.to(
-    //   this._offsetSide,
-    //   1.5,
-    //   {
-    //     x: 1,
-    //     ease: 'Power4.easeInOut',
-    //     delay: 2,
-    //   },
-    // );
+  deactivate() {
+    this._mask.deactivate();
+
+    this._offsetCenter.set(0, 0);
   }
 
   // Events --------------------------------------------------------------------
@@ -186,8 +182,6 @@ class ProjectContainer extends THREE.Object3D {
     if (this._isFocus) {
 
       Signals.onProjectClick.dispatch( this.projectID, this._index );
-
-      this._goToProjectMode();
     }
   }
 

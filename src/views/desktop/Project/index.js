@@ -71,6 +71,12 @@ export default class ProjectView {
     Signals.onScrollWheel.add(this._onScrollWheel);
   }
 
+  _removeEvents() {
+    Signals.onResize.remove(this._onResize);
+    Signals.onScroll.remove(this._onScroll);
+    Signals.onScrollWheel.remove(this._onScrollWheel);
+  }
+
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
@@ -80,7 +86,7 @@ export default class ProjectView {
       this,
       {
         delay,
-        _firstScale: 1.5,
+        _firstScale: 0.3,
       },
     );
 
@@ -117,8 +123,45 @@ export default class ProjectView {
       {
         y: -window.innerHeight,
         ease: 'Power4.easeout',
+        onComplete: () => {
+          this._reset();
+        },
       },
     );
+  }
+
+  _reset() {
+    this._removeEvents();
+
+    TweenLite.set( this.el, { display: 'none', opacity: 0, y: 0 } );
+    TweenLite.set( this._ui.titleContainer, { y: '0%', force3d: true } );
+    TweenLite.set( this._ui.scaleElements, { scaleX: 1, scaleY: 1, scaleZ: 1, force3d: true } );
+    TweenLite.set( this._ui.subtitle, { opacity: 0 });
+    TweenLite.set( this._ui.description, { opacity: 0 });
+    TweenLite.set( this._ui.categories, { opacity: 0 });
+    TweenLite.set( this._ui.contents, { opacity: 0 });
+
+    this._project = null;
+    this._needsUpdate = false;
+    this._revealedSections = false;
+    this._skippedPreview = false;
+    this._isSkippingPreview = false;
+
+    this._delta = 0;
+    this._currentScrollY = 0;
+    this._previousScrollY = 0;
+    this._firstScale = 0;
+    this._secondScale = 0;
+    this._thirdScale = 0;
+    this._mediaScalableFactor = 0;
+    this._layerScalableFactor = 1;
+    this._currentTransformOriginY = 0;
+    this._targetTransformOriginY = 0;
+    this._previewY = 0;
+    this._scrollState = 1;
+
+    this._bodyOffsetHeight = document.body.offsetHeight;
+    this._distanceToBottom = document.body.offsetHeight;
   }
 
   fillProjectPage() {
@@ -134,6 +177,9 @@ export default class ProjectView {
 
         // Preview
         const preview = States.resources.getImage(`${this._project.id}-preview`).media;
+        while (this._ui.preview.firstChild) {
+          this._ui.preview.removeChild(this._ui.preview.firstChild);
+        }
         this._ui.preview.appendChild(preview);
 
         // Subtitle
@@ -190,18 +236,24 @@ export default class ProjectView {
       },
     );
 
-    TweenLite.to(
+    TweenLite.fromTo(
       this._ui.subtitle,
       1,
+      {
+        opacity: 0,
+      },
       {
         opacity: 1,
         ease: 'Power4.easeOut',
       },
     );
 
-    TweenLite.to(
+    TweenLite.fromTo(
       this._ui.description,
       1,
+      {
+        opacity: 0,
+      },
       {
         delay: 0.1,
         opacity: 1,
@@ -210,9 +262,12 @@ export default class ProjectView {
     );
 
     for (let i = 0; i < this._ui.categories.length; i++) {
-      TweenLite.to(
+      TweenLite.fromTo(
         this._ui.categories[i],
         1,
+        {
+          opacity: 0,
+        },
         {
           delay: 0.3,
           opacity: 1,
@@ -222,9 +277,12 @@ export default class ProjectView {
     }
 
     for (let i = 0; i < this._ui.contents.length; i++) {
-      TweenLite.to(
+      TweenLite.fromTo(
         this._ui.contents[i],
         1,
+        {
+          opacity: 0,
+        },
         {
           delay: 0.4,
           opacity: 1,
@@ -262,6 +320,7 @@ export default class ProjectView {
   }
 
   _skipPreview() {
+    console.log(132242);
     this._isSkippingPreview = true;
 
     this._deactivateLayerScalable();
@@ -271,6 +330,7 @@ export default class ProjectView {
       1,
       {
         y: '-99%',
+        force3d: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
           document.body.style.overflow = 'visible';

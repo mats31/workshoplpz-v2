@@ -1,10 +1,13 @@
 import States from 'core/States';
+import { active, focused } from 'core/decorators';
 import { lerp } from 'utils/math';
 import { getPerspectiveSize } from 'utils/3d';
 
 import vertexShader from '../shaders/mask.vs';
 import fragmentShader from '../shaders/mask.fs';
 
+@active()
+@focused()
 class Mask extends THREE.Object3D {
 
   constructor(options) {
@@ -24,7 +27,6 @@ class Mask extends THREE.Object3D {
     this._initalMaskWidth = 0;
     this._initalMaskHeight = 0;
     this._color = options.color;
-    console.log(this._color);
 
     this._createMask();
   }
@@ -84,7 +86,7 @@ class Mask extends THREE.Object3D {
 
   // State ---------------------------------------------------------------------
 
-  activateMask() {
+  focus() {
 
     if (!this._isMasking && !this._projectState) {
 
@@ -101,7 +103,7 @@ class Mask extends THREE.Object3D {
     }
   }
 
-  deactivateMask() {
+  blur() {
 
     if (this._isMasking && !this._projectState) {
 
@@ -118,20 +120,18 @@ class Mask extends THREE.Object3D {
     }
   }
 
-  activateProject() {
-
-    // const previousX = this.rotation.x;
-    // const previousY = this.rotation.y;
-    // this.rotation.x = 0;
-    // this.rotation.y = 0;
-    //
-    // // const scaleX = this._squareScale.x;
-    // // const scaleY = this._squareScale.y;
-    //
-    // this.rotation.x = previousX;
-    // this.rotation.y = previousY;
+  activate() {
 
     this._projectState = true;
+
+    TweenLite.to(
+      this,
+      1.5,
+      {
+        _activeRotation: 0,
+        ease: 'Power4.easeInOut',
+      },
+    );
 
     TweenLite.to(
       this,
@@ -144,7 +144,7 @@ class Mask extends THREE.Object3D {
     );
 
     TweenLite.to(
-      this._maskMaterial.uniforms.u_morph,
+      this._maskUniforms.u_morph,
       1.5,
       {
         delay: 0.34,
@@ -162,15 +162,15 @@ class Mask extends THREE.Object3D {
         ease: 'Power4.easeInOut',
       },
     );
+  }
 
-    TweenLite.to(
-      this,
-      1.5,
-      {
-        _activeRotation: 0,
-        ease: 'Power4.easeInOut',
-      },
-    );
+  deactivate() {
+    TweenLite.killTweensOf([this, this._maskUniforms.u_ease, this._maskUniforms.u_morph, this._maskUniforms.u_fullColor]);
+    this._activeRotation = 1;
+    this._squareScaleEase = 0;
+    this._maskMaterial.uniforms.u_morph.value = 0;
+    this._maskUniforms.u_fullColor.value = 0;
+    this._maskUniforms.u_ease.value = 0;
   }
 
   // Getters -------------------------------------------------------------------
