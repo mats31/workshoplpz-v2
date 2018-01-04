@@ -97,7 +97,7 @@ class ProjectContainer extends THREE.Object3D {
 
   deActiveRaycast() {
 
-    this._deactiveFocus();
+    this.deactiveFocus();
     this._isHover = false;
   }
 
@@ -120,7 +120,7 @@ class ProjectContainer extends THREE.Object3D {
     this._mask.focus();
   }
 
-  _deactiveFocus() {
+  deactiveFocus() {
 
     if (this._isFocus) {
 
@@ -174,7 +174,7 @@ class ProjectContainer extends THREE.Object3D {
 
   onDOMMouseleave() {
 
-    this._deactiveFocus();
+    this.deactiveFocus();
   }
 
   onClick() {
@@ -266,7 +266,7 @@ class ProjectContainer extends THREE.Object3D {
 
     } else if (this._isHover) {
 
-      this._deactiveFocus();
+      this.deactiveFocus();
       this._isHover = false;
 
     }

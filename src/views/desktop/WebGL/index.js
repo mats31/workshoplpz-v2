@@ -257,7 +257,7 @@ export default class WebGL {
       {
         z: 0,
         ease: 'Power4.easeOut',
-      }
+      },
     );
 
     TweenLite.to(
@@ -266,7 +266,7 @@ export default class WebGL {
       {
         z: this._grainPosition.z,
         ease: 'Power4.easeOut',
-      }
+      },
     );
   }
 
@@ -280,7 +280,7 @@ export default class WebGL {
       {
         z: 10,
         ease: 'Power4.easeOut',
-      }
+      },
     );
 
     TweenLite.to(
@@ -289,7 +289,7 @@ export default class WebGL {
       {
         z: this._grainPosition.z + 10,
         ease: 'Power4.easeOut',
-      }
+      },
     );
   }
 
@@ -297,6 +297,10 @@ export default class WebGL {
     switch (page) {
       case pages.HOME:
         this._state = 'home';
+
+        for (let i = 0; i < this._projectContainers.length; i++) {
+          this._projectContainers[i].deactiveFocus();
+        }
         break;
       case pages.PROJECT:
         this._state = 'project';
