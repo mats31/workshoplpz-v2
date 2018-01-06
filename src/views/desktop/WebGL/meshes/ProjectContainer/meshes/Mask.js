@@ -88,36 +88,36 @@ class Mask extends THREE.Object3D {
 
   focus() {
 
-    if (!this._isMasking && !this._projectState) {
+    // if (!this._isMasking && !this._projectState) {
 
-      this._isMasking = true;
+    this._isMasking = true;
 
-      TweenLite.to(
-        this._maskUniforms.u_ease,
-        0.25,
-        {
-          value: 1,
-          ease: 'Power2.easeInOut',
-        },
-      );
-    }
+    TweenLite.to(
+      this._maskUniforms.u_ease,
+      0.25,
+      {
+        value: 1,
+        ease: 'Power2.easeInOut',
+      },
+    );
+    // }
   }
 
   blur() {
 
-    if (this._isMasking && !this._projectState) {
+    // if (this._isMasking && !this._projectState) {
 
-      this._isMasking = false;
+    this._isMasking = false;
 
-      TweenLite.to(
-        this._maskUniforms.u_ease,
-        0.7,
-        {
-          value: 0,
-          ease: 'Power2.easeOut',
-        },
-      );
-    }
+    TweenLite.to(
+      this._maskUniforms.u_ease,
+      0.7,
+      {
+        value: 0,
+        ease: 'Power2.easeOut',
+      },
+    );
+    // }
   }
 
   activate() {

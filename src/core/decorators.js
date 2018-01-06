@@ -43,26 +43,26 @@ export function visible(initialValue = false) {
   return toggle('visible', 'show', 'hide', initialValue);
 }
 
-export function active(initialValue) {
+export function active(initialValue = false) {
   return toggle('active', 'activate', 'deactivate', initialValue);
 }
 
-export function enabled(initialValue) {
+export function enabled(initialValue = false) {
   return toggle('enabled', 'enable', 'disable', initialValue);
 }
 
-export function started(initialValue) {
+export function started(initialValue = false) {
   return toggle('started', 'start', 'stop', initialValue);
 }
 
-export function focused(initialValue) {
+export function focused(initialValue = false) {
   return toggle('focused', 'focus', 'blur', initialValue);
 }
 
-export function selected(initialValue) {
+export function selected(initialValue = false) {
   return toggle('selected', 'select', 'deselect', initialValue);
 }
 
-export function opened(initialValue) {
+export function opened(initialValue = false) {
   return toggle('opened', 'open', 'close', initialValue);
 }
