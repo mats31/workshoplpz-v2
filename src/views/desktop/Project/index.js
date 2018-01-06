@@ -47,6 +47,7 @@ export default class ProjectView {
     this._revealedSections = false;
     this._skippedPreview = false;
     this._isSkippingPreview = false;
+    this._showAnimationDone = false;
 
     this._delta = 0;
     this._currentScrollY = 0;
@@ -82,6 +83,8 @@ export default class ProjectView {
   show({ delay = 0 } = {}) {
     this.el.style.display = 'block';
 
+    this._activateLayerScalable();
+
     TweenLite.set(
       this,
       {
@@ -97,6 +100,10 @@ export default class ProjectView {
         delay,
         opacity: 1,
         ease: 'Power2.easeOut',
+        onComplete: () => {
+          console.log(1);
+          this._showAnimationDone = true;
+        },
       },
     );
 
@@ -121,6 +128,7 @@ export default class ProjectView {
       this.el,
       1,
       {
+        delay,
         y: -window.innerHeight,
         ease: 'Power4.easeout',
         onComplete: () => {
@@ -133,9 +141,10 @@ export default class ProjectView {
   _reset() {
     this._removeEvents();
 
-    TweenLite.set( this.el, { display: 'none', opacity: 0, y: 0 } );
-    TweenLite.set( this._ui.titleContainer, { y: '0%', force3d: true } );
-    TweenLite.set( this._ui.scaleElements, { scaleX: 1, scaleY: 1, scaleZ: 1, force3d: true } );
+    TweenLite.set( this.el, { clearProps: 'transform' });
+    TweenLite.set( this.el, { display: 'none', opacity: 0 } );
+    TweenLite.set( this._ui.titleContainer, { y: '0%', force3D: true } );
+    TweenLite.set( this._ui.scaleElements, { scaleX: 1, scaleY: 1, scaleZ: 1, force3D: true } );
     TweenLite.set( this._ui.subtitle, { opacity: 0 });
     TweenLite.set( this._ui.description, { opacity: 0 });
     TweenLite.set( this._ui.categories, { opacity: 0 });
@@ -146,6 +155,7 @@ export default class ProjectView {
     this._revealedSections = false;
     this._skippedPreview = false;
     this._isSkippingPreview = false;
+    this._showAnimationDone = false;
 
     this._delta = 0;
     this._currentScrollY = 0;
@@ -258,6 +268,9 @@ export default class ProjectView {
         delay: 0.1,
         opacity: 1,
         ease: 'Power4.easeOut',
+        onComplete: () => {
+          this._revealedSections = true;
+        },
       },
     );
 
@@ -287,9 +300,6 @@ export default class ProjectView {
           delay: 0.4,
           opacity: 1,
           ease: 'Power2.easeOut',
-          onComplete: () => {
-            this._revealedSections = true;
-          },
         },
       );
     }
@@ -320,7 +330,6 @@ export default class ProjectView {
   }
 
   _skipPreview() {
-    console.log(132242);
     this._isSkippingPreview = true;
 
     this._deactivateLayerScalable();
@@ -329,8 +338,8 @@ export default class ProjectView {
       this._ui.titleContainer,
       1,
       {
-        y: '-99%',
-        force3d: true,
+        y: window.innerHeight * -0.99,
+        force3D: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
           document.body.style.overflow = 'visible';
@@ -362,30 +371,28 @@ export default class ProjectView {
   @autobind
   _onScroll(event) {
 
-    if (!this._skippedPreview) {
-      event.preventDefault();
-    }
+    if (this._showAnimationDone) {
+      this._currentScrollY = document.documentElement.scrollTop || document.body.scrollTop;
+      this._distanceToBottom = this._bodyOffsetHeight - window.innerHeight - this._currentScrollY;
+      const offsetTopMedias = this._ui.secondContainer.offsetTop;
+      const offsetBottomMedias = this._bodyOffsetHeight - window.innerHeight * 1.25;
 
-    this._currentScrollY = document.documentElement.scrollTop || document.body.scrollTop;
-    this._distanceToBottom = this._bodyOffsetHeight - window.innerHeight - this._currentScrollY;
-    const offsetTopMedias = this._ui.secondContainer.offsetTop;
-    const offsetBottomMedias = this._bodyOffsetHeight - window.innerHeight * 1.25;
+      this._delta = this._currentScrollY - this._previousScrollY;
 
-    this._delta = this._currentScrollY - this._previousScrollY;
+      this._previousScrollY = this._currentScrollY;
 
-    this._previousScrollY = this._currentScrollY;
+      TweenLite.killTweensOf(this._onDelayedEndScroll);
+      TweenLite.delayedCall(0.05, this._onDelayedEndScroll);
 
-    TweenLite.killTweensOf(this._onDelayedEndScroll);
-    TweenLite.delayedCall(0.05, this._onDelayedEndScroll);
+      if (this._currentScrollY < offsetTopMedias || this._currentScrollY >= offsetBottomMedias) {
+        this._deactivateMediaScalable();
+      } else {
+        this._activateMediaScalable();
+      }
 
-    if (this._currentScrollY < offsetTopMedias || this._currentScrollY >= offsetBottomMedias) {
-      this._deactivateMediaScalable();
-    } else {
-      this._activateMediaScalable();
-    }
-
-    if (this._distanceToBottom <= 0 && this._skippedPreview) {
-      States.router.navigateTo( pages.HOME );
+      if (this._distanceToBottom <= 0 && this._skippedPreview) {
+        States.router.navigateTo( pages.HOME );
+      }
     }
   }
 
@@ -397,10 +404,12 @@ export default class ProjectView {
   @autobind
   _onScrollWheel(event) {
 
-    this._delta = event.deltaY;
+    if (this._showAnimationDone) {
+      this._delta = event.deltaY;
 
-    if (event.deltaY > 0 && !this._isSkippingPreview) {
-      this._skipPreview();
+      if (event.deltaY > 0 && !this._isSkippingPreview) {
+        this._skipPreview();
+      }
     }
   }
 
@@ -449,7 +458,7 @@ export default class ProjectView {
     if (Math.abs(this._targetTransformOriginY - this._currentTransformOriginY) < 0.0000000001) {
       this._currentTransformOriginY = this._targetTransformOriginY;
     } else {
-      this._currentTransformOriginY += ( this._targetTransformOriginY - this._currentTransformOriginY ) * 0.05;
+      this._currentTransformOriginY += ( this._targetTransformOriginY - this._currentTransformOriginY ) * 0.01;
     }
 
 
@@ -482,7 +491,7 @@ export default class ProjectView {
       if (Math.abs(scrollStateTarget - this._scrollState) < 0.001) {
         this._scrollState = scrollStateTarget;
       } else {
-        this._scrollState += ( scrollStateTarget - this._scrollState ) * 0.1;
+        this._scrollState += ( scrollStateTarget - this._scrollState ) * 0.3;
       }
 
       this._ui.layer.style.webkitTransform = `scale3d(${this._scrollState},1,1)`;

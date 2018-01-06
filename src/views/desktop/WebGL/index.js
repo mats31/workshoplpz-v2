@@ -334,9 +334,11 @@ export default class WebGL {
   @autobind
   _onScrollWheel(event) {
 
-    const deltaY = event.deltaY;
+    if (!States.application.activateProject) {
+      const deltaY = event.deltaY;
 
-    this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
+      this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
+    }
   }
 
   @autobind
