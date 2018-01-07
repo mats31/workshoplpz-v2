@@ -25,6 +25,11 @@ class ProjectContainer extends THREE.Object3D {
     this._offsetCenter = new THREE.Vector2();
     this._offsetSide = new THREE.Vector2();
 
+    this._perspectiveSize = {
+      width: 0,
+      height: 0,
+    };
+
     this._depthTranslation = 0;
     this._perspectiveWidth = 0;
     this._scaleFactor = 1;
@@ -185,7 +190,8 @@ class ProjectContainer extends THREE.Object3D {
     }
   }
 
-  resize( camera ) {
+  resize( camera, perspectiveSize ) {
+    this._perspectiveSize = perspectiveSize;
 
     // const perspectiveSize = getPerspectiveSize( camera, this.position.z );
     //
@@ -231,11 +237,10 @@ class ProjectContainer extends THREE.Object3D {
 
     this._depthTranslation += ( maxTranslation * 5 - this._depthTranslation ) * 0.2;
 
-    const hFOV = 2 * Math.atan( Math.tan( camera.fov / 2 ) * camera.aspect );
-    const width = 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._initialPosition.z );
-    const moduloLength = length + ( this.getMaskWidth() * 0.5 );
-    const extraMargin = 15;
-    const offset = Math.abs(width * 2);
+    const maskWidth = this.getMaskWidth();
+    const width = this._perspectiveSize.width;
+    const moduloLength = length;
+    const offset = width * 0.5 + maskWidth;
 
     const xTranslation = this._initialPosition.x + translationEase;
     const x = ( modulo( xTranslation, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x ) - ( this._perspectiveWidth * 0.99 * this._offsetSide.x );

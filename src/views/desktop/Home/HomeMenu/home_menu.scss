@@ -7,7 +7,7 @@
   position: fixed;
   top: 6.7rem;
   width: 90%;
-  z-index: 100;
+  opacity: 0;
 }
 
 .menu__container {
@@ -61,5 +61,6 @@
   }
   &.is-active {
     color: rgba( 255, 255, 255, 1 );
+    cursor: initial;
   }
 }

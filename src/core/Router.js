@@ -24,6 +24,7 @@ export default class Router {
       '/': { as: pages.HOME, uses: this.onRouteHome },
       '/everydays': { as: pages.EVERYDAYS, uses: this.onRouteEverydays },
       '/project/:id': { as: pages.PROJECT, uses: this.onRouteProject },
+      '/about': { as: pages.ABOUT, uses: this.onRouteAbout },
     });
   }
 
@@ -73,6 +74,11 @@ export default class Router {
   @autobind
   onRouteProject() {
     this.updatePageCallback(pages.PROJECT);
+  }
+
+  @autobind
+  onRouteAbout() {
+    this.updatePageCallback(pages.ABOUT);
   }
 
 }

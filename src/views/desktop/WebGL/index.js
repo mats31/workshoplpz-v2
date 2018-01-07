@@ -4,6 +4,7 @@ import createDOM from 'utils/dom/createDOM';
 import { map } from 'utils/math';
 import { getPerspectiveSize } from 'utils/3d';
 import { autobind } from 'core-decorators';
+import { visible } from 'core/decorators';
 import projects from 'config/projects';
 import Background from './meshes/Background';
 import Grain from './meshes/Grain';
@@ -11,7 +12,6 @@ import Ground from './meshes/Ground';
 import ProjectContainer from './meshes/ProjectContainer';
 import template from './webgl.tpl.html';
 import './webgl.scss';
-
 
 export default class WebGL {
 
@@ -74,7 +74,7 @@ export default class WebGL {
     this._camera.lookAt(this._cameraTarget);
 
     const perspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
-    this._xStep = perspectiveSize.width;
+    this._xStep = perspectiveSize.width * 0.7;
 
     this._renderer = window.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -203,7 +203,30 @@ export default class WebGL {
     }
   }
 
-  show({ delay = 0 } = {}) {
+  _goToAboutState() {
+    TweenLite.to(
+      this._camera.position,
+      1.5,
+      {
+        y: this._topPosition,
+        ease: 'Power4.easeInOut',
+      },
+    );
+
+    TweenLite.to(
+      this._grain.position,
+      1.5,
+      {
+        y: this._topPosition,
+        ease: 'Power4.easeInOut',
+        onComplete: () => {
+          this.hide();
+        },
+      },
+    );
+  }
+
+  show({ delay = 0, transitionIn = true } = {}) {
     this._needsUpdate = true;
     this.isAnimating = true;
 
@@ -228,19 +251,21 @@ export default class WebGL {
       },
     );
 
-    this._translationShow = -10;
-    TweenLite.to(
-      this,
-      3,
-      {
-        delay,
-        _translationShow: 0,
-        ease: 'Expo.easeOut',
-        onComplete: () => {
-          this.isAnimating = false;
+    if (transitionIn) {
+      this._translationShow = -10;
+      TweenLite.to(
+        this,
+        3,
+        {
+          delay,
+          _translationShow: 0,
+          ease: 'Expo.easeOut',
+          onComplete: () => {
+            this.isAnimating = false;
+          },
         },
-      },
-    );
+      );
+    }
   }
 
   hide({ delay = 0 } = {}) {
@@ -310,10 +335,17 @@ export default class WebGL {
           if (lastRouteResolved.params.id === this._projectContainers[i].projectID) {
             this._goToProject(lastRouteResolved.params.id, i);
             this._projectContainers[i].goToProjectMode();
+
+            break;
           }
         }
 
         this._grain.hide();
+        break;
+      case pages.ABOUT:
+        this._state = 'about';
+
+        this._goToAboutState();
         break;
       default:
         this._grain.show();
@@ -321,15 +353,6 @@ export default class WebGL {
   }
 
   // Events --------------------------------------------------------------------
-
-  onUpdateFov() {
-
-    const hFOV = 2 * Math.atan( Math.tan( this._camera.fov / 2 ) * this._camera.aspect );
-    const xStep = Math.abs( 2 * Math.tan( ( hFOV / 2 ) ) * Math.abs( this._zDepth ) ) * 2.5;
-    this._xStep = xStep;
-
-    this._camera.updateProjectionMatrix();
-  }
 
   @autobind
   _onScrollWheel(event) {
@@ -418,7 +441,7 @@ export default class WebGL {
     this._renderer.setSize( this._width, this._height );
 
     const perspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
-    this._xStep = perspectiveSize.width;
+    this._xStep = Math.max( 35, perspectiveSize.width * 0.7 );
 
     // const scaleFactor = Math.min( 1, this._width / this._scaleStep );
 
@@ -429,7 +452,7 @@ export default class WebGL {
       const z = this._zDepth;
       const initialPosition = new THREE.Vector3(x, y, z);
       this._projectContainers[i].setInitialPosition(initialPosition);
-      this._projectContainers[i].resize( this._camera );
+      this._projectContainers[i].resize( this._camera, perspectiveSize );
     }
 
     if (this._grain) {

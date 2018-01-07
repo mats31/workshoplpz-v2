@@ -27,6 +27,15 @@ $fallbackFonts: Helvetica, Arial, sans-serif;
     @include fontSmoothing();
 }
 
+@mixin font-title-italic() {
+    font-family: 'majesti', $fallbackFonts;
+    font-weight: 500;
+    font-size: 19.4rem;
+    letter-spacing: 0rem;
+    line-height: 17.8rem;
+    @include fontSmoothing();
+}
+
 @mixin font-subtitle() {
     font-family: 'soleil', $fallbackFonts;
     font-weight: 300;

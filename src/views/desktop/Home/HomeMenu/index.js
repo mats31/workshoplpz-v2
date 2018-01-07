@@ -30,16 +30,31 @@ export default class HomeMenuView {
   _setupEvents() {
     this._ui.everydays.addEventListener( 'click', this.onEverydayClick );
     this._ui.projects.addEventListener( 'click', this.onProjectClick );
+    this._ui.about.addEventListener( 'click', this.onAboutClick );
   }
 
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
-    this.el.style.display = 'block';
+    TweenLite.to(
+      this.el,
+      1,
+      {
+        delay,
+        opacity: 1,
+      },
+    );
   }
 
   hide({ delay = 0 } = {}) {
-    this.el.style.display = 'none';
+    TweenLite.to(
+      this.el,
+      1,
+      {
+        delay,
+        opacity: 0,
+      },
+    );
   }
 
   setState( state ) {
@@ -76,6 +91,11 @@ export default class HomeMenuView {
   @autobind
   onEverydayClick() {
     States.router.navigateTo(pages.EVERYDAYS);
+  }
+
+  @autobind
+  onAboutClick() {
+    States.router.navigateTo(pages.ABOUT);
   }
 
 }

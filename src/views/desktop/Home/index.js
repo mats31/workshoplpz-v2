@@ -38,10 +38,16 @@ export default class DesktopHomeView {
 
   show({ delay = 0 } = {}) {
     this.el.style.display = 'block';
+
+    this._homeMenu.show({ delay });
   }
 
   hide({ delay = 0 } = {}) {
-    this.el.style.display = 'none';
+    this._homeMenu.hide({ delay });
+
+    TweenLite.delayedCall( delay + 1, () => {
+      // this.el.style.display = 'none';
+    });
   }
 
   updatePage(page) {
@@ -51,6 +57,9 @@ export default class DesktopHomeView {
         break;
       case pages.EVERYDAYS:
         this._homeMenu.setState('everydays');
+        break;
+      case pages.ABOUT:
+        this._homeMenu.setState('about');
         break;
       default:
         // this._home.hide();

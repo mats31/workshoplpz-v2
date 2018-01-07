@@ -212,8 +212,11 @@ class Mask extends THREE.Object3D {
 
     this._maskMaterial.uniforms.u_time.value = time;
 
-    this._mesh.rotation.x = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
-    this._mesh.rotation.z = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
+    // this._mesh.rotation.x = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
+    // this._mesh.rotation.z = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
+
+    this._mesh.rotation.x = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
+    this._mesh.rotation.z = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
 
     const scaleX = lerp( this._squareScaleEase, this._defaultScale.x, this._squareScale.x);
     const scaleY = lerp( this._squareScaleEase, this._defaultScale.y, this._squareScale.y);
@@ -225,8 +228,6 @@ class Mask extends THREE.Object3D {
   // Events --------------------------------------------------------------------
 
   resize( camera, containerDepth ) {
-
-    console.log(containerDepth);
 
     const perspectiveSize = getPerspectiveSize( camera, containerDepth );
 

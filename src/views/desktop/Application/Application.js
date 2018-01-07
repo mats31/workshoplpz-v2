@@ -4,6 +4,7 @@ import raf from 'raf';
 import { autobind } from 'core-decorators';
 import LoaderView from 'views/common/Loader/Loader';
 import HomeView from 'views/desktop/Home';
+import AboutView from 'views/desktop/About';
 import WebGLView from 'views/desktop/WebGL';
 import ProjectView from 'views/desktop/Project';
 
@@ -17,6 +18,7 @@ export default class DesktopAppView {
     this._views = [];
     this._loader = this._setupLoaderView();
     this._home = this._setupHomeView();
+    this._about = this._setupAboutView();
     this._webgl = this._setupWebGLView();
     this._project = this._setupProjectView();
 
@@ -36,6 +38,14 @@ export default class DesktopAppView {
 
   _setupHomeView() {
     const view = new HomeView({
+      parent: this.el,
+    });
+
+    return view;
+  }
+
+  _setupAboutView() {
+    const view = new AboutView({
       parent: this.el,
     });
 
@@ -80,19 +90,40 @@ export default class DesktopAppView {
         document.body.style.overflow = 'hidden';
         States.application.activateProject = false;
         this._loader.hide();
-        this._home.show();
+        this._about.hide({ delay: 0 });
+        this._home.show({ delay: 1 });
+        this._about.hide({ delay: 0 });
         this._webgl.show({ delay: 0 });
-        this._project.hide({
-          delay: 0.1,
-        });
+        this._project.hide({ delay: 0.1 });
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
         States.application.activateProject = true;
+        this._loader.hide();
+        this._about.hide({ delay: 0 });
+        this._home.hide({ delay: 0 });
+        this._about.hide({ delay: 0 });
         this._project.fillProjectPage();
-        this._project.show({
-          delay: 1.4,
-        });
+        this._project.show({ delay: 1.4 });
+        break;
+      case pages.EVERYDAYS:
+        document.body.style.overflow = 'hidden';
+        States.application.activateProject = false;
+        this._loader.hide();
+        this._about.hide({ delay: 0 });
+        this._home.show({ delay: 1 });
+        this._about.hide({ delay: 0 });
+        this._webgl.show({ delay: 0 });
+        this._project.hide({ delay: 0.1 });
+        break;
+      case pages.ABOUT:
+        document.body.style.overflow = 'hidden';
+        States.application.activateProject = false;
+        this._loader.hide();
+        this._about.show({ delay: 0.65 });
+        this._home.show({ delay: 1 });
+        this._webgl.show({ delay: 0, transitionIn: false });
+        this._project.hide({ delay: 0.1 });
         break;
       default:
         this._home.hide();
