@@ -11,6 +11,10 @@ const ressources = {
     { id: 'picture-skyfall-1', url: 'images/picture-skyfall-1.png', description: 'First orange picture' },
     { id: 'picture-skyfall-2', url: 'images/picture-skyfall-2.png', description: 'First orange picture' },
     { id: 'picture-skyfall-3', url: 'images/picture-skyfall-3.png', description: 'First orange picture' },
+    { id: 'everyday-01', url: 'images/everyday-01.jpg', description: '' },
+    { id: 'everyday-02', url: 'images/everyday-02.jpg', description: '' },
+    { id: 'everyday-03', url: 'images/everyday-03.jpg', description: '' },
+    { id: 'everyday-04', url: 'images/everyday-04.jpg', description: '' },
     { id: 'test', url: 'images/test.png', description: 'test' },
   ],
 

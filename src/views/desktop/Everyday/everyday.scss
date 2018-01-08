@@ -1,0 +1,16 @@
+@import '~stylesheets/common/global-imports';
+
+.everyday {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: $zindex-1;
+
+  .everyday__item {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 25vh;
+  }
+}
