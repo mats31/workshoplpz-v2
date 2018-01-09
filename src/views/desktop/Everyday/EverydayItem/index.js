@@ -22,6 +22,7 @@ export default class EverydayItem {
     this._length = options.length;
     this._parent = options.parent;
 
+    this._currentMargin = Math.max( 500, window.innerWidth * 0.33 );
     this._margin = Math.max( 500, window.innerWidth * 0.33 );
     this._spring = 0.01;
     this._friction = 0.85 + Math.random() * 0.03;
@@ -159,17 +160,20 @@ export default class EverydayItem {
     this._velocityX *= this._friction;
     this._currentPos.x += this._velocityX;
 
-    let moduloLength = this._moduloLength;
-    let margin = this._margin;
-    if (this.active()) {
-      this._currentBasePosition.x += ( this._fullBasePosition.x - this._currentBasePosition.x ) * 0.1;
-      moduloLength = this._fullModuloLength;
-      margin = this._fullWidth;
-    } else {
-      this._currentBasePosition.x += ( this._basePosition.x - this._currentBasePosition.x ) * 0.1;
-    }
+    // let moduloLength = this._moduloLength;
+    // let margin = this._margin;
+    // if (this.active()) {
+    //   this._currentBasePosition.x += ( this._fullBasePosition.x - this._currentBasePosition.x ) * 0.1;
+    //   moduloLength = this._fullModuloLength;
+    //   margin = this._fullWidth;
+    // } else {
+    //   // this._currentMargin += ( this._margin - this._currentMargin ) * 0.1;
+    //   this._currentBasePosition.x += ( this._basePosition.x - this._currentBasePosition.x ) * 0.1;
+    // }
+    //
+    // const x = modulo( this._currentBasePosition.x + this._currentPos.x, moduloLength ) - margin;
 
-    const x = modulo( this._currentBasePosition.x + this._currentPos.x, moduloLength ) - margin;
+    const x = modulo( this._basePosition.x + this._currentPos.x, this._moduloLength ) - this._margin;
 
     const y = this._basePosition.y;
 
