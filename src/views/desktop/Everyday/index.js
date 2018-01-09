@@ -40,10 +40,13 @@ export default class EverydayView {
   }
 
   _setupEvents() {
-    document.body.querySelector('#application').addEventListener('mousedown', this._onMousedown);
-    document.body.querySelector('#application').addEventListener('mousemove', this._onMousemove);
-    document.body.querySelector('#application').addEventListener('mouseup', this._onMouseleave);
-    document.addEventListener('mouseleave', this._onMouseleave);
+    this.el.addEventListener('mousedown', this._onMousedown);
+    this.el.addEventListener('mousemove', this._onMousemove);
+    this.el.addEventListener('mouseup', this._onMouseup);
+    document.addEventListener('mouseleave', this._onMouseup);
+
+    Signals.onResize.add(this._onResize);
+    Signals.onEverydayMousedown.add(this._onEverydayMousedown);
   }
 
   // State ---------------------------------------------------------------------
@@ -86,10 +89,34 @@ export default class EverydayView {
   }
 
   @autobind
-  _onMouseleave() {
+  _onMouseup() {
     this._clicked = false;
     this._delta = 0;
+
+    for (let i = 0; i < this._everydayItems.length; i++) {
+      this._everydayItems[i].deactivate();
+    }
   }
+
+  @autobind
+  _onEverydayMousedown() {
+    for (let i = 0; i < this._everydayItems.length; i++) {
+      this._everydayItems[i].activate();
+    }
+  }
+
+  @autobind
+  _onResize() {
+    this.resize();
+  }
+
+  resize() {
+    for (let i = 0; i < this._everydayItems.length; i++) {
+      this._everydayItems[i].resize();
+    }
+  }
+
+  // Update --------------------------------------------------------------------
 
   update() {
     if (this.visible()) {
