@@ -23,18 +23,24 @@ export default class EverydayItem {
     this._parent = options.parent;
 
     this._currentMargin = Math.max( 500, window.innerWidth * 0.33 );
-    this._margin = Math.max( 500, window.innerWidth * 0.33 );
     this._spring = 0.01;
     this._friction = 0.85 + Math.random() * 0.03;
     this._velocityX = 0;
+    this._imgW = this._imgH = Math.max( 300, window.innerWidth * 0.2 );
+    this._margin = this._currentMargin = this._imgW * 2;
+    this._moduloLength = this._currentModuloLength = this._length * this._margin;
+    this._fullModuloLength = this._length * this._fullWidth;
 
     this._currentPos = { x: 0, y: 0, z: 0 };
     this._targetPos = { x: 0, y: 0, z: 0 };
     this._translationDelta = 0;
+    this._offsetFullWidth = 0;
 
     this._currentScale = 1;
     this._targetScale = 1;
     this._fullScreenRatio = 1;
+    this._tappedIndex = 0;
+    this._offsetTarget = 0;
 
     this._currentBasePosition = {
       x: this.index * this._margin,
@@ -43,10 +49,9 @@ export default class EverydayItem {
 
     this._basePosition = {
       x: this.index * this._margin,
-      y: this.index % 2 === 0 ? 0 : 110,
+      y: this.index % 2 === 0 ? window.innerHeight * 0.5 : window.innerHeight * 0.6,
     };
 
-    this._moduloLength = this._length * this._margin;
 
     this._img = States.resources.getImage(`everyday-${this.id}`).media;
     this._img.classList.add('js-everyday__img');
@@ -58,7 +63,6 @@ export default class EverydayItem {
       x: this.index * this._fullWidth,
       y: 0
     };
-    this._fullModuloLength = this._length * this._fullWidth;
 
     this.el.appendChild(this._img);
 
@@ -96,19 +100,29 @@ export default class EverydayItem {
     this._targetScale = 1;
   }
 
-  activate() {
+  activate(index) {
+    this._tappedIndex = index;
+    this._offsetTarget = ( this._fullWidth * index ) + this._currentPos.x - ( window.innerWidth * 0.5 - this._fullWidth * 0.5 );
     this._targetScale = this._fullScreenRatio;
+    // this._currentModuloLength = this._fullModuloLength;
   }
 
   deactivate() {
     this._targetScale = 1;
+    // this._currentModuloLength = this._moduloLength;
   }
 
   // Events --------------------------------------------------------------------
 
   @autobind
   _onMousedown() {
-    Signals.onEverydayMousedown.dispatch();
+    // console.log(this._length * Math.floor( this._targetPos.x / ( this._length * this._margin ) ));
+    // console.log(Math.floor( this._x / ( this._length * this._margin ) ));
+    const translation = this._translationDelta * -1;
+    console.log(translation / ( this._length * this._margin - window.innerWidth ));
+    // console.log(this._length * this._margin);
+    const customIndex = this.index + this.length * Math.floor( this._targetPos.x / ( this.length * this._margin ) );
+    Signals.onEverydayMousedown.dispatch(this.index);
   }
 
   @autobind
@@ -126,15 +140,29 @@ export default class EverydayItem {
   }
 
   resize() {
-    this._fullScreenRatio = window.innerHeight / this._img.height;
-    this._fullWidth = this._img.width * this._fullScreenRatio;
-    this._fullHeight = this._img.height * this._fullScreenRatio;
+    this._imgW = this._imgH = Math.max( 300, window.innerWidth * 0.2 );
+    this.el.style.width = `${this._imgW}px`;
 
+    this._margin = this._imgW * 2;
+
+    this._fullScreenRatio = window.innerHeight / this._imgH;
+    this._fullWidth = this._imgW * this._fullScreenRatio;
+    this._fullHeight = this._imgH * this._fullScreenRatio;
+
+    this._moduloLength = this._length * this._margin;
     this._fullModuloLength = this._length * this._fullWidth;
+
+    const y1 = window.innerHeight * 0.5 - this._imgH * 0.5;
+    const y2 = window.innerHeight * 0.5 - this._imgH * 0.5 + window.innerHeight * 0.07;
+
+    this._basePosition = {
+      x: this.index * this._margin,
+      y: this.index % 2 === 0 ? y1 : y2,
+    };
 
     this._fullBasePosition = {
       x: this.index * this._fullWidth,
-      y: 0
+      y: y1,
     };
   }
 
@@ -151,6 +179,7 @@ export default class EverydayItem {
     const scale = this._currentScale;
 
     this._translationDelta += delta;
+    this._fullTranslationDelta += delta * 2;
     this._targetPos.x = this._translationDelta;
 
     const dx = this._targetPos.x - this._currentPos.x;
@@ -173,11 +202,28 @@ export default class EverydayItem {
     //
     // const x = modulo( this._currentBasePosition.x + this._currentPos.x, moduloLength ) - margin;
 
-    const x = modulo( this._basePosition.x + this._currentPos.x, this._moduloLength ) - this._margin;
+    if (this.active()) {
+      this._currentBasePosition.x += ( this._fullBasePosition.x - this._currentBasePosition.x ) * 0.1;
+      this._currentBasePosition.y += ( this._fullBasePosition.y - this._currentBasePosition.y ) * 0.1;
+      // this._offsetFullWidth += ( this._fullWidth * 0.5 * this._tappedIndex - this._offsetFullWidth ) * 0.1;
+      this._offsetFullWidth += ( this._offsetTarget - this._offsetFullWidth ) * 0.1;
+      this._currentMargin += ( this._fullWidth - this._currentMargin ) * 0.1;
+      this._currentModuloLength += ( this._fullModuloLength - this._currentModuloLength ) * 0.1;
+    } else {
+      this._currentBasePosition.x += ( this._basePosition.x - this._currentBasePosition.x ) * 0.1;
+      this._currentBasePosition.y += ( this._basePosition.y - this._currentBasePosition.y ) * 0.1;
+      this._offsetFullWidth += -this._offsetFullWidth * 0.1;
+      this._currentMargin += ( this._margin - this._currentMargin ) * 0.1;
+      this._currentModuloLength += ( this._moduloLength - this._currentModuloLength ) * 0.1;
+    }
 
-    const y = this._basePosition.y;
+    // const x = modulo( this._basePosition.x + this._currentPos.x, this._moduloLength ) - this._margin;
+    this._x = modulo( this._currentBasePosition.x + this._currentPos.x - this._offsetFullWidth + this._currentMargin, this._currentModuloLength) - this._currentMargin;
+    // const x = this._currentBasePosition.x + this._currentPos.x - this._offsetFullWidth;
 
-    const transform = `translate3d(${x}px,${y}px,0) scale3d(${scale},${scale},1)`;
+    this._y = this._currentBasePosition.y;
+
+    const transform = `translate3d(${this._x}px,${this._y}px,0) scale3d(${scale},${scale},1)`;
 
     this.el.style.webkitTransform = transform;
     this.el.style.MozTransform = transform;

@@ -99,9 +99,9 @@ export default class EverydayView {
   }
 
   @autobind
-  _onEverydayMousedown() {
+  _onEverydayMousedown(index) {
     for (let i = 0; i < this._everydayItems.length; i++) {
-      this._everydayItems[i].activate();
+      this._everydayItems[i].activate(index);
     }
   }
 

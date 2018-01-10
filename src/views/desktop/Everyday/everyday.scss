@@ -13,6 +13,12 @@
     opacity: 0;
     position: absolute;
     left: 0;
-    top: 25vh;
+    top: 0;
+    transform-origin: left center;
+  }
+
+  .everyday__item img {
+    display: block;
+    width: 100%;
   }
 }
