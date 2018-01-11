@@ -179,7 +179,9 @@ export default class EverydayItem {
     const scale = this._currentScale;
 
     this._translationDelta += delta;
-    this._fullTranslationDelta += delta * 2;
+    if (this.index === 0) {
+      console.log(this._translationDelta);
+    }
     this._targetPos.x = this._translationDelta;
 
     const dx = this._targetPos.x - this._currentPos.x;
