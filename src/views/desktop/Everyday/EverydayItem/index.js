@@ -179,9 +179,6 @@ export default class EverydayItem {
     const scale = this._currentScale;
 
     this._translationDelta += delta;
-    if (this.index === 0) {
-      console.log(this._translationDelta);
-    }
     this._targetPos.x = this._translationDelta;
 
     const dx = this._targetPos.x - this._currentPos.x;
@@ -190,6 +187,16 @@ export default class EverydayItem {
     this._velocityX += ax;
     this._velocityX *= this._friction;
     this._currentPos.x += this._velocityX;
+
+    if (this.index === 0) {
+      console.log(this._currentPos.x);
+
+      if (Math.abs( this._currentPos.x ) >= this._length * this._margin) {
+          this._currentPos.x = 0;
+          this._targetPos.x = 0;
+          this._translationDelta = 0;
+      }
+    }
 
     // let moduloLength = this._moduloLength;
     // let margin = this._margin;
