@@ -20,6 +20,8 @@ export default class EverydayView {
 
     this._mouse = { x: 0, y: 0 };
 
+    this._timeout = null;
+
     this._everydayItems = [];
 
     this._setupItems();
@@ -80,11 +82,15 @@ export default class EverydayView {
     if (this._clicked) {
 
       this._delta = ( event.clientX - this._mouse.x ) * 2;
-      // this._translationDelta += this._delta;
-
 
       this._mouse.x = event.clientX;
       this._mouse.y = event.clientY;
+
+      clearTimeout(this._timeout);
+
+      this._timeout = setTimeout( () => {
+        this._delta = 0;
+      }, 50);
     }
   }
 
