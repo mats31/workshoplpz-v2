@@ -1,11 +1,12 @@
 import States from 'core/States';
 import { modulo } from 'utils/math';
-import { active } from 'core/decorators';
+import { active, objectVisible } from 'core/decorators';
 import { getPerspectiveSize } from 'utils/3d';
 import Mask from './meshes/Mask';
 import Text from './meshes/Text';
 
 @active()
+@objectVisible()
 class ProjectContainer extends THREE.Object3D {
 
   constructor(options) {
@@ -168,6 +169,12 @@ class ProjectContainer extends THREE.Object3D {
     this._mask.deactivate();
 
     this._offsetCenter.set(0, 0);
+  }
+
+  show() {}
+
+  hide() {
+    this._mask.hide();
   }
 
   // Events --------------------------------------------------------------------

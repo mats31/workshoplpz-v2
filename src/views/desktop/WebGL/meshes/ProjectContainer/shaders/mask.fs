@@ -70,7 +70,7 @@ void main() {
 	#include <envmap_fragment>
 
 
-  float alpha = 1.;
+  float alpha = u_alpha;
 	gl_FragColor = vec4( mix( outgoingLight, emissive, u_fullColor ), alpha );
 
 	#include <premultiplied_alpha_fragment>

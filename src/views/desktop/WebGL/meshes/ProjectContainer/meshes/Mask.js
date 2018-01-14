@@ -1,5 +1,5 @@
 import States from 'core/States';
-import { active, focused } from 'core/decorators';
+import { active, focused, objectVisible } from 'core/decorators';
 import { lerp } from 'utils/math';
 import { getPerspectiveSize } from 'utils/3d';
 
@@ -7,6 +7,7 @@ import vertexShader from '../shaders/mask.vs';
 import fragmentShader from '../shaders/mask.fs';
 
 @active()
+@objectVisible()
 @focused()
 class Mask extends THREE.Object3D {
 
@@ -66,6 +67,7 @@ class Mask extends THREE.Object3D {
       specular: { value: new THREE.Color( 0x111111 ) },
       u_ease: { type: 'f', value: this._easeValue },
       u_morph: { type: 'f', value: this._morphValue },
+      u_alpha: { type: 'f', value: 1 },
     };
 
     this._maskMaterial = new THREE.ShaderMaterial({
@@ -171,6 +173,19 @@ class Mask extends THREE.Object3D {
     this._maskMaterial.uniforms.u_morph.value = 0;
     this._maskUniforms.u_fullColor.value = 0;
     this._maskUniforms.u_ease.value = 0;
+  }
+
+  show() {}
+
+  hide() {
+    TweenLite.to(
+      this._maskUniforms.u_alpha,
+      1,
+      {
+        value: 0,
+        ease: 'Power2.easeOut',
+      },
+    );
   }
 
   // Getters -------------------------------------------------------------------

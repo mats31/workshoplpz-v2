@@ -66,3 +66,7 @@ export function selected(initialValue = false) {
 export function opened(initialValue = false) {
   return toggle('opened', 'open', 'close', initialValue);
 }
+
+export function objectVisible(initialValue = true) {
+  return toggle('objectVisible', 'show', 'hide', initialValue);
+}

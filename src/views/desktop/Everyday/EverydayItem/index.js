@@ -48,7 +48,7 @@ export default class EverydayItem {
 
     this._currentBasePosition = {
       x: this.index * this._margin,
-      y: this.index % 2 === 0 ? 0 : 110,
+      y: this.index % 2 === 0 ? window.innerHeight * 0.5 : window.innerHeight * 0.6,
     };
 
     this._basePosition = {

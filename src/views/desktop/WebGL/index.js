@@ -248,6 +248,12 @@ export default class WebGL {
         delay,
         y: this._baseY,
         ease: 'Power4.easeInOut',
+        onComplete: () => {
+          if (!transitionIn) {
+            console.log(1);
+            this.isAnimating = false;
+          }
+        },
       },
     );
 
@@ -261,6 +267,7 @@ export default class WebGL {
           _translationShow: 0,
           ease: 'Expo.easeOut',
           onComplete: () => {
+            console.log(2);
             this.isAnimating = false;
           },
         },
@@ -341,6 +348,31 @@ export default class WebGL {
         }
 
         this._grain.hide();
+        break;
+      case pages.EVERYDAYS:
+
+        console.log(this.isAnimating);
+
+        if (!this.isAnimating) {
+          this.isAnimating = true;
+          this._translationShow = -2;
+          TweenLite.killTweensOf(this._translationShow);
+          TweenLite.to(
+            this,
+            3,
+            {
+              _translationShow: 0,
+              ease: 'Expo.easeOut',
+              onComplete: () => {
+                this.isAnimating = false;
+              },
+            },
+          );
+        }
+
+        for (let i = 0; i < this._projectContainers.length; i++) {
+          this._projectContainers[i].hide();
+        }
         break;
       case pages.ABOUT:
         this._state = 'about';
