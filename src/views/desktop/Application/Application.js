@@ -103,7 +103,7 @@ export default class DesktopAppView {
         this._about.hide({ delay: 0 });
         this._home.show({ delay: 1 });
         this._about.hide({ delay: 0 });
-        this._webgl.show({ delay: 0 });
+        this._webgl.show({ delay: 1 });
         this._project.hide({ delay: 0.1 });
         this._everyday.hide({ delay: 0 });
         break;
@@ -127,7 +127,7 @@ export default class DesktopAppView {
         this._about.hide({ delay: 0 });
         this._webgl.show({ delay: 0, transitionIn: false });
         this._project.hide({ delay: 0.1 });
-        this._everyday.show({ delay: 0 });
+        this._everyday.show({ delay: 0.35 });
         break;
       case pages.ABOUT:
         document.body.style.overflow = 'hidden';

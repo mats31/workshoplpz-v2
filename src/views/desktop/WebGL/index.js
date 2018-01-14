@@ -233,7 +233,7 @@ export default class WebGL {
     TweenLite.killTweensOf([this._camera, this._grain]);
     TweenLite.to(
       this._camera.position,
-      1.5,
+      2.55,
       {
         delay,
         y: this._baseY,
@@ -243,14 +243,13 @@ export default class WebGL {
 
     TweenLite.to(
       this._grain.position,
-      1.5,
+      2.55,
       {
         delay,
         y: this._baseY,
         ease: 'Power4.easeInOut',
         onComplete: () => {
           if (!transitionIn) {
-            console.log(1);
             this.isAnimating = false;
           }
         },
@@ -258,16 +257,15 @@ export default class WebGL {
     );
 
     if (transitionIn) {
-      this._translationShow = -10;
+      TweenLite.killTweensOf(this._translationShow);
       TweenLite.to(
         this,
-        3,
+        2,
         {
-          delay,
-          _translationShow: 0,
-          ease: 'Expo.easeOut',
+          delay: delay + 1.5,
+          _translationShow: '-=40',
+          ease: 'Power4.easeOut',
           onComplete: () => {
-            console.log(2);
             this.isAnimating = false;
           },
         },
@@ -329,7 +327,6 @@ export default class WebGL {
     switch (page) {
       case pages.HOME:
         this._state = 'home';
-
         for (let i = 0; i < this._projectContainers.length; i++) {
           this._projectContainers[i].deactiveFocus();
         }
@@ -337,38 +334,29 @@ export default class WebGL {
       case pages.PROJECT:
         this._state = 'project';
         const lastRouteResolved = States.router.getLastRouteResolved();
-
         for (let i = 0; i < this._projectContainers.length; i++) {
           if (lastRouteResolved.params.id === this._projectContainers[i].projectID) {
             this._goToProject(lastRouteResolved.params.id, i);
             this._projectContainers[i].goToProjectMode();
-
             break;
           }
         }
-
         this._grain.hide();
         break;
       case pages.EVERYDAYS:
-
-        console.log(this.isAnimating);
-
-        if (!this.isAnimating) {
-          this.isAnimating = true;
-          this._translationShow = -2;
-          TweenLite.killTweensOf(this._translationShow);
-          TweenLite.to(
-            this,
-            3,
-            {
-              _translationShow: 0,
-              ease: 'Expo.easeOut',
-              onComplete: () => {
-                this.isAnimating = false;
-              },
+        this.isAnimating = true;
+        TweenLite.killTweensOf(this._translationShow);
+        TweenLite.to(
+          this,
+          2,
+          {
+            _translationShow: '-=20',
+            ease: 'Expo.easeOut',
+            onComplete: () => {
+              this.isAnimating = false;
             },
-          );
-        }
+          },
+        );
 
         for (let i = 0; i < this._projectContainers.length; i++) {
           this._projectContainers[i].hide();
@@ -392,7 +380,14 @@ export default class WebGL {
     if (!States.application.activateProject) {
       const deltaY = event.deltaY;
 
-      this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
+      // this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
+      this._translationWheel = deltaY;
+
+      clearTimeout(this._scrollWheelTimeout);
+
+      this._scrollWheelTimeout = setTimeout( () => {
+        this._translationWheel = 0;
+      }, 50);
     }
   }
 
@@ -420,22 +415,31 @@ export default class WebGL {
       } else {
 
         this._drag = true;
-        this._translationDelta = Math.min( 5, Math.max( -5, ( this._mouse.x - this._previousMouse.x ) * 20 ) );
+        // this._translationDelta = Math.min( 5, Math.max( -5, ( this._mouse.x - this._previousMouse.x ) * 20 ) );
+        this._translationDelta = this._mouse.x - this._previousMouse.x;
       }
 
       this._previousMouse.x = this._mouse.x;
     }
+
+    clearTimeout(this._mousemoveTimeout);
+
+    this._mousemoveTimeout = setTimeout( () => {
+      this._translationDelta = 0;
+    }, 50);
   }
 
   @autobind
   _onWeblGLMouseleave() {
     this._clicked = false;
+    this._translationDelta = 0;
     // this._translationEase = 0;
   }
 
   @autobind
   _onWebGLMouseup() {
     this._clicked = false;
+    this._translationDelta = 0;
     // this._zoomFov();
   }
 
@@ -539,16 +543,23 @@ export default class WebGL {
   _updateProjectContainers(time) {
 
     const length = this._projectContainers.length * this._xStep;
-    const maxTranslation = Math.max( Math.abs(this._translationDelta), Math.abs(this._translationWheel) );
     // this._translationEase += ( this._translationTarget - this._translationEase ) * 0.05;
-    this._translationDelta += -this._translationDelta * 0.05;
-    this._translationWheel += -this._translationWheel * 0.05;
-    this._translationEase += this._translationDelta + this._translationWheel + this._translationShow;
+    // this._translationDelta += -this._translationDelta * 0.05;
+    // this._translationWheel += -this._translationWheel * 0.05;
+    // this._translationEase += this._translationDelta + this._translationWheel + this._translationShow;
+
+    const translationDelta = this._translationDelta * 60;
+    const translationWheel = this._translationWheel * 0.02;
+    const translationShow = this._translationShow;
+
+    const delta = translationDelta + translationWheel;
+    const maxTranslation = Math.max( Math.abs(translationDelta), Math.abs(translationWheel) );
+    // const maxTranslation = Math.max( -5, Math.min( 5, Math.abs(translationDelta) ) );
 
     for ( let i = 0; i < this._projectContainers.length; i++ ) {
 
       const project = this._projectContainers[i];
-      project.update( time, this._translationEase, maxTranslation, this._camera, length, i );
+      project.update( time, delta, translationShow, maxTranslation, this._camera, length, i );
     }
   }
 

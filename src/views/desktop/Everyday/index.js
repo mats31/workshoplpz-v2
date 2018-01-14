@@ -16,7 +16,7 @@ export default class EverydayView {
     );
 
     this._delta = 0;
-    this._translationDelta = 0;
+    this._translationShow = 0;
 
     this._mouse = { x: 0, y: 0 };
 
@@ -56,8 +56,18 @@ export default class EverydayView {
   show({ delay = 0 } = {}) {
     this.el.style.display = 'block';
 
+    TweenLite.to(
+      this,
+      2,
+      {
+        delay,
+        _translationShow: '-=400',
+        ease: 'Expo.easeOut',
+      },
+    );
+
     for (let i = 0; i < this._everydayItems.length; i++) {
-      this._everydayItems[i].show();
+      this._everydayItems[i].show({ delay });
     }
   }
 
@@ -127,7 +137,7 @@ export default class EverydayView {
   update() {
     if (this.visible()) {
       for (let i = 0; i < this._everydayItems.length; i++) {
-        this._everydayItems[i].update(this._delta);
+        this._everydayItems[i].update(this._delta, this._translationShow);
       }
     }
   }

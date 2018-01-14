@@ -34,6 +34,11 @@ class ProjectContainer extends THREE.Object3D {
     this._depthTranslation = 0;
     this._perspectiveWidth = 0;
     this._scaleFactor = 1;
+    this._spring = 0.005;
+    this._friction = 0.85 + Math.random() * 0.05;
+    this._currentTranslation = 0;
+    this._targetTranslation = 0;
+    this._velocityX = 0;
 
     this._isHover = false;
     this._isFocus = false;
@@ -216,14 +221,14 @@ class ProjectContainer extends THREE.Object3D {
 
   // Update --------------------------------------------------------------------
 
-  update( time, translationEase, maxTranslation, camera, length, i ) {
+  update( time, delta, translationShow, maxTranslation, camera, length, i ) {
 
     // this._updateDOM(i);
-    this._updatePosition( translationEase, maxTranslation, camera, length, i );
+    this._updatePosition( delta, translationShow, maxTranslation, camera, length, i );
     // this._checkFocus(point);
     this._mask.update( time );
     // this._text.update( time );
-    // this._projectPlane.update( time, translationEase );
+    // this._projectPlane.update( time, delta );
   }
 
   _updateDOM() {
@@ -234,22 +239,26 @@ class ProjectContainer extends THREE.Object3D {
     // if (i===1) console.log(this._getMaskPosition().left);
   }
 
-  _updatePosition( translationEase, maxTranslation, camera, length, i ) {
+  _updatePosition( delta, translationShow, maxTranslation, camera, length, i ) {
 
-    // if (i === 0) {
-    //   this.visible = true;
-    // } else {
-    //   this.visible = false;
-    // }
-
-    this._depthTranslation += ( maxTranslation * 5 - this._depthTranslation ) * 0.2;
+    // this._depthTranslation += ( maxTranslation * 5 - this._depthTranslation ) * 0.2;
 
     const maskWidth = this.getMaskWidth();
     const width = this._perspectiveSize.width;
     const moduloLength = length;
     const offset = width * 0.5 + maskWidth;
 
-    const xTranslation = this._initialPosition.x + translationEase;
+    this._targetTranslation += delta;
+    const dx = this._targetTranslation - this._currentTranslation;
+    const ax = dx * this._spring;
+
+    this._velocityX += ax;
+    this._velocityX *= this._friction;
+    this._currentTranslation += this._velocityX;
+
+    this._depthTranslation = Math.abs( this._velocityX * 5.5 );
+
+    const xTranslation = this._initialPosition.x + this._currentTranslation + translationShow;
     const x = ( modulo( xTranslation, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x ) - ( this._perspectiveWidth * 0.99 * this._offsetSide.x );
     const y = this._initialPosition.y + ( ( this._topPosition - this._initialPosition.y ) * this._offsetCenter.y );
     const z = this._initialPosition.z - this._depthTranslation;

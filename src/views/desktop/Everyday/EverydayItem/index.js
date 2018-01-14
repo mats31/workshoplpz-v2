@@ -46,14 +46,17 @@ export default class EverydayItem {
     this._currentTransformOrgin = 50;
     this._targetTransformOrigin = 50;
 
-    this._currentBasePosition = {
-      x: this.index * this._margin,
-      y: this.index % 2 === 0 ? window.innerHeight * 0.5 : window.innerHeight * 0.6,
-    };
 
+    const y1 = window.innerHeight * 0.5 - this._imgH * 0.5;
+    const y2 = window.innerHeight * 0.5 - this._imgH * 0.5 + window.innerHeight * 0.07;
     this._basePosition = {
       x: this.index * this._margin,
-      y: this.index % 2 === 0 ? window.innerHeight * 0.5 : window.innerHeight * 0.6,
+      y: this.index % 2 === 0 ? y1 : y2,
+    };
+
+    this._currentBasePosition = {
+      x: this.index * this._margin,
+      y: this.index % 2 === 0 ? y1 : y2,
     };
 
     this._x = 0;
@@ -197,13 +200,13 @@ export default class EverydayItem {
 
   // Update --------------------------------------------------------------------
 
-  update(delta) {
+  update(delta, translationShow) {
 
-    this._updatePosition(delta);
+    this._updatePosition(delta, translationShow);
     // this._updateTransformOrigin();
   }
 
-  _updatePosition(delta) {
+  _updatePosition(delta, translationShow) {
 
     this._currentScale += (this._targetScale - this._currentScale) * 0.1;
     const scale = this._currentScale;
@@ -238,7 +241,8 @@ export default class EverydayItem {
     }
 
     // const x = modulo( this._basePosition.x + this._currentPos.x, this._moduloLength ) - this._margin;
-    this._x = modulo( this._currentBasePosition.x + this._currentPos.x - this._offsetFullWidth + this._currentMargin, this._currentModuloLength) - this._currentMargin;
+    const showOffset = 400;
+    this._x = modulo( this._currentBasePosition.x + this._currentPos.x - this._offsetFullWidth + this._currentMargin + translationShow + showOffset, this._currentModuloLength) - this._currentMargin;
     // const x = this._currentBasePosition.x + this._currentPos.x - this._offsetFullWidth;
 
     this._y = this._currentBasePosition.y;
