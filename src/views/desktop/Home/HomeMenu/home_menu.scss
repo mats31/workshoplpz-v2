@@ -11,6 +11,8 @@
 }
 
 .menu__container {
+  user-select: none;
+  outline: none;
   position: relative;
   width: 100%;
 }

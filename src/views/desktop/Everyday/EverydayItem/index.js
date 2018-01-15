@@ -105,6 +105,7 @@ export default class EverydayItem {
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
+    TweenLite.killTweensOf(this);
     TweenLite.to(
       this.el,
       1,
@@ -116,7 +117,9 @@ export default class EverydayItem {
     );
   }
 
+
   hide({ delay = 0 } = {}) {
+    TweenLite.killTweensOf(this);
     TweenLite.to(
       this.el,
       1,
@@ -139,7 +142,7 @@ export default class EverydayItem {
   activate(index) {
     this._tappedIndex = index;
     // this._offsetTarget = ( this._fullWidth * index ) + this._currentPos.x - ( window.innerWidth * 0.5 - this._fullWidth * 0.5 );
-    this._offsetTarget = ( this._fullWidth * index ) + this._currentPos.x - ( window.innerWidth * 0.5 - ( window.innerWidth - this._fullWidth ) * 0.5 );
+    this._offsetTarget = ( this._fullWidth * index ) + this._currentPos.x - window.innerWidth * 0.36;
     this._targetScale = this._fullScreenRatio;
     this._deltaFactor = 2;
     this._targetTextAlpha = 0;
@@ -177,7 +180,7 @@ export default class EverydayItem {
       const sideFactor = xPos > 0 ? 1 : 0;
       translationFactor = Math.floor( Math.abs(xPos) / (this._length * this._margin) );
 
-      customIndex = sideFactor * ( ( this.index - this._length ) - translationFactor * this._length );
+      customIndex = ( this.index - this._length * sideFactor ) - translationFactor * this._length;
     } else {
       translationFactor = Math.floor( Math.abs(this._currentPos.x + this._basePosition.x - window.innerWidth) / (this._length * this._margin) );
       customIndex = this.index + this._length * translationFactor;
@@ -268,7 +271,7 @@ export default class EverydayItem {
     }
 
     // const x = modulo( this._basePosition.x + this._currentPos.x, this._moduloLength ) - this._margin;
-    const showOffset = 400;
+    const showOffset = 0;
     this._x = modulo( this._currentBasePosition.x + this._currentPos.x - this._offsetFullWidth + this._currentMargin + translationShow + showOffset, this._currentModuloLength) - this._currentMargin;
     // const x = this._currentBasePosition.x + this._currentPos.x - this._offsetFullWidth;
 

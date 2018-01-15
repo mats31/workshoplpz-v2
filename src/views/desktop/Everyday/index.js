@@ -55,6 +55,8 @@ export default class EverydayView {
   // State ---------------------------------------------------------------------
 
   show({ delay = 0, transitionFromDown = false } = {}) {
+    TweenLite.killTweensOf(this.el);
+    TweenLite.killTweensOf(this);
     this.needsUpdate = true;
     this.el.style.display = 'block';
     this.el.style.pointerEvents = 'initial';
@@ -64,7 +66,6 @@ export default class EverydayView {
     }
 
     if (transitionFromDown) {
-      TweenLite.killTweensOf(this);
       TweenLite.fromTo(
         this.el,
         1.7,
@@ -78,13 +79,13 @@ export default class EverydayView {
         },
       );
     } else {
-      TweenLite.killTweensOf(this._translationShow);
+      this._translationShow = 400;
       TweenLite.to(
         this,
         2,
         {
           delay,
-          _translationShow: '-=400',
+          _translationShow: 0,
           ease: 'Expo.easeOut',
         },
       );
@@ -92,11 +93,9 @@ export default class EverydayView {
   }
 
   hide({ delay = 0, transitionFromTop = false } = {}) {
-
-    this.el.style.pointerEvents = 'none';
-
+    TweenLite.killTweensOf(this.el);
+    TweenLite.killTweensOf(this);
     if (transitionFromTop) {
-      TweenLite.killTweensOf(this.el);
       TweenLite.to(
         this.el,
         1,
@@ -104,10 +103,13 @@ export default class EverydayView {
           delay,
           y: window.innerHeight * 0.85,
           ease: 'Power2.easeIn',
+          onComplete: () => {
+            this.needsUpdate = false;
+            this.el.style.display = 'none';
+          },
         },
       );
     } else {
-      TweenLite.killTweensOf(this._translationShow);
       TweenLite.to(
         this,
         2,
