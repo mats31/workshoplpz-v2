@@ -35,5 +35,6 @@
       color: white;
       line-height: 11rem;
       z-index: $zindex-1;
+      pointer-events: none;
   }
 }
