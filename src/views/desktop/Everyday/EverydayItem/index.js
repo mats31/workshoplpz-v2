@@ -42,9 +42,10 @@ export default class EverydayItem {
     this._tappedIndex = 0;
     this._offsetTarget = 0;
     this._deltaFactor = 1;
-
-    this._currentTransformOrgin = 50;
-    this._targetTransformOrigin = 50;
+    this._targetTextAlpha = 1;
+    this._currentTextAlpha = 1;
+    this._targetTextTranslation = 0;
+    this._currentTextTranslation = 0;
 
 
     const y1 = window.innerHeight * 0.5 - this._imgH * 0.5;
@@ -73,6 +74,22 @@ export default class EverydayItem {
       y: 0,
     };
 
+    this._text = document.createElement('div');
+    this._text.classList.add('js-everyday__text');
+    this._text.classList.add('everyday__text');
+    this._text.innerHTML = this.id;
+    if (this.index % 3 === 0) {
+      this._text.style.left = '55%';
+      this._text.style.top = '-70px';
+    } else if (this.index % 3 === 1) {
+      this._text.style.left = '-94px';
+      this._text.style.top = '90%';
+    } else {
+      this._text.style.left = '-21px';
+      this._text.style.top = '-100px';
+    }
+
+    this.el.appendChild(this._text);
     this.el.appendChild(this._img);
 
     this._setupEvents();
@@ -99,7 +116,17 @@ export default class EverydayItem {
     );
   }
 
-  hide({ delay = 0 } = {}) {}
+  hide({ delay = 0 } = {}) {
+    TweenLite.to(
+      this.el,
+      1,
+      {
+        delay,
+        opacity: 0,
+        ease: 'Power2.easeOut',
+      },
+    );
+  }
 
   focus() {
     this._targetScale = 1.1;
@@ -115,14 +142,16 @@ export default class EverydayItem {
     this._offsetTarget = ( this._fullWidth * index ) + this._currentPos.x - ( window.innerWidth * 0.5 - ( window.innerWidth - this._fullWidth ) * 0.5 );
     this._targetScale = this._fullScreenRatio;
     this._deltaFactor = 2;
-    this._targetTransformOrigin = 0;
+    this._targetTextAlpha = 0;
+    this._targetTextTranslation = 100;
     // this._currentModuloLength = this._fullModuloLength;
   }
 
   deactivate() {
     this._targetScale = 1;
     this._deltaFactor = 1;
-    this._targetTransformOrigin = 50;
+    this._targetTextAlpha = 1;
+    this._targetTextTranslation = 0;
     // this._currentModuloLength = this._moduloLength;
   }
 
@@ -203,13 +232,11 @@ export default class EverydayItem {
   update(delta, translationShow) {
 
     this._updatePosition(delta, translationShow);
-    // this._updateTransformOrigin();
+    this._updateImages();
+    this._updateText();
   }
 
   _updatePosition(delta, translationShow) {
-
-    this._currentScale += (this._targetScale - this._currentScale) * 0.1;
-    const scale = this._currentScale;
 
     this._translationDelta += delta * this._deltaFactor;
     this._targetPos.x = this._translationDelta;
@@ -247,7 +274,7 @@ export default class EverydayItem {
 
     this._y = this._currentBasePosition.y;
 
-    const transform = `translate3d(${this._x}px,${this._y}px,0) scale3d(${scale},${scale},1)`;
+    const transform = `translate3d(${this._x}px,${this._y}px,0)`;
 
     this.el.style.webkitTransform = transform;
     this.el.style.MozTransform = transform;
@@ -256,21 +283,32 @@ export default class EverydayItem {
     this.el.style.transform = transform;
   }
 
-  _updateTransformOrigin() {
+  _updateImages() {
+    this._currentScale += (this._targetScale - this._currentScale) * 0.1;
+    const scale = this._currentScale;
 
-    if (this.active()) {
-      this._currentTransformOrgin += ( this._targetTransformOrigin - this._currentTransformOrgin ) * 1;
-    } else {
-      this._currentTransformOrgin = this._targetTransformOrigin;
-    }
+    const transform = `scale3d(${scale},${scale},1)`;
 
+    this._img.style.webkitTransform = transform;
+    this._img.style.MozTransform = transform;
+    this._img.style.msTransform = transform;
+    this._img.style.OTransform = transform;
+    this._img.style.transform = transform;
+  }
 
-    const transformOrigin = `${this._currentTransformOrgin}% 50%`;
+  _updateText() {
+    this._currentTextAlpha += ( this._targetTextAlpha - this._currentTextAlpha ) * 0.3;
+    this._text.style.opacity = this._currentTextAlpha;
 
-    this.el.style.webkitTransformOrigin = transformOrigin;
-    this.el.style.MozTransformOrigin = transformOrigin;
-    this.el.style.msTransformOrigin = transformOrigin;
-    this.el.style.OTransformOrigin = transformOrigin;
-    this.el.style.transformOrigin = transformOrigin;
+    this._currentTextTranslation += ( this._targetTextTranslation - this._currentTextTranslation ) * 0.05;
+
+    const x = this._velocityX;
+    const y = this._currentTextTranslation;
+    const transform = `translate(${x}px, ${y}px)`;
+    this._text.style.webkitTransform = transform;
+    this._text.style.MozTransform = transform;
+    this._text.style.msTransform = transform;
+    this._text.style.OTransform = transform;
+    this._text.style.transform = transform;
   }
 }

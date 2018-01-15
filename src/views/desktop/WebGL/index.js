@@ -256,13 +256,20 @@ export default class WebGL {
       },
     );
 
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].show({ delay });
+    }
+
     if (transitionIn) {
+
+      const customDelay = delay < 1 ? delay : delay + 1.5;
+
       TweenLite.killTweensOf(this._translationShow);
       TweenLite.to(
         this,
         2,
         {
-          delay: delay + 1.5,
+          delay: customDelay,
           _translationShow: '-=40',
           ease: 'Power4.easeOut',
           onComplete: () => {
@@ -506,7 +513,6 @@ export default class WebGL {
   // UPDATE -------------------------------------------------------------------
 
   update() {
-
     if (this._needsUpdate) {
       const time = this._clock.getElapsedTime();
 

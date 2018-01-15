@@ -176,7 +176,9 @@ class ProjectContainer extends THREE.Object3D {
     this._offsetCenter.set(0, 0);
   }
 
-  show() {}
+  show({ delay = 0 } = {}) {
+    this._mask.show({ delay });
+  }
 
   hide() {
     this._mask.hide();

@@ -175,15 +175,33 @@ class Mask extends THREE.Object3D {
     this._maskUniforms.u_ease.value = 0;
   }
 
-  show() {}
+  show({ delay = 0 } = {}) {
+    this.visible = true;
+    TweenLite.killTweensOf(this._maskUniforms.u_alpha);
+    TweenLite.to(
+      this._maskUniforms.u_alpha,
+      1,
+      {
+        delay,
+        value: 1,
+        ease: 'Power2.easeOut',
+      },
+    );
+  }
 
   hide() {
+    TweenLite.killTweensOf(this._maskUniforms.u_alpha);
     TweenLite.to(
       this._maskUniforms.u_alpha,
       1,
       {
         value: 0,
         ease: 'Power2.easeOut',
+        onComplete: () => {
+          if (this.parent) {
+            this.visible = false;
+          }
+        },
       },
     );
   }

@@ -24,6 +24,8 @@ export default class DesktopAppView {
     this._project = this._setupProjectView();
     this._everyday = this._setupEveryday();
 
+    this._previousState = null;
+
     this._views.push(this._loader, this._home);
 
     this._start();
@@ -103,7 +105,13 @@ export default class DesktopAppView {
         this._about.hide({ delay: 0 });
         this._home.show({ delay: 1 });
         this._about.hide({ delay: 0 });
-        this._webgl.show({ delay: 1 });
+
+        if (this._previousState === pages.EVERYDAYS) {
+          this._webgl.show({ delay: 0.35 });
+        } else {
+          this._webgl.show({ delay: 1 });
+        }
+
         this._project.hide({ delay: 0.1 });
         this._everyday.hide({ delay: 0 });
         break;
@@ -127,7 +135,14 @@ export default class DesktopAppView {
         this._about.hide({ delay: 0 });
         this._webgl.show({ delay: 0, transitionIn: false });
         this._project.hide({ delay: 0.1 });
-        this._everyday.show({ delay: 0.35 });
+
+        if (this._previousState === pages.PROJECT || this._previousState === pages.ABOUT) {
+          this._everyday.show({ delay: 0.35, transitionFromDown: true });
+        } else if (!this._previousState) {
+          this._everyday.show({ delay: 0.5, transitionFromDown: true });
+        } else {
+          this._everyday.show({ delay: 0.35 });
+        }
         break;
       case pages.ABOUT:
         document.body.style.overflow = 'hidden';
@@ -135,9 +150,11 @@ export default class DesktopAppView {
         this._loader.hide();
         this._about.show({ delay: 0.65 });
         this._home.show({ delay: 1 });
-        this._webgl.show({ delay: 0, transitionIn: false });
+        if (this._previousState !== pages.EVERYDAYS) {
+          this._webgl.show({ delay: 0, transitionIn: false });
+        }
         this._project.hide({ delay: 0.1 });
-        this._everyday.hide({ delay: 0 });
+        this._everyday.hide({ delay: 0, transitionFromTop: true });
         break;
       default:
         this._home.hide();
@@ -145,6 +162,8 @@ export default class DesktopAppView {
 
     this._home.updatePage(page);
     this._webgl.updatePage(page);
+
+    this._previousState = page;
   }
 
   @autobind

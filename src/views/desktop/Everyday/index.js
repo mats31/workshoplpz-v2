@@ -21,6 +21,7 @@ export default class EverydayView {
     this._mouse = { x: 0, y: 0 };
 
     this._timeout = null;
+    this.needsUpdate = false;
 
     this._everydayItems = [];
 
@@ -53,27 +54,77 @@ export default class EverydayView {
 
   // State ---------------------------------------------------------------------
 
-  show({ delay = 0 } = {}) {
+  show({ delay = 0, transitionFromDown = false } = {}) {
+    this.needsUpdate = true;
     this.el.style.display = 'block';
-
-    TweenLite.to(
-      this,
-      2,
-      {
-        delay,
-        _translationShow: '-=400',
-        ease: 'Expo.easeOut',
-      },
-    );
+    this.el.style.pointerEvents = 'initial';
 
     for (let i = 0; i < this._everydayItems.length; i++) {
       this._everydayItems[i].show({ delay });
     }
+
+    if (transitionFromDown) {
+      TweenLite.killTweensOf(this);
+      TweenLite.fromTo(
+        this.el,
+        1.7,
+        {
+          y: window.innerHeight * 0.85,
+        },
+        {
+          delay: delay + 0.7,
+          y: 0,
+          ease: 'Power4.easeOut',
+        },
+      );
+    } else {
+      TweenLite.killTweensOf(this._translationShow);
+      TweenLite.to(
+        this,
+        2,
+        {
+          delay,
+          _translationShow: '-=400',
+          ease: 'Expo.easeOut',
+        },
+      );
+    }
   }
 
-  hide({ delay = 0 } = {}) {
-    for (let i = 0; i < this._everydayItems.length; i++) {
-      this._everydayItems[i].hide();
+  hide({ delay = 0, transitionFromTop = false } = {}) {
+
+    this.el.style.pointerEvents = 'none';
+
+    if (transitionFromTop) {
+      TweenLite.killTweensOf(this.el);
+      TweenLite.to(
+        this.el,
+        1,
+        {
+          delay,
+          y: window.innerHeight * 0.85,
+          ease: 'Power2.easeIn',
+        },
+      );
+    } else {
+      TweenLite.killTweensOf(this._translationShow);
+      TweenLite.to(
+        this,
+        2,
+        {
+          _translationShow: '-=400',
+          ease: 'Expo.easeOut',
+          onComplete: () => {
+            this.needsUpdate = false;
+            this._translationShow = 0;
+            this.el.style.display = 'none';
+          },
+        },
+      );
+
+      for (let i = 0; i < this._everydayItems.length; i++) {
+        this._everydayItems[i].hide({ delay });
+      }
     }
   }
 
@@ -135,7 +186,7 @@ export default class EverydayView {
   // Update --------------------------------------------------------------------
 
   update() {
-    if (this.visible()) {
+    if (this.needsUpdate) {
       for (let i = 0; i < this._everydayItems.length; i++) {
         this._everydayItems[i].update(this._delta, this._translationShow);
       }
