@@ -32,6 +32,7 @@ const ressources = {
     { id: 'grain', url: 'textures/grain-2.png', description: '' },
     { id: 'preview-wind', url: 'textures/preview-wind.png', description: '' },
     { id: 'preview-mask', url: 'textures/preview-mask.png', description: '' },
+    { id: 'orange-text', url: 'textures/orange-text.png', description: '' },
     { id: 'picture-skyfall-0', url: 'textures/picture-skyfall-0.png', description: 'First orange picture' },
     { id: 'picture-skyfall-1', url: 'textures/picture-skyfall-1.png', description: 'First orange picture' },
     { id: 'picture-skyfall-2', url: 'textures/picture-skyfall-2.png', description: 'First orange picture' },

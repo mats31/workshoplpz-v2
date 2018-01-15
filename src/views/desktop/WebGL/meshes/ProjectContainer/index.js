@@ -43,14 +43,10 @@ class ProjectContainer extends THREE.Object3D {
     this._isHover = false;
     this._isFocus = false;
 
-    this._texture = States.resources.getTexture(this._previewID).media;
-    this._texture.minFilter = THREE.LinearFilter;
-    this._texture.needsUpdate = true;
-
     // this.visible = false;
 
     this._setupMask();
-    // this._setupDescription();
+    this._setupDescription();
   }
 
   _setupMask() {
@@ -64,20 +60,19 @@ class ProjectContainer extends THREE.Object3D {
 
   _setupDescription() {
 
-    this._texture2 = new THREE.Texture();
-    // this._texture2 = new THREE.Texture( States.resources.getImage('orange').media );
-    this._texture2.wrapS = THREE.ClampToEdgeWrapping;
-    this._texture2.wrapT = THREE.ClampToEdgeWrapping;
-    this._texture2.needsUpdate = true;
+    this._textTexture = States.resources.getTexture('orange-text').media;
+    this._textTexture.wrapS = THREE.ClampToEdgeWrapping;
+    this._textTexture.wrapT = THREE.ClampToEdgeWrapping;
+    this._textTexture.needsUpdate = true;
 
-    this._text = new Text({
-      texture: this._texture2,
-    });
-
-    this._text.position.setY( this._index % 2 === 0 ? 13 : -13 );
-    this._text.position.setZ( -10 );
-
-    this.add(this._text);
+    // this._text = new Text({
+    //   texture: this._textTexture,
+    // });
+    //
+    // this._text.position.setY( this._index % 2 === 0 ? 13 : -13 );
+    // this._text.position.setZ( -10 );
+    //
+    // this.add(this._text);
   }
 
   // Getters --------------------------------------------------------------------
