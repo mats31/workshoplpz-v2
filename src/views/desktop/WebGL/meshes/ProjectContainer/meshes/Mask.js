@@ -189,12 +189,13 @@ class Mask extends THREE.Object3D {
     );
   }
 
-  hide() {
+  hide({ delay = 0 } = {}) {
     TweenLite.killTweensOf(this._maskUniforms.u_alpha);
     TweenLite.to(
       this._maskUniforms.u_alpha,
-      1,
+      0.7,
       {
+        delay,
         value: 0,
         ease: 'Power2.easeOut',
         onComplete: () => {

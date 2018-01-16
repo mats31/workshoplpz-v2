@@ -105,7 +105,8 @@ export default class EverydayItem {
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
-    TweenLite.killTweensOf(this);
+    TweenLite.killTweensOf(this.el);
+    this.el.style.opacity = 0;
     TweenLite.to(
       this.el,
       1,
@@ -119,10 +120,10 @@ export default class EverydayItem {
 
 
   hide({ delay = 0 } = {}) {
-    TweenLite.killTweensOf(this);
+    TweenLite.killTweensOf(this.el);
     TweenLite.to(
       this.el,
-      1,
+      0.7,
       {
         delay,
         opacity: 0,

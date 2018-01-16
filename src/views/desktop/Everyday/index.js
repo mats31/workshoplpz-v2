@@ -80,6 +80,7 @@ export default class EverydayView {
       );
     } else {
       this._translationShow = 400;
+      TweenLite.set(this.el, { y: 0 });
       TweenLite.to(
         this,
         2,
@@ -95,6 +96,11 @@ export default class EverydayView {
   hide({ delay = 0, transitionFromTop = false } = {}) {
     TweenLite.killTweensOf(this.el);
     TweenLite.killTweensOf(this);
+
+    for (let i = 0; i < this._everydayItems.length; i++) {
+      this._everydayItems[i].hide({ delay });
+    }
+
     if (transitionFromTop) {
       TweenLite.to(
         this.el,
@@ -112,10 +118,10 @@ export default class EverydayView {
     } else {
       TweenLite.to(
         this,
-        2,
+        1.3,
         {
           _translationShow: '-=400',
-          ease: 'Expo.easeOut',
+          ease: 'Expo.easeInOut',
           onComplete: () => {
             this.needsUpdate = false;
             this._translationShow = 0;
@@ -123,10 +129,6 @@ export default class EverydayView {
           },
         },
       );
-
-      for (let i = 0; i < this._everydayItems.length; i++) {
-        this._everydayItems[i].hide({ delay });
-      }
     }
   }
 

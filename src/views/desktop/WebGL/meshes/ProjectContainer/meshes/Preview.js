@@ -1,21 +1,20 @@
 import { objectVisible } from 'core/decorators';
-import vertexShader from '../shaders/text.vs';
-import fragmentShader from '../shaders/text.fs';
+import vertexShader from '../shaders/preview.vs';
+import fragmentShader from '../shaders/preview.fs';
 
 @objectVisible()
-class Text extends THREE.Object3D {
+class Preview extends THREE.Object3D {
 
   constructor(options) {
     super(options);
 
     this._texture = options.texture;
-    this._initialY = options.initialY;
 
-    this._setupText();
+    this._setupPreview();
   }
 
-  _setupText() {
-    this._geometry = new THREE.PlaneBufferGeometry( 1, 1, 1, 1);
+  _setupPreview() {
+    this._geometry = new THREE.PlaneBufferGeometry( 15, 15, 1, 1);
 
     this._material = new THREE.ShaderMaterial({
       vertexShader,
@@ -29,23 +28,11 @@ class Text extends THREE.Object3D {
 
     this._mesh = new THREE.Mesh(this._geometry, this._material);
     this.add(this._mesh);
-
-    const xScale = 30;
-    const yScale = xScale / ( this._texture.image.width / this._texture.image.height );
-    this.scale.set( xScale, yScale, 1 );
-
-    this.position.setY(this._initialY);
-  }
-
-  setupEvent() {
-
-    Signals.onResize.add( this._onResize.bind(this) );
   }
 
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
-    TweenLite.killTweensOf(this.position);
     TweenLite.killTweensOf(this._material.uniforms.u_alpha);
 
     TweenLite.to(
@@ -57,20 +44,9 @@ class Text extends THREE.Object3D {
         ease: 'Power2.easeOut',
       },
     );
-
-    TweenLite.to(
-      this.position,
-      2,
-      {
-        delay,
-        y: this._initialY,
-        ease: 'Power4.easeOut',
-      },
-    );
   }
 
-  hide({ delay = 0, transitionFromTop = true } = {}) {
-    TweenLite.killTweensOf(this.position);
+  hide({ delay = 0 } = {}) {
     TweenLite.killTweensOf(this._material.uniforms.u_alpha);
     TweenLite.to(
       this._material.uniforms.u_alpha,
@@ -81,18 +57,6 @@ class Text extends THREE.Object3D {
         ease: 'Power2.easeOut',
       },
     );
-
-    if (transitionFromTop) {
-      TweenLite.to(
-        this.position,
-        1,
-        {
-          delay,
-          y: '-=20',
-          ease: 'Power4.easeInOut',
-        },
-      );
-    }
   }
 
   // Getters -------------------------------------------------------------------
@@ -115,4 +79,4 @@ class Text extends THREE.Object3D {
   }
 }
 
-export default Text;
+export default Preview;

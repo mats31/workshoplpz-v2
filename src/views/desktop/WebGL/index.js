@@ -4,7 +4,7 @@ import createDOM from 'utils/dom/createDOM';
 import { map } from 'utils/math';
 import { getPerspectiveSize } from 'utils/3d';
 import { autobind } from 'core-decorators';
-import { visible } from 'core/decorators';
+import { toggle } from 'core/decorators';
 import projects from 'config/projects';
 import Background from './meshes/Background';
 import Grain from './meshes/Grain';
@@ -13,6 +13,8 @@ import ProjectContainer from './meshes/ProjectContainer';
 import template from './webgl.tpl.html';
 import './webgl.scss';
 
+@toggle('projectVisible', 'showProject', 'hideProject', false)
+@toggle('cameraOnTop', 'cameraToTop', 'cameraToBottom', true)
 export default class WebGL {
 
   // Setup ---------------------------------------------------------------------
@@ -26,6 +28,7 @@ export default class WebGL {
     this._state = 'home';
 
     this._drag = false;
+    this._isShowing = false;
     this._needsUpdate = true;
     this._grain = null;
 
@@ -174,35 +177,6 @@ export default class WebGL {
 
   // State ---------------------------------------------------------------------
 
-  _goToProject( id, index ) {
-
-    TweenLite.to(
-      this._camera.position,
-      1.5,
-      {
-        y: this._topPosition,
-        ease: 'Power4.easeInOut',
-      },
-    );
-
-    TweenLite.to(
-      this._grain.position,
-      1.5,
-      {
-        y: this._topPosition,
-        ease: 'Power4.easeInOut',
-        onComplete: () => {
-          this.hide();
-        },
-      },
-    );
-
-    for (let i = 0; i < this._projectContainers.length; i++) {
-
-      this._projectContainers[i].hideText();
-    }
-  }
-
   _goToAboutState() {
     TweenLite.to(
       this._camera.position,
@@ -226,11 +200,53 @@ export default class WebGL {
     );
   }
 
-  show({ delay = 0, transitionIn = true } = {}) {
+  show({ delay = 0, transitionIn = true, transitionToBottom = true } = {}) {
     this._needsUpdate = true;
-    this.isAnimating = true;
 
-    TweenLite.killTweensOf([this._camera, this._grain]);
+    this.showProject(delay);
+
+    if (transitionToBottom) {
+      this.cameraToBottom(delay, transitionIn);
+    }
+
+    if (transitionIn) {
+      this.isAnimating = true;
+
+      const customDelay = delay < 1 ? delay : delay + 1.5;
+
+      TweenLite.killTweensOf(this);
+      TweenLite.to(
+        this,
+        2,
+        {
+          delay: customDelay,
+          _translationShow: '-=40',
+          ease: 'Power4.easeOut',
+          onComplete: () => {
+            this.isAnimating = false;
+          },
+        },
+      );
+    }
+  }
+
+  showProject(delay) {
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].deactiveFocus();
+      this._projectContainers[i].showText({ delay });
+      this._projectContainers[i].show({ delay });
+    }
+  }
+
+  hideProject(delay) {
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].hide({ delay });
+    }
+  }
+
+  cameraToBottom(delay, transitionIn) {
+    this.isAnimating = true;
+    TweenLite.killTweensOf([this._camera.position, this._grain.position]);
     TweenLite.to(
       this._camera.position,
       2.55,
@@ -255,29 +271,30 @@ export default class WebGL {
         },
       },
     );
+  }
 
-    for (let i = 0; i < this._projectContainers.length; i++) {
-      this._projectContainers[i].show({ delay });
-    }
+  cameraToTop() {
 
-    if (transitionIn) {
+    TweenLite.to(
+      this._camera.position,
+      1.5,
+      {
+        y: this._topPosition,
+        ease: 'Power4.easeInOut',
+      },
+    );
 
-      const customDelay = delay < 1 ? delay : delay + 1.5;
-
-      TweenLite.killTweensOf(this._translationShow);
-      TweenLite.to(
-        this,
-        2,
-        {
-          delay: customDelay,
-          _translationShow: '-=40',
-          ease: 'Power4.easeOut',
-          onComplete: () => {
-            this.isAnimating = false;
-          },
+    TweenLite.to(
+      this._grain.position,
+      1.5,
+      {
+        y: this._topPosition,
+        ease: 'Power4.easeInOut',
+        onComplete: () => {
+          this.hide();
         },
-      );
-    }
+      },
+    );
   }
 
   hide({ delay = 0 } = {}) {
@@ -343,10 +360,12 @@ export default class WebGL {
         const lastRouteResolved = States.router.getLastRouteResolved();
         for (let i = 0; i < this._projectContainers.length; i++) {
           if (lastRouteResolved.params.id === this._projectContainers[i].projectID) {
-            this._goToProject(lastRouteResolved.params.id, i);
+            // this._goToProject(lastRouteResolved.params.id, i);
+            this.cameraToTop();
             this._projectContainers[i].goToProjectMode();
-            break;
           }
+
+          this._projectContainers[i].hideText({ delay: 0 });
         }
         this._grain.hide();
         break;
@@ -355,24 +374,22 @@ export default class WebGL {
         TweenLite.killTweensOf(this._translationShow);
         TweenLite.to(
           this,
-          2,
+          1.3,
           {
             _translationShow: '-=20',
-            ease: 'Expo.easeOut',
+            ease: 'Expo.easeInOut',
             onComplete: () => {
               this.isAnimating = false;
             },
           },
         );
 
-        for (let i = 0; i < this._projectContainers.length; i++) {
-          this._projectContainers[i].hide();
-        }
+        this.hideProject(0.5);
         break;
       case pages.ABOUT:
         this._state = 'about';
 
-        this._goToAboutState();
+        this.cameraToTop();
         break;
       default:
         this._grain.show();
@@ -440,6 +457,9 @@ export default class WebGL {
   _onWeblGLMouseleave() {
     this._clicked = false;
     this._translationDelta = 0;
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].unpress();
+    }
     // this._translationEase = 0;
   }
 
@@ -447,12 +467,18 @@ export default class WebGL {
   _onWebGLMouseup() {
     this._clicked = false;
     this._translationDelta = 0;
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].unpress();
+    }
     // this._zoomFov();
   }
 
   @autobind
   _onWebGLMousedown() {
     this._clicked = true;
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].press();
+    }
     // this._dezoomFov();
   }
 

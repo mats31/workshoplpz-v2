@@ -1,12 +1,13 @@
 import States from 'core/States';
 import { modulo } from 'utils/math';
-import { active, objectVisible } from 'core/decorators';
-import { getPerspectiveSize } from 'utils/3d';
+import { active, objectVisible, toggle } from 'core/decorators';
 import Mask from './meshes/Mask';
 import Text from './meshes/Text';
+import Preview from './meshes/Preview';
 
 @active()
 @objectVisible()
+@toggle('pressed', 'press', 'unpress', false)
 class ProjectContainer extends THREE.Object3D {
 
   constructor(options) {
@@ -39,14 +40,17 @@ class ProjectContainer extends THREE.Object3D {
     this._currentTranslation = 0;
     this._targetTranslation = 0;
     this._velocityX = 0;
+    this._targetPress = 0;
+    this._currentPress = 0;
 
     this._isHover = false;
     this._isFocus = false;
 
     // this.visible = false;
 
-    this._setupMask();
     this._setupDescription();
+    this._setupMask();
+    this._setupPreview();
   }
 
   _setupMask() {
@@ -61,18 +65,28 @@ class ProjectContainer extends THREE.Object3D {
   _setupDescription() {
 
     this._textTexture = States.resources.getTexture('orange-text').media;
-    this._textTexture.wrapS = THREE.ClampToEdgeWrapping;
-    this._textTexture.wrapT = THREE.ClampToEdgeWrapping;
+    // this._textTexture.wrapS = THREE.ClampToEdgeWrapping;
+    // this._textTexture.wrapT = THREE.ClampToEdgeWrapping;
     this._textTexture.needsUpdate = true;
 
-    // this._text = new Text({
-    //   texture: this._textTexture,
-    // });
-    //
-    // this._text.position.setY( this._index % 2 === 0 ? 13 : -13 );
-    // this._text.position.setZ( -10 );
-    //
-    // this.add(this._text);
+    this._text = new Text({
+      texture: this._textTexture,
+      initialY: this._index % 2 === 0 ? 13 : -13,
+    });
+
+    this.add(this._text);
+  }
+
+  _setupPreview() {
+    this._previewTexture = States.resources.getTexture('orange-preview').media;
+
+    this._preview = new Preview({
+      texture: this._previewTexture,
+    });
+
+    this._preview.position.setZ(15);
+
+    this.add(this._preview);
   }
 
   // Getters --------------------------------------------------------------------
@@ -138,9 +152,12 @@ class ProjectContainer extends THREE.Object3D {
     }
   }
 
-  hideText() {
+  showText({ delay = 0 } = {}) {
+    this._text.show({ delay });
+  }
 
-    // this._text.hide();
+  hideText({ delay = 0 } = {}) {
+    this._text.hide({ delay });
   }
 
   goToProjectMode() {
@@ -167,6 +184,7 @@ class ProjectContainer extends THREE.Object3D {
 
   deactivate() {
     this._mask.deactivate();
+    this._text.show();
 
     this._offsetCenter.set(0, 0);
   }
@@ -175,8 +193,17 @@ class ProjectContainer extends THREE.Object3D {
     this._mask.show({ delay });
   }
 
-  hide() {
-    this._mask.hide();
+  hide({ delay = 0 } = {}) {
+    this._mask.hide({ delay });
+    this._text.hide({ transitionFromTop: false });
+  }
+
+  press() {
+    this._targetPress = 3;
+  }
+
+  unpress() {
+    this._targetPress = 0;
   }
 
   // Events --------------------------------------------------------------------
@@ -222,9 +249,9 @@ class ProjectContainer extends THREE.Object3D {
 
     // this._updateDOM(i);
     this._updatePosition( delta, translationShow, maxTranslation, camera, length, i );
+    this._updateText();
     // this._checkFocus(point);
     this._mask.update( time );
-    // this._text.update( time );
     // this._projectPlane.update( time, delta );
   }
 
@@ -253,16 +280,19 @@ class ProjectContainer extends THREE.Object3D {
     this._velocityX *= this._friction;
     this._currentTranslation += this._velocityX;
 
-    this._depthTranslation = Math.abs( this._velocityX * 5.5 );
+    this._currentPress += ( this._targetPress - this._currentPress ) * 0.1;
 
     const xTranslation = this._initialPosition.x + this._currentTranslation + translationShow;
     const x = ( modulo( xTranslation, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x ) - ( this._perspectiveWidth * 0.99 * this._offsetSide.x );
     const y = this._initialPosition.y + ( ( this._topPosition - this._initialPosition.y ) * this._offsetCenter.y );
-    const z = this._initialPosition.z - this._depthTranslation;
+    const z = this._initialPosition.z - this._currentPress;
 
     this.position.set( x, y, z );
 
     this.scale.set( this._scaleFactor, this._scaleFactor, this._scaleFactor );
+  }
+  _updateText() {
+    this._text.position.setX(this._velocityX * 2);
   }
 
   checkFocus( mousePoint ) {

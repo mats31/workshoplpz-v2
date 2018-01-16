@@ -107,13 +107,15 @@ export default class DesktopAppView {
         this._about.hide({ delay: 0 });
 
         if (this._previousState === pages.EVERYDAYS) {
-          this._webgl.show({ delay: 0.35 });
+          this._webgl.show({ delay: 0.7 });
+        } else if (this._previousState === pages.ABOUT) {
+          this._webgl.show({ delay: 0, transitionIn: false });
         } else {
           this._webgl.show({ delay: 1 });
         }
 
         this._project.hide({ delay: 0.1 });
-        this._everyday.hide({ delay: 0 });
+        this._everyday.hide({ delay: 0.5 });
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
@@ -141,7 +143,7 @@ export default class DesktopAppView {
         } else if (!this._previousState) {
           this._everyday.show({ delay: 0.5, transitionFromDown: true });
         } else {
-          this._everyday.show({ delay: 0.35 });
+          this._everyday.show({ delay: 0.7 });
         }
         break;
       case pages.ABOUT:
