@@ -353,6 +353,7 @@ export default class WebGL {
         this._state = 'home';
         for (let i = 0; i < this._projectContainers.length; i++) {
           this._projectContainers[i].deactiveFocus();
+          this._projectContainers[i].showText();
         }
         break;
       case pages.PROJECT:

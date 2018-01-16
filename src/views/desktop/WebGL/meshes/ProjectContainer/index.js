@@ -138,7 +138,9 @@ class ProjectContainer extends THREE.Object3D {
     document.body.style.cursor = 'pointer';
 
     this._mask.focus();
-    this._preview.focus();
+    if (!this.active()) {
+      this._preview.focus();
+    }
   }
 
   deactiveFocus() {
@@ -169,6 +171,7 @@ class ProjectContainer extends THREE.Object3D {
 
   activate() {
     this._mask.activate();
+    this._preview.blur();
 
     TweenLite.to(
       this._offsetCenter,
@@ -186,7 +189,6 @@ class ProjectContainer extends THREE.Object3D {
 
   deactivate() {
     this._mask.deactivate();
-    this._text.show();
 
     this._offsetCenter.set(0, 0);
   }

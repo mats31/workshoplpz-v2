@@ -33,16 +33,18 @@ void main() {
 
     vec2 st1 = vUv;
     st1 -= vec2(0.5);
-    st1 = scale(vec2( 1. - u_progress * 0.5, 1. )) * rotate2d( 2. * PI * 0.14  ) * st1;
+    // st1 = scale(vec2( 1. - u_progress * 0.5, 1. )) * rotate2d( 2. * PI * 0.14  ) * st1;
+    st1 = rotate2d( 2. * PI * 0.14  ) * st1;
     st1 += vec2(0.4, 0.37);
 
     vec2 st2 = vUv;
     st2 -= vec2(0.5);
-    st2 = scale(vec2( 1. - u_progress * 0.5, 1. )) * rotate2d( 2. * PI * 0.14  ) * st2;
+    // st2 = scale(vec2( 1. - u_progress * 0.5, 1. )) * rotate2d( 2. * PI * 0.14  ) * st2;
+    st2 = rotate2d( 2. * PI * 0.14  ) * st2;
     st2 += vec2(0.6, 0.63);
 
-    vec3 color1 = vec3(box(st1, vec2(0.7, 0.2)));
-    vec3 color2 = vec3(box(st2, vec2(0.7, 0.2)));
+    vec3 color1 = vec3(box(st1, vec2(0.7 * u_progress, 0.2)));
+    vec3 color2 = vec3(box(st2, vec2(0.7 * u_progress, 0.2)));
 
     vec3 maskColor = color1 + color2;
 
