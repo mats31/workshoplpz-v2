@@ -1,8 +1,9 @@
-import { objectVisible } from 'core/decorators';
+import { objectVisible, focused } from 'core/decorators';
 import vertexShader from '../shaders/preview.vs';
 import fragmentShader from '../shaders/preview.fs';
 
 @objectVisible()
+@focused()
 class Preview extends THREE.Object3D {
 
   constructor(options) {
@@ -21,6 +22,7 @@ class Preview extends THREE.Object3D {
       fragmentShader,
       uniforms: {
         u_alpha: { type: 'f', value: 1 },
+        u_progress: { type: 'f', value: 0 },
         t_diffuse: { type: 't', value: this._texture },
       },
       transparent: true,
@@ -55,6 +57,30 @@ class Preview extends THREE.Object3D {
         delay,
         value: 0,
         ease: 'Power2.easeOut',
+      },
+    );
+  }
+
+  focus() {
+    TweenLite.killTweensOf(this._material.uniforms.u_progress);
+    TweenLite.to(
+      this._material.uniforms.u_progress,
+      0.7,
+      {
+        value: 1,
+        ease: 'Expo.easeOut',
+      },
+    );
+  }
+
+  blur() {
+    TweenLite.killTweensOf(this._material.uniforms.u_progress);
+    TweenLite.to(
+      this._material.uniforms.u_progress,
+      0.7,
+      {
+        value: 0,
+        ease: 'Expo.easeOut',
       },
     );
   }
