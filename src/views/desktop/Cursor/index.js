@@ -1,6 +1,7 @@
 import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible, toggle, opened, focused, selected } from 'core/decorators';
+import { createCanvas, resizeCanvas } from 'utils/canvas';
 import template from './cursor.tpl.html';
 import './cursor.scss';
 
@@ -20,8 +21,11 @@ export default class CursorView {
       createDOM(template()),
     );
 
+    this._setupCanvas();
     this._setupEvents();
   }
+
+  _setupCanvas() {}
 
   _setupEvents() {}
 
