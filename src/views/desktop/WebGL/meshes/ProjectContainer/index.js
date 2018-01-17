@@ -135,7 +135,7 @@ class ProjectContainer extends THREE.Object3D {
 
     this._isFocus = true;
 
-    document.body.style.cursor = 'pointer';
+    // document.body.style.cursor = 'pointer';
 
     this._mask.focus();
     if (!this.active()) {
@@ -149,7 +149,7 @@ class ProjectContainer extends THREE.Object3D {
 
       this._isFocus = false;
 
-      document.body.style.cursor = 'initial';
+      // document.body.style.cursor = 'initial';
 
       this._mask.blur();
       this._preview.blur();

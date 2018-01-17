@@ -126,7 +126,7 @@ export default class DesktopAppView {
 
         this._project.hide({ delay: 0.1 });
         this._everyday.hide({ delay: 0.5 });
-        this._cursor.show({ delay: 0 });
+        this._cursor.show({ delay: 2 });
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';

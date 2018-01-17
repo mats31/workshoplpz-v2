@@ -67,6 +67,9 @@ export default class ProjectView {
   }
 
   _setupEvents() {
+    this._ui.close.addEventListener('mouseenter', this._onCloseMouseenter);
+    this._ui.close.addEventListener('mouseout', this._onCloseMouseout);
+    this._ui.close.addEventListener('click', this._onCloseClick);
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
     Signals.onScrollWheel.add(this._onScrollWheel);
@@ -358,6 +361,37 @@ export default class ProjectView {
   }
 
   // Events --------------------------------------------------------------------
+
+  @autobind
+  _onCloseMouseenter() {
+    TweenLite.killTweensOf(this._ui.close);
+    TweenLite.to(
+      this._ui.close,
+      0.3,
+      {
+        opacity: 1,
+      },
+    );
+    Signals.onProjectCloseMouseenter.dispatch();
+  }
+
+  @autobind
+  _onCloseMouseout() {
+    TweenLite.killTweensOf(this._ui.close);
+    TweenLite.to(
+      this._ui.close,
+      0.3,
+      {
+        opacity: 0.5,
+      },
+    );
+    Signals.onProjectCloseMouseout.dispatch();
+  }
+
+  @autobind
+  _onCloseClick() {
+    States.router.navigateTo( pages.HOME );
+  }
 
   @autobind
   _onResize() {

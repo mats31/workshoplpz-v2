@@ -11,4 +11,9 @@ html {
 
 #application {
   @include font-body();
+  cursor: none;
+
+  a{
+    cursor: none;
+  }
 }

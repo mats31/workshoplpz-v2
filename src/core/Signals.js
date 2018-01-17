@@ -18,9 +18,13 @@ class Signals {
     // this.onWeblGLMouseleave = new Signal();
     this.onProjectClick = new Signal();
     this.onProjectAnimationDone = new Signal();
+    this.onProjectCloseMouseenter = new Signal();
+    this.onProjectCloseMouseout = new Signal();
 
     // Everydays
     this.onEverydayMousedown = new Signal();
+    this.onEverydayMouseenter = new Signal();
+    this.onEverydayMouseout = new Signal();
   }
 }
 

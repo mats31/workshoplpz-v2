@@ -19,6 +19,35 @@
   padding-bottom: 50rem;
 }
 
+.project__close {
+
+  opacity: 0.5;
+  position: fixed;
+  right: 7rem;
+  top: 7rem;
+  height: 6rem;
+  width: 6rem;
+  z-index: $zindex-2;
+
+  .project__closeLine {
+    background: white;
+    height: 0.1rem;
+    width: 6rem;
+    position: relative;
+    top: 50%;
+    transform-origin: center center;
+    pointer-events: none;
+  }
+
+  .project__closeLine:first-child {
+    transform: rotate(45deg);
+  }
+
+  .project__closeLine:last-child {
+    transform: rotate(-45deg);
+  }
+}
+
 .project__titleContainer {
   height: 100vh;
   position: fixed;

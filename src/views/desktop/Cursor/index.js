@@ -9,7 +9,7 @@ import './cursor.scss';
 
 @visible()
 @toggle('slided', 'slide', 'unslide')
-@opened()
+@opened(true)
 @focused()
 @selected()
 export default class CursorView {
@@ -24,7 +24,7 @@ export default class CursorView {
 
     this._page = pages.HOME;
 
-    this._width = this._height = 57;
+    this._width = this._height = 44;
     this._scale = 1;
 
     this._clicked = false;
@@ -79,6 +79,11 @@ export default class CursorView {
     document.body.addEventListener('mousemove', this._onMousemove);
     document.body.addEventListener('mouseup', this._onMouseup);
     document.body.addEventListener('mouseleave', this._onMouseleave);
+
+    Signals.onProjectCloseMouseenter.add(this._onCloseMouseenter);
+    Signals.onProjectCloseMouseout.add(this._onCloseMouseout);
+    Signals.onEverydayMouseenter.add(this._onEverydayMouseenter);
+    Signals.onEverydayMouseout.add(this._onEverydayMouseout);
   }
 
   // State ---------------------------------------------------------------------
@@ -111,6 +116,7 @@ export default class CursorView {
       this._line1.point1,
       1,
       {
+        delay,
         x: this._canvasW * 0.5,
         y: this._canvasH * 0.5,
         ease: 'Expo.easeOut',
@@ -121,6 +127,7 @@ export default class CursorView {
       this._line1.point2,
       1,
       {
+        delay,
         x: this._canvasW * 0.5,
         y: this._canvasH,
         ease: 'Expo.easeOut',
@@ -136,6 +143,7 @@ export default class CursorView {
       this._line2.point1,
       1,
       {
+        delay,
         x: this._canvasW * 0.5,
         y: this._canvasH * 0.5,
         ease: 'Expo.easeOut',
@@ -146,8 +154,9 @@ export default class CursorView {
       this._line2.point2,
       1,
       {
-        x: this._canvasW * 0.9,
-        y: this._canvasH * 0.9,
+        delay,
+        x: this._canvasW * 1,
+        y: this._canvasH * 1,
         ease: 'Expo.easeOut',
         onComplete: () => {
           this._line2.needsUpdate = false;
@@ -232,8 +241,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 0.9,
-        y: this._canvasH * 0.9,
+        x: this._canvasW * 1,
+        y: this._canvasH * 1,
         onComplete: () => {
           this._line1.needsUpdate = false;
         },
@@ -267,8 +276,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 0.9,
-        y: this._canvasH * 0.1,
+        x: this._canvasW * 1,
+        y: this._canvasH * 0,
         onComplete: () => {
           this._line2.needsUpdate = false;
         },
@@ -304,8 +313,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 0.1,
-        y: this._canvasH * 0.9,
+        x: this._canvasW * 0,
+        y: this._canvasH * 1,
         onComplete: () => {
           this._line1.needsUpdate = false;
         },
@@ -339,8 +348,219 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 0.1,
-        y: this._canvasH * 0.1,
+        x: this._canvasW * 0,
+        y: this._canvasH * 0,
+        onComplete: () => {
+          this._line2.needsUpdate = false;
+        },
+      },
+    );
+  }
+
+  unslide() {
+    this._goToNormalState();
+  }
+
+  close() {
+
+    // Line 1 ---
+    TweenLite.killTweensOf(this._line1.point1);
+    this._line1.needsUpdate = true;
+    TweenLite.to(
+      this._line1.point1,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.to(
+      this._line1.point1,
+      0.15,
+      {
+        delay: 0.15,
+        x: this._canvasW * 0,
+        y: this._canvasH * 1,
+      },
+    );
+    TweenLite.killTweensOf(this._line1.point2);
+    TweenLite.to(
+      this._line1.point2,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.to(
+      this._line1.point2,
+      0.15,
+      {
+        delay: 0.15,
+        x: this._canvasW * 1,
+        y: this._canvasH * 0,
+        onComplete: () => {
+          this._line1.needsUpdate = false;
+        },
+      },
+    );
+
+    // Line 2 ---
+    TweenLite.killTweensOf(this._line2.point1);
+    this._line2.needsUpdate = true;
+    TweenLite.to(
+      this._line2.point1,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.to(
+      this._line2.point1,
+      0.15,
+      {
+        x: this._canvasW * 0,
+        y: this._canvasH * 0,
+      },
+    );
+    TweenLite.killTweensOf(this._line2.point2);
+    TweenLite.to(
+      this._line2.point2,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.to(
+      this._line2.point2,
+      0.15,
+      {
+        delay: 0.15,
+        x: this._canvasW * 1,
+        y: this._canvasH * 1,
+        onComplete: () => {
+          this._line2.needsUpdate = false;
+        },
+      },
+    );
+  }
+
+  open() {
+    this._goToNormalState();
+  }
+
+  focus() {
+
+    // Line1 ---
+    TweenLite.killTweensOf(this._line1.point1);
+    this._line1.needsUpdate = true;
+    TweenLite.to(
+      this._line1.point1,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0,
+      },
+    );
+
+    TweenLite.killTweensOf(this._line1.point2);
+    TweenLite.to(
+      this._line1.point2,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 1,
+      },
+    );
+
+    // Line 2 ---
+    TweenLite.killTweensOf(this._line2.point1);
+    this._line2.needsUpdate = true;
+    TweenLite.to(
+      this._line2.point1,
+      0.15,
+      {
+        x: this._canvasW * 0,
+        y: this._canvasH * 0.5,
+      },
+    );
+
+    TweenLite.killTweensOf(this._line2.point2);
+    TweenLite.to(
+      this._line2.point2,
+      0.15,
+      {
+        x: this._canvasW * 1,
+        y: this._canvasH * 0.5,
+      },
+    );
+  }
+
+  blur() {
+    this._goToNormalState();
+  }
+
+  _goToNormalState() {
+    TweenLite.killTweensOf(this._line1.point1);
+    this._line1.needsUpdate = true;
+    TweenLite.to(
+      this._line1.point1,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.killTweensOf(this._line1.point2);
+    TweenLite.to(
+      this._line1.point2,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.to(
+      this._line1.point2,
+      0.15,
+      {
+        delay: 0.15,
+        x: this._canvasW * 0.5,
+        y: this._canvasH,
+        onComplete: () => {
+          this._line1.needsUpdate = false;
+        },
+      },
+    );
+
+    TweenLite.killTweensOf(this._line2.point1);
+    this._line2.needsUpdate = true;
+    TweenLite.to(
+      this._line2.point1,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.killTweensOf(this._line2.point2);
+    TweenLite.to(
+      this._line2.point2,
+      0.15,
+      {
+        x: this._canvasW * 0.5,
+        y: this._canvasH * 0.5,
+      },
+    );
+    TweenLite.to(
+      this._line2.point2,
+      0.15,
+      {
+        delay: 0.15,
+        x: this._canvasW * 1,
+        y: this._canvasH * 1,
         onComplete: () => {
           this._line2.needsUpdate = false;
         },
@@ -351,19 +571,39 @@ export default class CursorView {
   // Events --------------------------------------------------------------------
 
   @autobind
+  _onCloseMouseenter() {
+    this.close();
+  }
+
+  @autobind
+  _onCloseMouseout() {
+    this.open();
+  }
+
+  @autobind
+  _onEverydayMouseenter() {
+    this.focus();
+  }
+
+  @autobind
+  _onEverydayMouseout() {
+    this.blur();
+  }
+
+  @autobind
   _onMousedown(event) {
     this.select();
 
-    this._mouse.x = event.clientX;
-    this._mouse.y = event.clientY;
+    this._mouse.x = event.pageX;
+    this._mouse.y = event.pageY;
 
     this._clicked = true;
   }
 
   @autobind
   _onMousemove(event) {
-    const x = event.clientX - this._canvasW * 0.5;
-    const y = event.clientY - this._canvasH * 0.5;
+    const x = event.pageX - this._canvasW * 0.5;
+    const y = event.pageY - this._canvasH * 0.5;
     const transform = `translate3d(${x}px,${y}px,1px)`;
     this.el.style.webkitTransform = transform;
     this.el.style.MozTransform = transform;
@@ -371,8 +611,11 @@ export default class CursorView {
     this.el.style.OTransform = transform;
     this.el.style.transform = transform;
 
-    if (this._clicked && this._page === pages.HOME) {
-      const direction = event.clientX - this._mouse.x;
+    if (
+      this._clicked && this._page === pages.HOME ||
+      this._clicked && this._page === pages.EVERYDAYS
+    ) {
+      const direction = event.pageX - this._mouse.x;
 
       if (this.slided()) {
         if (direction > 0 && this._direction === 'left') {
@@ -391,14 +634,15 @@ export default class CursorView {
       this.deselect();
     }
 
-    this._mouse.x = event.clientX;
-    this._mouse.y = event.clientY;
+    this._mouse.x = event.pageX;
+    this._mouse.y = event.pageY;
   }
 
   @autobind
   _onMouseup() {
     this.deselect();
     this.unslide();
+    this.blur();
     this._clicked = false;
   }
 
@@ -406,6 +650,7 @@ export default class CursorView {
   _onMouseleave() {
     this.deselect();
     this.unslide();
+    this.blur();
     this._clicked = false;
   }
 

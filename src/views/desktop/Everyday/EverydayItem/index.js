@@ -92,6 +92,10 @@ export default class EverydayItem {
     this.el.appendChild(this._text);
     this.el.appendChild(this._img);
 
+    this._ui = {
+      itemSelect: this.el.querySelector('.js-everyday__itemSelect'),
+    };
+
     this._setupEvents();
   }
 
@@ -134,10 +138,30 @@ export default class EverydayItem {
 
   focus() {
     this._targetScale = 1.1;
+    Signals.onEverydayMouseenter.dispatch();
+
+    TweenLite.killTweensOf(this._ui.itemSelect);
+    TweenLite.to(
+      this._ui.itemSelect,
+      0.3,
+      {
+        opacity: 1,
+      },
+    );
   }
 
   blur() {
     this._targetScale = 1;
+    Signals.onEverydayMouseout.dispatch();
+
+    TweenLite.killTweensOf(this._ui.itemSelect);
+    TweenLite.to(
+      this._ui.itemSelect,
+      0.3,
+      {
+        opacity: 0,
+      },
+    );
   }
 
   activate(index) {
@@ -149,6 +173,15 @@ export default class EverydayItem {
     this._targetTextAlpha = 0;
     this._targetTextTranslation = 100;
     // this._currentModuloLength = this._fullModuloLength;
+
+    TweenLite.killTweensOf(this._ui.itemSelect);
+    TweenLite.to(
+      this._ui.itemSelect,
+      0.3,
+      {
+        opacity: 0,
+      },
+    );
   }
 
   deactivate() {

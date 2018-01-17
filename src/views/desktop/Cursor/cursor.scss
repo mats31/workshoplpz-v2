@@ -1,6 +1,7 @@
 @import '~stylesheets/common/global-imports';
 
 .cursor {
+  pointer-events: none;
   position: absolute;
   left: 0;
   top: 0;
