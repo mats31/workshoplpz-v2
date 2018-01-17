@@ -1,1 +1,8 @@
-.cursor {}
+@import '~stylesheets/common/global-imports';
+
+.cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: $zindex-2;
+}

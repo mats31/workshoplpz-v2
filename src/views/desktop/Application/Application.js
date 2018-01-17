@@ -8,6 +8,7 @@ import AboutView from 'views/desktop/About';
 import WebGLView from 'views/desktop/WebGL';
 import ProjectView from 'views/desktop/Project';
 import EverydayView from 'views/desktop/Everyday';
+import CursorView from 'views/desktop/Cursor';
 
 export default class DesktopAppView {
 
@@ -23,6 +24,7 @@ export default class DesktopAppView {
     this._webgl = this._setupWebGLView();
     this._project = this._setupProjectView();
     this._everyday = this._setupEveryday();
+    this._cursor = this._setupCursor();
 
     this._previousState = null;
 
@@ -80,6 +82,14 @@ export default class DesktopAppView {
     return view;
   }
 
+  _setupCursor() {
+    const view = new CursorView({
+      parent: this.el,
+    });
+
+    return view;
+  }
+
   _setupEvents() {
     window.addEventListener('resize', this.onResize);
     window.addEventListener('scroll', this.onScroll);
@@ -116,6 +126,7 @@ export default class DesktopAppView {
 
         this._project.hide({ delay: 0.1 });
         this._everyday.hide({ delay: 0.5 });
+        this._cursor.show({ delay: 0 });
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
@@ -127,6 +138,7 @@ export default class DesktopAppView {
         this._project.fillProjectPage();
         this._project.show({ delay: 1.4 });
         this._everyday.hide({ delay: 0 });
+        this._cursor.show({ delay: 0 });
         break;
       case pages.EVERYDAYS:
         document.body.style.overflow = 'hidden';
@@ -137,6 +149,7 @@ export default class DesktopAppView {
         this._about.hide({ delay: 0 });
         this._webgl.show({ delay: 0, transitionIn: false });
         this._project.hide({ delay: 0.1 });
+        this._cursor.show({ delay: 0 });
 
         if (this._previousState === pages.PROJECT || this._previousState === pages.ABOUT) {
           this._everyday.show({ delay: 0.35, transitionFromDown: true });
@@ -157,6 +170,7 @@ export default class DesktopAppView {
         }
         this._project.hide({ delay: 0.1 });
         this._everyday.hide({ delay: 0, transitionFromTop: true });
+        this._cursor.show({ delay: 0 });
         break;
       default:
         this._home.hide();
@@ -164,6 +178,7 @@ export default class DesktopAppView {
 
     this._home.updatePage(page);
     this._webgl.updatePage(page);
+    this._cursor.updatePage(page);
 
     this._previousState = page;
   }
@@ -192,5 +207,6 @@ export default class DesktopAppView {
     this._webgl.update();
     this._project.update();
     this._everyday.update();
+    this._cursor.update();
   }
 }
