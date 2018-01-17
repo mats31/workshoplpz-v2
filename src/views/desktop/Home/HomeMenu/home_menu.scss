@@ -17,11 +17,6 @@
   width: 100%;
 }
 
-.menu__celia.menu__item:hover {
-  color: rgba( 255, 255, 255, 0.2 );
-  cursor: initial;
-}
-
 .menu__toggle {
   position: absolute;
   left: 50%;
@@ -63,6 +58,14 @@
   }
   &.is-active {
     color: rgba( 255, 255, 255, 1 );
+    cursor: initial;
+  }
+}
+
+.menu__celia {
+  color: rgba( 255, 255, 255, 1 );
+
+  &:hover {
     cursor: initial;
   }
 }
