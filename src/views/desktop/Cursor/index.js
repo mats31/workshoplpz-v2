@@ -621,6 +621,9 @@ export default class CursorView {
 
   @autobind
   _onMousemove(event) {
+
+    this.show();
+
     const x = event.pageX - this._width * 0.5;
     const y = event.pageY - this._height * 0.5;
     const transform = `translate3d(${x}px,${y}px,1px)`;

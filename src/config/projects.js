@@ -18,7 +18,7 @@ const projects = {
         'picture-skyfall-2',
         'picture-skyfall-3',
       ],
-      color: 'rgb(255, 200, 107)',
+      color: 'rgb(245, 231, 218)',
     },
     {
       id: 'fuse',
@@ -37,7 +37,7 @@ const projects = {
         'picture-skyfall-2',
         'picture-skyfall-3',
       ],
-      color: 'rgb(107, 255, 215)',
+      color: 'rgb(245, 231, 218)',
     },
     {
       id: 'orange',
@@ -56,7 +56,7 @@ const projects = {
         'picture-skyfall-2',
         'picture-skyfall-3',
       ],
-      color: 'rgb(129, 107, 255)',
+      color: 'rgb(245, 231, 218)',
     },
     {
       id: 'retrograph',
@@ -75,7 +75,7 @@ const projects = {
         'picture-skyfall-2',
         'picture-skyfall-3',
       ],
-      color: 'rgb(255, 0, 0)',
+      color: 'rgb(245, 231, 218)',
     },
   ],
 };

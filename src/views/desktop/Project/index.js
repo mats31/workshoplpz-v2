@@ -92,7 +92,7 @@ export default class ProjectView {
       this,
       {
         delay,
-        _firstScale: 0.3,
+        _firstScale: 0.5,
       },
     );
 
@@ -100,11 +100,10 @@ export default class ProjectView {
       this.el,
       0.5,
       {
-        delay,
+        delay: delay + 0.05,
         opacity: 1,
         ease: 'Power2.easeOut',
         onComplete: () => {
-          console.log(1);
           this._showAnimationDone = true;
         },
       },
@@ -132,6 +131,7 @@ export default class ProjectView {
       1,
       {
         delay,
+        opacity: 0,
         y: -window.innerHeight,
         ease: 'Power4.easeout',
         onComplete: () => {
@@ -175,6 +175,9 @@ export default class ProjectView {
 
     this._bodyOffsetHeight = document.body.offsetHeight;
     this._distanceToBottom = document.body.offsetHeight;
+
+    this._ui.preview.classList.add('js-project__scale');
+    this._ui.preview.classList.add('project__scale');
   }
 
   fillProjectPage() {

@@ -120,13 +120,15 @@ export default class DesktopAppView {
           this._webgl.show({ delay: 0.7 });
         } else if (this._previousState === pages.ABOUT) {
           this._webgl.show({ delay: 0, transitionIn: false });
+        } else if (this._previousState === pages.PROJECT) {
+          this._webgl.show({ delay: 0.1 });
         } else {
           this._webgl.show({ delay: 1 });
         }
 
         this._project.hide({ delay: 0.1 });
         this._everyday.hide({ delay: 0.5 });
-        this._cursor.show({ delay: 2 });
+        // this._cursor.show({ delay: 2 });
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
@@ -138,7 +140,7 @@ export default class DesktopAppView {
         this._project.fillProjectPage();
         this._project.show({ delay: 1.4 });
         this._everyday.hide({ delay: 0 });
-        this._cursor.show({ delay: 0 });
+        // this._cursor.show({ delay: 0 });
         break;
       case pages.EVERYDAYS:
         document.body.style.overflow = 'hidden';
@@ -149,7 +151,7 @@ export default class DesktopAppView {
         this._about.hide({ delay: 0 });
         this._webgl.show({ delay: 0, transitionIn: false });
         this._project.hide({ delay: 0.1 });
-        this._cursor.show({ delay: 0 });
+        // this._cursor.show({ delay: 0 });
 
         if (this._previousState === pages.PROJECT || this._previousState === pages.ABOUT) {
           this._everyday.show({ delay: 0.35, transitionFromDown: true });
@@ -170,7 +172,7 @@ export default class DesktopAppView {
         }
         this._project.hide({ delay: 0.1 });
         this._everyday.hide({ delay: 0, transitionFromTop: true });
-        this._cursor.show({ delay: 0 });
+        // this._cursor.show({ delay: 0 });
         break;
       default:
         this._home.hide();
