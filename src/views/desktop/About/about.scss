@@ -63,12 +63,26 @@
     text-decoration: none;
   }
 
-  .about__line {
-    background: white;
+  .about__lines {
+    overflow: hidden;
     height: 0.1rem;
     width: 5.5rem;
     position: relative;
     top: 5px;
     transform-origin: left center;
   }
+
+  .about__line {
+    background: white;
+    height: 0.1rem;
+    width: 5.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: left center;
+  }
+
+  // .about__line:last-child {
+  //   transform: scale(0, 1);
+  // }
 }

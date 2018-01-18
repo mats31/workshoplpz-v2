@@ -43,32 +43,32 @@ export default class CursorView {
 
     this._line1 = {
       point1: {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-        xTarget: this._canvasW * 0.5,
-        yTarget: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
+        xTarget: this._width * 0.5,
+        yTarget: this._height * 0.5,
       },
       point2: {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-        xTarget: this._canvasW * 0.5,
-        yTarget: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
+        xTarget: this._width * 0.5,
+        yTarget: this._height * 0.5,
       },
       needsUpdate: false,
     };
 
     this._line2 = {
       point1: {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-        xTarget: this._canvasW * 0.5,
-        yTarget: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
+        xTarget: this._width * 0.5,
+        yTarget: this._height * 0.5,
       },
       point2: {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-        xTarget: this._canvasW * 0.5,
-        yTarget: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
+        xTarget: this._width * 0.5,
+        yTarget: this._height * 0.5,
       },
       needsUpdate: false,
     };
@@ -102,8 +102,8 @@ export default class CursorView {
       1,
       {
         delay,
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
         ease: 'Expo.easeOut',
       },
     );
@@ -113,8 +113,8 @@ export default class CursorView {
       1,
       {
         delay,
-        x: this._canvasW * 0.5,
-        y: this._canvasH,
+        x: this._width * 0.5,
+        y: this._height,
         ease: 'Expo.easeOut',
         onComplete: () => {
           this._line1.needsUpdate = false;
@@ -129,8 +129,8 @@ export default class CursorView {
       1,
       {
         delay,
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
         ease: 'Expo.easeOut',
       },
     );
@@ -140,8 +140,8 @@ export default class CursorView {
       1,
       {
         delay,
-        x: this._canvasW * 1,
-        y: this._canvasH * 1,
+        x: this._width * 1,
+        y: this._height * 1,
         ease: 'Expo.easeOut',
         onComplete: () => {
           this._line2.needsUpdate = false;
@@ -207,8 +207,8 @@ export default class CursorView {
       this._line1.point1,
       1,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
         ease: 'Expo.easeOut',
       },
     );
@@ -217,8 +217,8 @@ export default class CursorView {
       this._line1.point2,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
     TweenLite.to(
@@ -226,8 +226,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 1,
-        y: this._canvasH * 1,
+        x: this._width * 1,
+        y: this._height * 1,
         onComplete: () => {
           this._line1.needsUpdate = false;
         },
@@ -241,8 +241,8 @@ export default class CursorView {
       this._line2.point1,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
 
@@ -251,8 +251,8 @@ export default class CursorView {
       this._line2.point2,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
 
@@ -261,8 +261,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 1,
-        y: this._canvasH * 0,
+        x: this._width * 1,
+        y: this._height * 0,
         onComplete: () => {
           this._line2.needsUpdate = false;
         },
@@ -279,8 +279,8 @@ export default class CursorView {
       this._line1.point1,
       1,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
         ease: 'Expo.easeOut',
       },
     );
@@ -289,8 +289,8 @@ export default class CursorView {
       this._line1.point2,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
     TweenLite.to(
@@ -298,8 +298,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 0,
-        y: this._canvasH * 1,
+        x: this._width * 0,
+        y: this._height * 1,
         onComplete: () => {
           this._line1.needsUpdate = false;
         },
@@ -313,8 +313,8 @@ export default class CursorView {
       this._line2.point1,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
 
@@ -323,8 +323,8 @@ export default class CursorView {
       this._line2.point2,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
 
@@ -333,8 +333,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 0,
-        y: this._canvasH * 0,
+        x: this._width * 0,
+        y: this._height * 0,
         onComplete: () => {
           this._line2.needsUpdate = false;
         },
@@ -355,8 +355,8 @@ export default class CursorView {
       this._line1.point1,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
     TweenLite.to(
@@ -364,8 +364,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 0,
-        y: this._canvasH * 1,
+        x: this._width * 0,
+        y: this._height * 1,
       },
     );
     TweenLite.killTweensOf(this._line1.point2);
@@ -373,8 +373,8 @@ export default class CursorView {
       this._line1.point2,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
     TweenLite.to(
@@ -382,8 +382,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 1,
-        y: this._canvasH * 0,
+        x: this._width * 1,
+        y: this._height * 0,
         onComplete: () => {
           this._line1.needsUpdate = false;
         },
@@ -397,16 +397,16 @@ export default class CursorView {
       this._line2.point1,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
     TweenLite.to(
       this._line2.point1,
       0.15,
       {
-        x: this._canvasW * 0,
-        y: this._canvasH * 0,
+        x: this._width * 0,
+        y: this._height * 0,
       },
     );
     TweenLite.killTweensOf(this._line2.point2);
@@ -414,8 +414,8 @@ export default class CursorView {
       this._line2.point2,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
+        x: this._width * 0.5,
+        y: this._height * 0.5,
       },
     );
     TweenLite.to(
@@ -423,8 +423,8 @@ export default class CursorView {
       0.15,
       {
         delay: 0.15,
-        x: this._canvasW * 1,
-        y: this._canvasH * 1,
+        x: this._width * 1,
+        y: this._height * 1,
         onComplete: () => {
           this._line2.needsUpdate = false;
         },
@@ -445,8 +445,8 @@ export default class CursorView {
       this._line1.point1,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0,
+        x: this._width * 0.5,
+        y: this._height * 0,
       },
     );
 
@@ -455,8 +455,8 @@ export default class CursorView {
       this._line1.point2,
       0.15,
       {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 1,
+        x: this._width * 0.5,
+        y: this._height * 1,
       },
     );
 
@@ -467,8 +467,8 @@ export default class CursorView {
       this._line2.point1,
       0.15,
       {
-        x: this._canvasW * 0,
-        y: this._canvasH * 0.5,
+        x: this._width * 0,
+        y: this._height * 0.5,
       },
     );
 
@@ -477,8 +477,8 @@ export default class CursorView {
       this._line2.point2,
       0.15,
       {
-        x: this._canvasW * 1,
-        y: this._canvasH * 0.5,
+        x: this._width * 1,
+        y: this._height * 0.5,
       },
     );
   }
@@ -488,69 +488,103 @@ export default class CursorView {
   }
 
   _goToNormalState() {
-    TweenLite.killTweensOf(this._line1.point1);
-    this._line1.needsUpdate = true;
-    TweenLite.to(
-      this._line1.point1,
-      0.15,
-      {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-      },
-    );
-    TweenLite.killTweensOf(this._line1.point2);
-    TweenLite.to(
-      this._line1.point2,
-      0.15,
-      {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-      },
-    );
-    TweenLite.to(
-      this._line1.point2,
-      0.15,
-      {
-        delay: 0.15,
-        x: this._canvasW * 0.5,
-        y: this._canvasH,
-        onComplete: () => {
-          this._line1.needsUpdate = false;
+    if (this._line1.point1.x !== this._width * 0.5 || this._line1.point1.y !== this._height * 0.5) {
+      TweenLite.killTweensOf(this._line1.point1);
+      TweenLite.to(
+        this._line1.point1,
+        0.15,
+        {
+          x: this._width * 0.5,
+          y: this._height * 0.5,
+          onUpdate: () => {
+            this._line1.needsUpdate = true;
+          },
+          onComplete: () => {
+            this._line1.needsUpdate = false;
+          },
         },
-      },
-    );
+      );
+    }
 
-    TweenLite.killTweensOf(this._line2.point1);
-    this._line2.needsUpdate = true;
-    TweenLite.to(
-      this._line2.point1,
-      0.15,
-      {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-      },
-    );
-    TweenLite.killTweensOf(this._line2.point2);
-    TweenLite.to(
-      this._line2.point2,
-      0.15,
-      {
-        x: this._canvasW * 0.5,
-        y: this._canvasH * 0.5,
-      },
-    );
-    TweenLite.to(
-      this._line2.point2,
-      0.15,
-      {
-        delay: 0.15,
-        x: this._canvasW * 1,
-        y: this._canvasH * 1,
-        onComplete: () => {
-          this._line2.needsUpdate = false;
+    if (this._line1.point2.x !== this._width * 0.5 || this._line1.point2.y !== this._height) {
+      this._line1.needsUpdate = true;
+      TweenLite.killTweensOf(this._line1.point2);
+      TweenLite.to(
+        this._line1.point2,
+        0.15,
+        {
+          x: this._width * 0.5,
+          y: this._height * 0.5,
+          onUpdate: () => {
+            this._line1.needsUpdate = true;
+          },
         },
-      },
-    );
+      );
+      TweenLite.to(
+        this._line1.point2,
+        0.15,
+        {
+          delay: 0.15,
+          x: this._width * 0.5,
+          y: this._height,
+          onUpdate: () => {
+            this._line1.needsUpdate = true;
+          },
+          onComplete: () => {
+            this._line1.needsUpdate = false;
+          },
+        },
+      );
+    }
+
+    if (this._line2.point1.x !== this._width * 0.5 || this._line2.point1.y !== this._height * 0.5) {
+      TweenLite.killTweensOf(this._line2.point1);
+      TweenLite.to(
+        this._line2.point1,
+        0.15,
+        {
+          x: this._width * 0.5,
+          y: this._height * 0.5,
+          onUpdate: () => {
+            this._line2.needsUpdate = true;
+          },
+          onComplete: () => {
+            this._line2.needsUpdate = false;
+          },
+        },
+      );
+    }
+
+    if (this._line2.point2.x !== this._width * 1 || this._line2.point2.y !== this._height * 1) {
+      this._line2.needsUpdate = true;
+      TweenLite.killTweensOf(this._line2.point2);
+      TweenLite.to(
+        this._line2.point2,
+        0.15,
+        {
+          x: this._width * 0.5,
+          y: this._height * 0.5,
+          onUpdate: () => {
+            this._line2.needsUpdate = true;
+          },
+        },
+      );
+      TweenLite.to(
+        this._line2.point2,
+        0.15,
+        {
+          delay: 0.15,
+          x: this._width * 1,
+          y: this._height * 1,
+          onUpdate: () => {
+            this._line2.needsUpdate = true;
+          },
+          onComplete: () => {
+            this._line2.needsUpdate = false;
+          },
+        },
+      );
+    }
   }
 
   // Events --------------------------------------------------------------------
@@ -587,8 +621,8 @@ export default class CursorView {
 
   @autobind
   _onMousemove(event) {
-    const x = event.pageX - this._canvasW * 0.5;
-    const y = event.pageY - this._canvasH * 0.5;
+    const x = event.pageX - this._width * 0.5;
+    const y = event.pageY - this._height * 0.5;
     const transform = `translate3d(${x}px,${y}px,1px)`;
     this.el.style.webkitTransform = transform;
     this.el.style.MozTransform = transform;
@@ -644,7 +678,7 @@ export default class CursorView {
   update() {
 
     if (this.needsUpdate) {
-      this._ctx.clearRect(0, 0, this._canvasW, this._canvasH);
+      this._ctx.clearRect(0, 0, this._width, this._height);
       this._updateScale();
       this._updateLine1();
       this._updateLine2();
@@ -657,7 +691,7 @@ export default class CursorView {
 
   _updateScale() {
     this._ctx.save();
-    this._ctx.translate(this._canvasW / 2, this._canvasH / 2);
+    this._ctx.translate(this._width / 2, this._height / 2);
     this._ctx.scale(this._scale, this._scale);
   }
 
@@ -669,10 +703,10 @@ export default class CursorView {
     // this._line1.point2.x += ( this._line1.point2.xTarget - this._line1.point2.x ) * 0.1;
     // this._line1.point2.y += ( this._line1.point2.yTarget - this._line1.point2.y ) * 0.1;
 
-    const x1 = this._line1.point1.x - this._canvasW * 0.5;
-    const y1 = this._line1.point1.y - this._canvasH * 0.5;
-    const x2 = this._line1.point2.x - this._canvasW * 0.5;
-    const y2 = this._line1.point2.y - this._canvasH * 0.5;
+    const x1 = this._line1.point1.x - this._width * 0.5;
+    const y1 = this._line1.point1.y - this._height * 0.5;
+    const x2 = this._line1.point2.x - this._width * 0.5;
+    const y2 = this._line1.point2.y - this._height * 0.5;
 
     this._ctx.beginPath();
     this._ctx.moveTo(x1, y1);
@@ -688,10 +722,10 @@ export default class CursorView {
     // this._line2.point2.x += ( this._line2.point2.xTarget - this._line2.point2.x ) * 0.1;
     // this._line2.point2.y += ( this._line2.point2.yTarget - this._line2.point2.y ) * 0.1;
 
-    const x1 = this._line2.point1.x - this._canvasW * 0.5;
-    const y1 = this._line2.point1.y - this._canvasH * 0.5;
-    const x2 = this._line2.point2.x - this._canvasW * 0.5;
-    const y2 = this._line2.point2.y - this._canvasH * 0.5;
+    const x1 = this._line2.point1.x - this._width * 0.5;
+    const y1 = this._line2.point1.y - this._height * 0.5;
+    const x2 = this._line2.point2.x - this._width * 0.5;
+    const y2 = this._line2.point2.y - this._height * 0.5;
 
     this._ctx.beginPath();
     this._ctx.moveTo(x1, y1);
