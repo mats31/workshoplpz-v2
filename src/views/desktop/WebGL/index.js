@@ -60,7 +60,7 @@ export default class WebGL {
 
     this._setupWebGL(window.innerWidth, window.innerHeight);
     this._setupBackground();
-    this._setupGround();
+    // this._setupGround();
     this._setupProjects();
     this._setupLight();
     this._setupGrain();
@@ -512,6 +512,7 @@ export default class WebGL {
 
     const perspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
     this._xStep = Math.max( 35, perspectiveSize.width * 0.7 );
+    // this._xStep = perspectiveSize.width * 1.5;
 
     // const scaleFactor = Math.min( 1, this._width / this._scaleStep );
 
@@ -545,7 +546,7 @@ export default class WebGL {
 
       this._updateRaycast();
       this._updateProjectContainers(time);
-      this._ground.update(time, this._translationEase );
+      // this._ground.update(time, this._translationEase );
       this._grain.update(time);
       this._renderer.render(this._scene, this._camera);
     }

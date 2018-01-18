@@ -1,6 +1,7 @@
 import States from 'core/States';
 import * as pages from 'core/pages';
 import raf from 'raf';
+import PerformanceTest from 'helpers/PerformanceTest'
 import { autobind } from 'core-decorators';
 import LoaderView from 'views/common/Loader/Loader';
 import HomeView from 'views/desktop/Home';
@@ -15,6 +16,9 @@ export default class DesktopAppView {
   // Setup ---------------------------------------------------------------------
 
   constructor() {
+
+    States.version = PerformanceTest.version;
+
     this.el = document.getElementById('application');
 
     this._views = [];

@@ -293,6 +293,12 @@ class ProjectContainer extends THREE.Object3D {
 
     this.position.set( x, y, z );
 
+    // if (x <= this._perspectiveSize.width * 0.5 && x > this._perspectiveSize.width * -0.5) {
+    //   this.visible = true;
+    // } else {
+    //   this.visible = false;
+    // }
+
     this.scale.set( this._scaleFactor, this._scaleFactor, this._scaleFactor );
   }
   _updateText() {

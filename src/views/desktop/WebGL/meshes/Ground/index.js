@@ -1,3 +1,4 @@
+import States from 'core/States';
 import vertexShader from './shaders/ground.vs';
 import fragmentShader from './shaders/ground.fs';
 import vertexDepthShader from './shaders/groundDepth.vs';
