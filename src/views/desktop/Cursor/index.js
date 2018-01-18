@@ -90,21 +90,6 @@ export default class CursorView {
 
   updatePage(page) {
     this._page = page;
-    // switch (page) {
-    //   case pages.HOME:
-    //
-    //     break;
-    //   case pages.PROJECT:
-    //
-    //     break;
-    //   case pages.EVERYDAYS:
-    //
-    //     break;
-    //   case pages.ABOUT:
-    //
-    //     break;
-    //   default:
-    // }
   }
 
   show({ delay = 0 } = {}) {
