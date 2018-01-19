@@ -11,6 +11,7 @@ class Ground extends THREE.Object3D {
     this.translation = 0;
 
     this.geometry = new THREE.PlaneGeometry( 550, 550, 200, 200 );
+    // this.geometry = new THREE.PlaneGeometry( 200, 200, 10, 10 );
 
     const baseShader = THREE.ShaderLib.phong;
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);

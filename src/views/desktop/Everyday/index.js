@@ -120,7 +120,7 @@ export default class EverydayView {
         this,
         1.3,
         {
-          _translationShow: '-=400',
+          _translationShow: '+=400',
           ease: 'Expo.easeInOut',
           onComplete: () => {
             this.needsUpdate = false;

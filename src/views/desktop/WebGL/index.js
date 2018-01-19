@@ -60,7 +60,9 @@ export default class WebGL {
 
     this._setupWebGL(window.innerWidth, window.innerHeight);
     this._setupBackground();
-    // this._setupGround();
+    if (States.version !== 'low') {
+      this._setupGround();
+    }
     this._setupProjects();
     this._setupLight();
     this._setupGrain();
@@ -83,7 +85,10 @@ export default class WebGL {
       antialias: true,
     });
     this._renderer.setSize(width, height);
-    this._renderer.setClearColor(0x282828);
+    // this._renderer.setClearColor(0x282828);
+    this._renderer.setClearColor(0x000000);
+    // this._renderer.setPixelRatio();
+    // console.log(this._renderer.getPixelRatio());
 
     this._raycaster = new THREE.Raycaster();
 
@@ -126,7 +131,7 @@ export default class WebGL {
         topPosition: this._topPosition,
       });
 
-      const x = this._xStep * i;
+      const x = this._xStep * i + this._xStep;
       const y = i % 2 === 0 ? 15 : 22;
       const z = this._zDepth;
       const initialPosition = new THREE.Vector3(x, y, z);
@@ -134,9 +139,6 @@ export default class WebGL {
 
       this._scene.add(projectContainer);
       this._projectContainers.push(projectContainer);
-
-      if ( i === 0 ) { this._startProject = projectContainer; }
-      if ( i === projectList.length - 1 ) { this._endProject = projectContainer; }
     }
   }
 
@@ -200,7 +202,7 @@ export default class WebGL {
     );
   }
 
-  show({ delay = 0, transitionIn = true, transitionToBottom = true } = {}) {
+  show({ delay = 0, transitionIn = true, transitionToBottom = true, direction = 'right' } = {}) {
     this._needsUpdate = true;
 
     this.showProject(delay);
@@ -212,7 +214,8 @@ export default class WebGL {
     if (transitionIn) {
       this.isAnimating = true;
 
-      const customDelay = delay < 1 ? delay : delay + 1.5;
+      const customDelay = delay < 1 && delay !== 0.1 ? delay : delay + 1.5;
+      const translationShow = direction === 'right' ? `-=${this._xStep}` : `+=${this._xStep}`;
 
       TweenLite.killTweensOf(this);
       TweenLite.to(
@@ -220,7 +223,7 @@ export default class WebGL {
         2,
         {
           delay: customDelay,
-          _translationShow: '-=40',
+          _translationShow: translationShow,
           ease: 'Power4.easeOut',
           onComplete: () => {
             this.isAnimating = false;
@@ -362,6 +365,7 @@ export default class WebGL {
         for (let i = 0; i < this._projectContainers.length; i++) {
           if (lastRouteResolved.params.id === this._projectContainers[i].projectID) {
             // this._goToProject(lastRouteResolved.params.id, i);
+            this._mouse.set( 0, 0 );
             this.cameraToTop();
             this._projectContainers[i].goToProjectMode();
           }
@@ -377,10 +381,11 @@ export default class WebGL {
           this,
           1.3,
           {
-            _translationShow: '-=20',
+            _translationShow: `-=${this._xStep}`,
             ease: 'Expo.easeInOut',
             onComplete: () => {
               this.isAnimating = false;
+              this._translationShow = this._xStep * 2;
             },
           },
         );
@@ -402,7 +407,7 @@ export default class WebGL {
   @autobind
   _onScrollWheel(event) {
 
-    if (!States.application.activateProject) {
+    if (!States.application.activateProject && !this.isAnimating) {
       const deltaY = event.deltaY;
 
       // this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
@@ -510,20 +515,20 @@ export default class WebGL {
 
     this._renderer.setSize( this._width, this._height );
 
-    const perspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
-    this._xStep = Math.max( 35, perspectiveSize.width * 0.7 );
-    // this._xStep = perspectiveSize.width * 1.5;
+    this._projectPerspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
+    this._xStep = Math.max( 35, this._projectPerspectiveSize.width * 0.7 );
+    // this._xStep = this._projectPerspectiveSize.width * 1.5;
 
     // const scaleFactor = Math.min( 1, this._width / this._scaleStep );
 
     for (let i = 0; i < this._projectContainers.length; i += 1) {
 
-      const x = this._xStep * i;
+      const x = this._xStep * i + this._xStep;
       const y = i % 2 === 0 ? 15 : 22;
       const z = this._zDepth;
       const initialPosition = new THREE.Vector3(x, y, z);
       this._projectContainers[i].setInitialPosition(initialPosition);
-      this._projectContainers[i].resize( this._camera, perspectiveSize );
+      this._projectContainers[i].resize( this._camera, this._projectPerspectiveSize );
     }
 
     if (this._grain) {
@@ -546,7 +551,9 @@ export default class WebGL {
 
       this._updateRaycast();
       this._updateProjectContainers(time);
-      // this._ground.update(time, this._translationEase );
+      if (States.version !== 'low') {
+        this._ground.update(time, this._translationEase );
+      }
       this._grain.update(time);
       this._renderer.render(this._scene, this._camera);
     }

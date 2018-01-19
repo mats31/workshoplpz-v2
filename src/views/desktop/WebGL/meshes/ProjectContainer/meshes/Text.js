@@ -31,6 +31,7 @@ class Text extends THREE.Object3D {
     this.add(this._mesh);
 
     const xScale = 30;
+    // const xScale = 15;
     const yScale = xScale / ( this._texture.image.width / this._texture.image.height );
     this.scale.set( xScale, yScale, 1 );
 

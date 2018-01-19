@@ -20,7 +20,7 @@ void main() {
 
   vec3 backgroundColor = vec3( 40. / 255. );
   float gradient = smoothstep( 0.5, 0.7, vUv.y );
-  vec3 color = backgroundColor * gradient;
+  vec3 color = backgroundColor * abs( gradient - 1. );
   float alpha = 1.;
 
   // gl_FragColor = vec4(color, alpha);

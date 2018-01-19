@@ -71,7 +71,7 @@ class ProjectContainer extends THREE.Object3D {
 
     this._text = new Text({
       texture: this._textTexture,
-      initialY: this._index % 2 === 0 ? 13 : -13,
+      initialY: this._index % 2 === 0 ? 12 : -12,
     });
 
     this.add(this._text);
@@ -286,8 +286,10 @@ class ProjectContainer extends THREE.Object3D {
 
     this._currentPress += ( this._targetPress - this._currentPress ) * 0.1;
 
-    const xTranslation = this._initialPosition.x + this._currentTranslation + translationShow;
-    const x = ( modulo( xTranslation, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x ) - ( this._perspectiveWidth * 0.99 * this._offsetSide.x );
+    const xTranslation = this._initialPosition.x + this._currentTranslation + translationShow + offset;
+
+    // const x = ( modulo( xTranslation, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x ) - ( this._perspectiveWidth * 0.99 * this._offsetSide.x );
+    const x = ( modulo( xTranslation, moduloLength ) - offset ) * ( 1 - this._offsetCenter.x );
     const y = this._initialPosition.y + ( ( this._topPosition - this._initialPosition.y ) * this._offsetCenter.y );
     const z = this._initialPosition.z - this._currentPress;
 

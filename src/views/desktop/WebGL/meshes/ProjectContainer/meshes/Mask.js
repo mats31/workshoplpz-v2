@@ -16,6 +16,7 @@ class Mask extends THREE.Object3D {
     super();
 
     this._defaultScale = new THREE.Vector3(1, 1, 1);
+    // this._defaultScale = new THREE.Vector3(0.75, 0.75, 0.75);
     this._squareScale = new THREE.Vector3();
     this._squareScaleEase = 0;
     this._perspectiveWidth = null;
@@ -30,6 +31,8 @@ class Mask extends THREE.Object3D {
     this._color = options.color;
 
     this._createMask();
+
+    this.visible = true;
   }
 
   _createMask() {
@@ -38,6 +41,7 @@ class Mask extends THREE.Object3D {
     const finalModel = States.resources.getModel('forme1-final').media;
 
     this._maskGeometry = startModel.children[0].geometry;
+    console.log(this._maskGeometry);
 
     const length = this._maskGeometry.attributes.position.array.length;
     const randomColors = new Float32Array( parseInt( length / 3, 10 ) );

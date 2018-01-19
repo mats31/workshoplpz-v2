@@ -98,11 +98,11 @@ export default class ProjectView {
 
     TweenLite.to(
       this.el,
-      0.5,
+      0.4,
       {
         delay: delay + 0.05,
         opacity: 1,
-        ease: 'Power2.easeOut',
+        ease: 'Power4.easeOut',
         onComplete: () => {
           this._showAnimationDone = true;
         },
@@ -216,17 +216,31 @@ export default class ProjectView {
         // Role
         this._ui.roleDescription.innerHTML = this._project.role;
 
-        for (let j = 0; j < this._project.pictures.length; j++) {
-          const media = document.createElement('div');
-          const image = States.resources.getImage(this._project.pictures[j]).media;
+        while (this._ui.medias.firstChild) {
+          this._ui.medias.removeChild(this._ui.medias.firstChild);
+        }
 
+        for (let j = 0; j < this._project.medias.length; j++) {
+
+          const media = document.createElement('div');
           media.classList.add('js-project__media');
           media.classList.add('project__media');
-          // media.classList.add('js-project__scale');
-          // media.classList.add('project__scale');
 
-          media.appendChild(image);
-          this._ui.medias.appendChild(media);
+          if (this._project.medias[j].type === 'image') {
+            const image = States.resources.getImage(this._project.medias[j].id).media;
+
+            media.appendChild(image);
+            this._ui.medias.appendChild(media);
+          } else {
+            const video = document.createElement('video');
+            video.controls = false;
+            video.muted = true;
+            video.onload = () => { console.log(1); video.play(); };
+            video.src = `videos/${this._project.medias[j].id}.mp4`;
+
+            media.appendChild(video);
+            this._ui.medias.appendChild(media);
+          }
         }
 
         this._ui.scaleElements = this.el.querySelectorAll('.js-project__scale');

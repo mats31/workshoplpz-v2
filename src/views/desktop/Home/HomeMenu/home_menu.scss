@@ -26,13 +26,10 @@
 
 .menu__everydays {
   position: relative;
-}
-
-.menu__projects {
   margin-left: 1.5rem;
 }
 
-.menu__everydays::after {
+.menu__projects::after {
   content: '';
   display: inline-block;
   background: white;
@@ -58,14 +55,6 @@
   }
   &.is-active {
     color: rgba( 255, 255, 255, 1 );
-    // cursor: initial;
-  }
-}
-
-.menu__celia {
-  color: rgba( 255, 255, 255, 1 );
-
-  &:hover {
     // cursor: initial;
   }
 }

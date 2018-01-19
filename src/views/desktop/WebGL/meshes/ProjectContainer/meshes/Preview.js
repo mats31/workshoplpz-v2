@@ -16,6 +16,7 @@ class Preview extends THREE.Object3D {
 
   _setupPreview() {
     this._geometry = new THREE.PlaneBufferGeometry( 15, 15, 1, 1);
+    // this._geometry = new THREE.PlaneBufferGeometry( 10, 10, 1, 1);
 
     this._material = new THREE.ShaderMaterial({
       vertexShader,
@@ -30,6 +31,8 @@ class Preview extends THREE.Object3D {
 
     this._mesh = new THREE.Mesh(this._geometry, this._material);
     this.add(this._mesh);
+
+    this.visible = false;
   }
 
   // State ---------------------------------------------------------------------
@@ -63,6 +66,8 @@ class Preview extends THREE.Object3D {
 
   focus() {
     TweenLite.killTweensOf(this._material.uniforms.u_progress);
+    this.visible = true;
+
     TweenLite.to(
       this._material.uniforms.u_progress,
       0.7,
@@ -81,6 +86,9 @@ class Preview extends THREE.Object3D {
       {
         value: 0,
         ease: 'Expo.easeOut',
+        onComplete: () => {
+          this.visible = false;
+        },
       },
     );
   }

@@ -191,6 +191,8 @@ export default class CursorView {
   }
 
   slide(direction) {
+    Signals.onCursorSlide.dispatch();
+
     if (direction === 'left') {
       this._slideToLeft();
     } else {
@@ -343,6 +345,7 @@ export default class CursorView {
   }
 
   unslide() {
+    Signals.onCursorUnslide.dispatch();
     this._goToNormalState();
   }
 

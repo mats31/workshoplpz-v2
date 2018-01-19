@@ -20,22 +20,31 @@ export default class HomeMenuView {
 
     this._ui = {
       about: this.el.querySelector('.js-menu__about'),
+      celia: this.el.querySelector('.js-menu__celia'),
       everydays: this.el.querySelector('.js-menu__everydays'),
       projects: this.el.querySelector('.js-menu__projects'),
     };
-
-    this._setupEvents();
   }
 
   _setupEvents() {
-    this._ui.everydays.addEventListener( 'click', this.onEverydayClick );
-    this._ui.projects.addEventListener( 'click', this.onProjectClick );
-    this._ui.about.addEventListener( 'click', this.onAboutClick );
+    this._ui.everydays.addEventListener( 'click', this._onEverydayClick );
+    this._ui.projects.addEventListener( 'click', this._onProjectClick );
+    this._ui.celia.addEventListener( 'click', this._onCeliaClick );
+    this._ui.about.addEventListener( 'click', this._onAboutClick );
+  }
+
+  _removeEvents() {
+    this._ui.everydays.removeEventListener( 'click', this._onEverydayClick );
+    this._ui.projects.removeEventListener( 'click', this._onProjectClick );
+    this._ui.celia.removeEventListener( 'click', this._onCeliaClick );
+    this._ui.about.removeEventListener( 'click', this._onAboutClick );
   }
 
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
+    this._setupEvents();
+
     TweenLite.to(
       this.el,
       1,
@@ -47,6 +56,8 @@ export default class HomeMenuView {
   }
 
   hide({ delay = 0 } = {}) {
+    this._removeEvents();
+
     TweenLite.to(
       this.el,
       1,
@@ -84,17 +95,22 @@ export default class HomeMenuView {
 
   // Events --------------------------------------------------------------------
   @autobind
-  onProjectClick() {
+  _onProjectClick() {
     States.router.navigateTo(pages.HOME);
   }
 
   @autobind
-  onEverydayClick() {
+  _onEverydayClick() {
     States.router.navigateTo(pages.EVERYDAYS);
   }
 
   @autobind
-  onAboutClick() {
+  _onCeliaClick() {
+    States.router.navigateTo(pages.HOME);
+  }
+
+  @autobind
+  _onAboutClick() {
     States.router.navigateTo(pages.ABOUT);
   }
 

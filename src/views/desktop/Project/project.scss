@@ -4,7 +4,7 @@
   display: none;
   position: relative;
   opacity: 0;
-  z-index: 10;
+  z-index: $zindex-1;
 }
 
 .project__back {
@@ -15,7 +15,7 @@
 
 .project__container {
   color: #ffffff;
-  background: #191919;
+  background: #313234;
   padding-bottom: 50rem;
 }
 
@@ -83,10 +83,10 @@
   z-index: $zindex-1;
 }
 
-.project__preview img {
-  display: block;
-  width: 100%;
-}
+  .project__preview img {
+    display: block;
+    width: 100%;
+  }
 
 .project__titleLayer {
   position: absolute;
@@ -171,6 +171,7 @@
 }
 
 .project__divider {
+  float: right;
   width: 50%;
 }
 
@@ -227,10 +228,15 @@
   margin-bottom: 0;
 }
 
-.project__media img {
-  width: 100%;
-  display: block;
-}
+  .project__media img {
+    width: 100%;
+    display: block;
+  }
+
+  .project__media video {
+    display: block;
+    width: 100%;
+  }
 
 // .project__scale, .project__scale img {
 //   transform-origin: 0% 0% 0px !important;
