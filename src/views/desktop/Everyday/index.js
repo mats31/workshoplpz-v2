@@ -83,11 +83,11 @@ export default class EverydayView {
       TweenLite.set(this.el, { y: 0 });
       TweenLite.to(
         this,
-        2,
+        2.1,
         {
           delay,
           _translationShow: 0,
-          ease: 'Expo.easeOut',
+          ease: 'Power4.easeOut',
         },
       );
     }

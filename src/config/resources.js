@@ -41,7 +41,7 @@ const ressources = {
   ],
 
   models: [
-    { id: 'forme1-start', url: 'models/forme1-start.obj' },
+    { id: 'forme1-start', url: 'models/forme1-start-test.obj' },
     { id: 'forme1-final', url: 'models/forme1-final.obj' },
   ],
 

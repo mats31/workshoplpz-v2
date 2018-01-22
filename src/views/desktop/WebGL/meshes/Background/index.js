@@ -17,21 +17,22 @@ class Background extends THREE.Object3D {
     map.wrapS = map.wrapT = THREE.RepeatWrapping;
     map.needsUpdate = true;
 
-    this.geometry = new THREE.PlaneBufferGeometry( 1, 1, 1, 1);
+    this._geometry = new THREE.PlaneBufferGeometry( 1, 1, 1, 1);
 
-    this.material = new THREE.ShaderMaterial({
+    this._material = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
       transparent: true,
       side: THREE.DoubleSide,
       uniforms: {
         u_map: { type: 't', value: map },
+        u_gradient: { type: 'v2', value: States.version === 'low' ? new THREE.Vector2(0.2, 0.8) : new THREE.Vector2(0.5, 0.7) },
       },
       wireframe: false,
     });
 
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.add(this.mesh);
+    this._mesh = new THREE.Mesh(this._geometry, this._material);
+    this.add(this._mesh);
 
     // this.addGUI()
   }

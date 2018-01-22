@@ -205,13 +205,13 @@ export default class WebGL {
     );
   }
 
-  show({ delay = 0, transitionIn = true, transitionToBottom = true, direction = 'right' } = {}) {
+  show({ delay = 0, transitionIn = true, transitionToBottom = true, direction = 'right', fromProject = false } = {}) {
     this._needsUpdate = true;
     this._previousIndex = ( this._currentIndex - 1 ) % this._projectContainers.length;
     this._nextIndex = ( this._currentIndex + 1 ) % this._projectContainers.length;
-    console.log('previous:', this._previousIndex);
-    console.log('current:', this._currentIndex);
-    console.log('next:', this._nextIndex);
+    // console.log('previous:', this._previousIndex);
+    // console.log('current:', this._currentIndex);
+    // console.log('next:', this._nextIndex);
 
     this.showProject(delay);
 
@@ -224,29 +224,36 @@ export default class WebGL {
 
       const customDelay = delay < 1 && delay !== 0.1 ? delay : delay + 1.5;
       let value;
+      let translationShow;
 
-      if (direction === 'right') {
-        this._currentIndex = this._nextIndex;
-        value = this._projectContainers[this._nextIndex].position.x * -1;
-      } else {
-        this._currentIndex = this._previousIndex;
-        value = this._projectContainers[this._previousIndex].position.x * -1;
-      }
+      // if (direction === 'right') {
+      //   this._currentIndex = this._nextIndex;
+      //   value = this._projectContainers[this._nextIndex].position.x * -1;
+      // } else {
+      //   this._currentIndex = this._previousIndex;
+      //   value = this._projectContainers[this._previousIndex].position.x * -1;
+      // }
 
       // const translationShow = direction === 'right' ? `-=${value}` : `+=${value}`;
-      const translationShow = `+=${value}`;
+      // const translationShow = `+=${value}`;
+
+      if (fromProject) {
+        translationShow = `-=${this._projectContainers[this._nextIndex].position.x}`;
+      } else {
+        translationShow = direction === 'right' ? `-=${this._xStep}` : `+=${this._xStep}`;
+      }
+
 
       TweenLite.killTweensOf(this);
       TweenLite.to(
         this,
-        2,
+        2.1,
         {
           delay: customDelay,
           _translationShow: translationShow,
           ease: 'Power4.easeOut',
           onComplete: () => {
             this.isAnimating = false;
-            console.log('current:', this._currentIndex);
           },
         },
       );
@@ -388,6 +395,7 @@ export default class WebGL {
             this._mouse.set( 0, 0 );
             this.cameraToTop();
             this._projectContainers[i].goToProjectMode();
+            this._currentIndex = i;
           }
 
           this._projectContainers[i].hideText({ delay: 0 });
@@ -395,9 +403,11 @@ export default class WebGL {
         this._grain.hide();
         break;
       case pages.EVERYDAYS:
-        this._nextIndex = ( this._currentIndex + 1 ) % this._projectContainers.length;
-        const value = Math.abs(this._projectContainers[this._nextIndex].position.x);
-        this._currentIndex = this._nextIndex;
+        // this._nextIndex = ( this._currentIndex + 1 ) % this._projectContainers.length;
+        // const value = Math.abs(this._projectContainers[this._nextIndex].position.x);
+        // this._currentIndex = this._nextIndex;
+
+        const value = this._xStep;
 
         this.isAnimating = true;
         TweenLite.killTweensOf(this._translationShow);
@@ -410,7 +420,6 @@ export default class WebGL {
             onComplete: () => {
               this.isAnimating = false;
               this._translationShow = this._xStep * 2;
-              console.log('current:', this._currentIndex);
             },
           },
         );

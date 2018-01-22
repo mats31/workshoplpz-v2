@@ -14,12 +14,14 @@
 //   gl_FragColor = vec4(color, alpha);
 // }
 
+uniform vec2 u_gradient;
+
 varying vec2 vUv;
 
 void main() {
 
   vec3 backgroundColor = vec3( 40. / 255. );
-  float gradient = smoothstep( 0.5, 0.7, vUv.y );
+  float gradient = smoothstep( u_gradient.x, u_gradient.y, vUv.y );
   vec3 color = backgroundColor * abs( gradient - 1. );
   float alpha = 1.;
 

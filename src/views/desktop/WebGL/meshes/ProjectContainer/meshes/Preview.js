@@ -66,7 +66,7 @@ class Preview extends THREE.Object3D {
 
   focus() {
     TweenLite.killTweensOf(this._material.uniforms.u_progress);
-    this.visible = true;
+    // this.visible = true;
 
     TweenLite.to(
       this._material.uniforms.u_progress,

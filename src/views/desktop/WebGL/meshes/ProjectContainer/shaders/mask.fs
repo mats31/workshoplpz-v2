@@ -14,6 +14,7 @@ uniform float u_alpha;
 uniform sampler2D u_mapNoise;
 uniform sampler2D u_mapDisplacement;
 uniform sampler2D u_mapCircle;
+uniform sampler2D t_diffuse;
 
 varying float vRandomColor;
 
@@ -47,7 +48,10 @@ void main() {
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 
-  vec3 totalEmissiveRadiance = emissive * (vRandomColor * u_ease );
+	vec4 texture = texture2D(t_diffuse, vUV);
+
+	// vec3 totalEmissiveRadiance = emissive * (vRandomColor * u_ease );
+  vec3 totalEmissiveRadiance = texture.rgb * (vRandomColor * u_ease );
 
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
@@ -71,11 +75,11 @@ void main() {
 
 
   float alpha = u_alpha;
+
 	gl_FragColor = vec4( mix( outgoingLight, emissive, u_fullColor ), alpha );
 
 	#include <premultiplied_alpha_fragment>
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
 	#include <fog_fragment>
-
 }

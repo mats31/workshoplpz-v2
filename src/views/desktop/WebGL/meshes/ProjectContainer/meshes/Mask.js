@@ -41,20 +41,23 @@ class Mask extends THREE.Object3D {
     const finalModel = States.resources.getModel('forme1-final').media;
 
     this._maskGeometry = startModel.children[0].geometry;
-    console.log(this._maskGeometry);
 
     const length = this._maskGeometry.attributes.position.array.length;
     const randomColors = new Float32Array( parseInt( length / 3, 10 ) );
 
     for (let i = 0; i < length; i++ ) {
 
-      const random = Math.random() * 0.6 + 0.5;
+      // const random = Math.random() * 0.6 + 0.5;
+      const random = Math.random();
 
       randomColors[i] = random;
     }
 
     this._maskGeometry.addAttribute( 'a_finalPosition', new THREE.BufferAttribute( finalModel.children[0].geometry.attributes.position.array, 3 ) );
     this._maskGeometry.addAttribute( 'a_randomColor', new THREE.BufferAttribute( randomColors, 1 ) );
+
+    const texture = States.resources.getTexture('orange-preview').media;
+    texture.needsUpdate = true;
 
     const baseShader = THREE.ShaderLib.phong;
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
@@ -72,6 +75,7 @@ class Mask extends THREE.Object3D {
       u_ease: { type: 'f', value: this._easeValue },
       u_morph: { type: 'f', value: this._morphValue },
       u_alpha: { type: 'f', value: 1 },
+      t_diffuse: { type: 't', value: texture },
     };
 
     this._maskMaterial = new THREE.ShaderMaterial({
@@ -81,6 +85,7 @@ class Mask extends THREE.Object3D {
       wireframe: false,
       lights: true,
       transparent: true,
+      side: THREE.DoubleSide,
     });
 
     this._mesh = new THREE.Mesh(this._maskGeometry, this._maskMaterial);
@@ -255,6 +260,10 @@ class Mask extends THREE.Object3D {
 
     this._mesh.rotation.x = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
     this._mesh.rotation.z = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
+
+    // this._mesh.rotation.x += 0.1;
+    // this._mesh.rotation.y += 0.1;
+    // this._mesh.rotation.z += 0.1;
 
     const scaleX = lerp( this._squareScaleEase, this._defaultScale.x, this._squareScale.x);
     const scaleY = lerp( this._squareScaleEase, this._defaultScale.y, this._squareScale.y);
