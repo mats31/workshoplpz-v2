@@ -135,7 +135,7 @@ export default class DesktopAppView {
         } else if (this._previousState === pages.ABOUT) {
           this._webgl.show({ delay: 0, transitionIn: false });
         } else if (this._previousState === pages.PROJECT) {
-          this._webgl.show({ delay: 0 });
+          this._webgl.show({ delay: 0.1 });
         } else {
           this._webgl.show({ delay: 1 });
         }

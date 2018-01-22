@@ -32,6 +32,9 @@ export default class WebGL {
     this._needsUpdate = true;
     this._grain = null;
 
+    this._previousIndex = 0;
+    this._currentIndex = -1;
+    this._nextIndex = 0;
     this._xStep = 50;
     this._zDepth = -50;
     this._baseY = 20;
@@ -204,6 +207,11 @@ export default class WebGL {
 
   show({ delay = 0, transitionIn = true, transitionToBottom = true, direction = 'right' } = {}) {
     this._needsUpdate = true;
+    this._previousIndex = ( this._currentIndex - 1 ) % this._projectContainers.length;
+    this._nextIndex = ( this._currentIndex + 1 ) % this._projectContainers.length;
+    console.log('previous:', this._previousIndex);
+    console.log('current:', this._currentIndex);
+    console.log('next:', this._nextIndex);
 
     this.showProject(delay);
 
@@ -215,7 +223,18 @@ export default class WebGL {
       this.isAnimating = true;
 
       const customDelay = delay < 1 && delay !== 0.1 ? delay : delay + 1.5;
-      const translationShow = direction === 'right' ? `-=${this._xStep}` : `+=${this._xStep}`;
+      let value;
+
+      if (direction === 'right') {
+        this._currentIndex = this._nextIndex;
+        value = this._projectContainers[this._nextIndex].position.x * -1;
+      } else {
+        this._currentIndex = this._previousIndex;
+        value = this._projectContainers[this._previousIndex].position.x * -1;
+      }
+
+      // const translationShow = direction === 'right' ? `-=${value}` : `+=${value}`;
+      const translationShow = `+=${value}`;
 
       TweenLite.killTweensOf(this);
       TweenLite.to(
@@ -227,6 +246,7 @@ export default class WebGL {
           ease: 'Power4.easeOut',
           onComplete: () => {
             this.isAnimating = false;
+            console.log('current:', this._currentIndex);
           },
         },
       );
@@ -375,17 +395,22 @@ export default class WebGL {
         this._grain.hide();
         break;
       case pages.EVERYDAYS:
+        this._nextIndex = ( this._currentIndex + 1 ) % this._projectContainers.length;
+        const value = Math.abs(this._projectContainers[this._nextIndex].position.x);
+        this._currentIndex = this._nextIndex;
+
         this.isAnimating = true;
         TweenLite.killTweensOf(this._translationShow);
         TweenLite.to(
           this,
           1.3,
           {
-            _translationShow: `-=${this._xStep}`,
+            _translationShow: `-=${value}`,
             ease: 'Expo.easeInOut',
             onComplete: () => {
               this.isAnimating = false;
               this._translationShow = this._xStep * 2;
+              console.log('current:', this._currentIndex);
             },
           },
         );
