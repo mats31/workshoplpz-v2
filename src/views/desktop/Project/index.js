@@ -4,6 +4,7 @@ import * as pages from 'core/pages';
 import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible, toggle } from 'core/decorators';
+import MediaItem from './MediaItem';
 import template from './project.tpl.html';
 import './project.scss';
 
@@ -61,6 +62,8 @@ export default class ProjectView {
     this._targetTransformOriginY = 0;
     this._previewY = 0;
     this._scrollState = 1;
+
+    this._mediaItems = [];
 
     this._bodyOffsetHeight = document.body.offsetHeight;
     this._distanceToBottom = document.body.offsetHeight;
@@ -123,6 +126,8 @@ export default class ProjectView {
       window.scrollTo(0, 0);
       this._setupEvents();
     }, 50);
+
+    this.resize();
   }
 
   hide({ delay = 0 } = {}) {
@@ -222,25 +227,40 @@ export default class ProjectView {
 
         for (let j = 0; j < this._project.medias.length; j++) {
 
-          const media = document.createElement('div');
-          media.classList.add('js-project__media');
-          media.classList.add('project__media');
+          let media;
+          let type;
+          const mediaContainer = document.createElement('div');
+          mediaContainer.classList.add('js-project__media');
+          mediaContainer.classList.add('project__media');
 
           if (this._project.medias[j].type === 'image') {
-            const image = States.resources.getImage(this._project.medias[j].id).media;
+            media = States.resources.getImage(this._project.medias[j].id).media;
+            type = 'image';
+            // const image = States.resources.getImage(this._project.medias[j].id).media;
 
-            media.appendChild(image);
-            this._ui.medias.appendChild(media);
+            // media.appendChild(image);
+            // this._ui.medias.appendChild(media);
           } else {
-            const video = document.createElement('video');
-            video.controls = false;
-            video.muted = true;
-            video.onload = () => { console.log(1); video.play(); };
-            video.src = `videos/${this._project.medias[j].id}.mp4`;
+            media = document.createElement('video');
+            // const video = document.createElement('video');
+            media.controls = false;
+            media.muted = true;
+            // media.onload = () => { media.play(); };
+            media.src = `videos/${this._project.medias[j].id}.mp4`;
+            type = 'video';
 
-            media.appendChild(video);
-            this._ui.medias.appendChild(media);
+            // media.appendChild(video);
+            // this._ui.medias.appendChild(media);
           }
+
+          const mediaItem = new MediaItem({
+            el: mediaContainer,
+            media,
+            type,
+          });
+
+          this._mediaItems.push(mediaItem);
+          this._ui.medias.appendChild(mediaContainer);
         }
 
         this._ui.scaleElements = this.el.querySelectorAll('.js-project__scale');
@@ -418,6 +438,10 @@ export default class ProjectView {
   resize() {
     this._bodyOffsetHeight = document.body.offsetHeight;
 
+    for (let i = 0; i < this._mediaItems.length; i++) {
+      this._mediaItems[i].resize();
+    }
+
     if (this._skipPreview) {
       TweenLite.set( this._ui.titleContainer, { y: window.innerHeight * -0.99, force3D: true } );
     }
@@ -475,6 +499,7 @@ export default class ProjectView {
     if (this._needsUpdate) {
       this._updateScaleElements();
       this._updateScrollState();
+      this._updateMedias();
     }
   }
 
@@ -556,6 +581,13 @@ export default class ProjectView {
       this._ui.layer.style.transform = `scale3d(${this._scrollState},1,1)`;
       this._ui.layer.style.transformOrigin = '0 0';
     }
+  }
+
+  _updateMedias() {
+    this._mediaItems[0].update();
+    // for (let i = 0; i < this._mediaItems.length; i++) {
+      // this._mediaItems[i].update();
+    // }
   }
 
 }
