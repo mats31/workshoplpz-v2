@@ -71,7 +71,7 @@ class ProjectContainer extends THREE.Object3D {
 
     this._text = new Text({
       texture: this._textTexture,
-      initialY: this._index % 2 === 0 ? 12 : -12,
+      initialY: this._index % 2 === 0 ? 11 : -11,
     });
 
     this.add(this._text);
@@ -86,7 +86,7 @@ class ProjectContainer extends THREE.Object3D {
 
     this._preview.position.setZ(15);
 
-    this.add(this._preview);
+    // this.add(this._preview);
   }
 
   // Getters --------------------------------------------------------------------

@@ -491,8 +491,8 @@ export default class CursorView {
   }
 
   _goToNormalState() {
+    TweenLite.killTweensOf(this._line1.point1);
     if (this._line1.point1.x !== this._width * 0.5 || this._line1.point1.y !== this._height * 0.5) {
-      TweenLite.killTweensOf(this._line1.point1);
       TweenLite.to(
         this._line1.point1,
         0.15,
@@ -509,9 +509,9 @@ export default class CursorView {
       );
     }
 
+    TweenLite.killTweensOf(this._line1.point2);
     if (this._line1.point2.x !== this._width * 0.5 || this._line1.point2.y !== this._height) {
       this._line1.needsUpdate = true;
-      TweenLite.killTweensOf(this._line1.point2);
       TweenLite.to(
         this._line1.point2,
         0.15,
@@ -540,8 +540,8 @@ export default class CursorView {
       );
     }
 
+    TweenLite.killTweensOf(this._line2.point1);
     if (this._line2.point1.x !== this._width * 0.5 || this._line2.point1.y !== this._height * 0.5) {
-      TweenLite.killTweensOf(this._line2.point1);
       TweenLite.to(
         this._line2.point1,
         0.15,
@@ -558,9 +558,9 @@ export default class CursorView {
       );
     }
 
+    TweenLite.killTweensOf(this._line2.point2);
     if (this._line2.point2.x !== this._width * 1 || this._line2.point2.y !== this._height * 1) {
       this._line2.needsUpdate = true;
-      TweenLite.killTweensOf(this._line2.point2);
       TweenLite.to(
         this._line2.point2,
         0.15,

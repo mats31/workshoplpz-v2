@@ -43,20 +43,47 @@ class Mask extends THREE.Object3D {
     this._maskGeometry = startModel.children[0].geometry;
 
     const length = this._maskGeometry.attributes.position.array.length;
-    const randomColors = new Float32Array( parseInt( length / 3, 10 ) );
+    const floatLength = parseInt( length / 3, 10 );
+    const randomColors = new Float32Array( floatLength );
 
-    for (let i = 0; i < length; i++ ) {
+    let j = 0;
+    for (let i = 0; i < floatLength; i += 3 ) {
 
+      let random;
+
+      // if (i > floatLength * 0.4) {
+      //   random = 0;
+      //   j = 0;
+      // } else {
+      //   random = 1;
+      //   j++;
+      // }
+      if (i % 2 === 0) {
+        random = 1;
+        j = 0;
+      } else {
+        random = 1;
+        j++;
+      }
       // const random = Math.random() * 0.6 + 0.5;
-      const random = Math.random();
 
       randomColors[i] = random;
+      randomColors[i + 1] = random;
+      randomColors[i + 2] = random;
+      // randomColors[i + 3] = random;
+      // randomColors[i + 4] = random;
+      // randomColors[i + 5] = random;
+      // randomColors[i + 6] = random;
+      // randomColors[i + 7] = random;
+      // randomColors[i + 8] = random;
     }
 
     this._maskGeometry.addAttribute( 'a_finalPosition', new THREE.BufferAttribute( finalModel.children[0].geometry.attributes.position.array, 3 ) );
     this._maskGeometry.addAttribute( 'a_randomColor', new THREE.BufferAttribute( randomColors, 1 ) );
 
     const texture = States.resources.getTexture('orange-preview').media;
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
     texture.needsUpdate = true;
 
     const baseShader = THREE.ShaderLib.phong;

@@ -92,7 +92,7 @@ export default class ProjectView {
       this,
       {
         delay,
-        _firstScale: 0.5,
+        _firstScale: 0.3,
       },
     );
 
@@ -417,6 +417,10 @@ export default class ProjectView {
 
   resize() {
     this._bodyOffsetHeight = document.body.offsetHeight;
+
+    if (this._skipPreview) {
+      TweenLite.set( this._ui.titleContainer, { y: window.innerHeight * -0.99, force3D: true } );
+    }
   }
 
   @autobind

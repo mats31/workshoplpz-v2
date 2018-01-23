@@ -39,6 +39,7 @@ class Preview extends THREE.Object3D {
 
   show({ delay = 0 } = {}) {
     TweenLite.killTweensOf(this._material.uniforms.u_alpha);
+    this.visible = true;
 
     TweenLite.to(
       this._material.uniforms.u_alpha,
