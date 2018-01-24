@@ -97,6 +97,6 @@ export default {
     ],
     { ignore: ['.DS_Store', '.keep'] }),
     new ExtractTextPlugin('[name]-[hash].min.css', { allChunks: true }),
-    new CleanWebpackPlugin(['build'], { root: `${__dirname}` }),
+    new CleanWebpackPlugin(['build'], { root: path.resolve(__dirname, '..') }),
   ],
 };

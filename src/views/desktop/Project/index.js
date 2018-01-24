@@ -22,7 +22,7 @@ export default class ProjectView {
     );
 
     this._ui = {
-      close: this.el.querySelector('.js-project__close'),
+      close: this.el.querySelector('.js-project__closeContainer'),
       firstContainer: this.el.querySelector('.js-project__firstContainer'),
       titleContainer: this.el.querySelector('.js-project__titleContainer'),
       title: this.el.querySelector('.js-project__title'),
