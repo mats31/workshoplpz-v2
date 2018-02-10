@@ -30,17 +30,7 @@ class Text extends THREE.Object3D {
     this._mesh = new THREE.Mesh(this._geometry, this._material);
     this.add(this._mesh);
 
-    const xScale = 30;
-    // const xScale = 15;
-    const yScale = xScale / ( this._texture.image.width / this._texture.image.height );
-    this.scale.set( xScale, yScale, 1 );
-
     this.position.setY(this._initialY);
-  }
-
-  setupEvent() {
-
-    Signals.onResize.add( this._onResize.bind(this) );
   }
 
   // State ---------------------------------------------------------------------
@@ -109,10 +99,11 @@ class Text extends THREE.Object3D {
 
   // Events --------------------------------------------------------------------
 
-  onResize( wW, wH ) {
+  resize() {
+    const xScale = Math.min( 30, window.innerWidth * 0.02 );
+    const yScale = xScale / ( this._texture.image.width / this._texture.image.height );
 
-    this._wW = wW;
-    this._wH = wH;
+    this.scale.set( xScale, yScale, 1 );
   }
 }
 

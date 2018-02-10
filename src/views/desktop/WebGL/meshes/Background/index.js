@@ -26,7 +26,7 @@ class Background extends THREE.Object3D {
       side: THREE.DoubleSide,
       uniforms: {
         u_map: { type: 't', value: map },
-        u_gradient: { type: 'v2', value: States.version === 'low' ? new THREE.Vector2(0.2, 0.8) : new THREE.Vector2(0.5, 0.7) },
+        u_gradient: { type: 'v2', value: new THREE.Vector2(0.4, 0.6) },
       },
       wireframe: false,
     });

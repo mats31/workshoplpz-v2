@@ -2,7 +2,8 @@
 
 .menu {
   @include font-bold();
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+  letter-spacing: 0.04rem;
   padding: 0 5%;
   position: fixed;
   top: 6.7rem;

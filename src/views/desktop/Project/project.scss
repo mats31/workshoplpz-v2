@@ -103,9 +103,30 @@
   width: 100%;
 }
 
+.project__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 60px;
+}
+
+  .project__scrollLine {
+    width: 1px;
+    height: 50px;
+    background: #1a1a1a;
+    left: 50%;
+    position: relative;
+    top: 0;
+  }
+
+  .project__scrollText {
+    @include font-body();
+    color: #1a1a1a;
+    margin-top: 20px;
+  }
+
 .project__sections {
   position: relative;
-  padding-top: 31rem;
+  padding-top: 12rem;
 }
 
 .project__subtitleContainer {

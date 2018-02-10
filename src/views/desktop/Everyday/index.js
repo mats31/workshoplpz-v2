@@ -79,11 +79,11 @@ export default class EverydayView {
         },
       );
     } else {
-      this._translationShow = 400;
+      this._translationShow = 800;
       TweenLite.set(this.el, { y: 0 });
       TweenLite.to(
         this,
-        2.1,
+        2.2,
         {
           delay,
           _translationShow: 0,
@@ -118,10 +118,10 @@ export default class EverydayView {
     } else {
       TweenLite.to(
         this,
-        1.3,
+        0.8,
         {
           _translationShow: '+=400',
-          ease: 'Expo.easeInOut',
+          ease: 'Power4.easeIn',
           onComplete: () => {
             this.needsUpdate = false;
             this._translationShow = 0;

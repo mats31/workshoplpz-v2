@@ -20,9 +20,10 @@ varying vec2 vUv;
 
 void main() {
 
-  vec3 backgroundColor = vec3( 40. / 255. );
+  vec3 bottomBackgroundColor = vec3( 26. ) / 255.;
+  vec3 topBackgroundColor = vec3( 49., 50., 52. ) / 255.;
   float gradient = smoothstep( u_gradient.x, u_gradient.y, vUv.y );
-  vec3 color = backgroundColor * abs( gradient - 1. );
+  vec3 color = mix( bottomBackgroundColor, topBackgroundColor, gradient );
   float alpha = 1.;
 
   // gl_FragColor = vec4(color, alpha);

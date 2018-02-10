@@ -45,6 +45,7 @@ export default class HomeMenuView {
   show({ delay = 0 } = {}) {
     this._setupEvents();
 
+    this.el.style.display = 'block';
     TweenLite.to(
       this.el,
       1,
@@ -64,6 +65,9 @@ export default class HomeMenuView {
       {
         delay,
         opacity: 0,
+        onComplete: () => {
+          this.el.style.display = 'none';
+        },
       },
     );
   }

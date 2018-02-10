@@ -67,8 +67,8 @@ void main() {
 
 	#include <begin_vertex>
 
-	transformed.x += ( cos( u_time * u_speed ) * 1. ) * u_direction.x;
-	transformed.y += ( sin( u_time * u_speed ) * 1. ) * u_direction.y;
+	transformed.x += ( cos( u_time * u_speed ) * .5 ) * u_direction.x;
+	transformed.y += ( sin( u_time * u_speed ) * .5 ) * u_direction.y;
 	vec3 finalPosition = a_finalPosition;
 
 	transformed = mix( transformed, finalPosition, u_morph );

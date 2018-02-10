@@ -26,6 +26,7 @@ export default class ProjectView {
       firstContainer: this.el.querySelector('.js-project__firstContainer'),
       titleContainer: this.el.querySelector('.js-project__titleContainer'),
       title: this.el.querySelector('.js-project__title'),
+      titleOffset: this.el.querySelector('.js-project__titleOffset'),
       preview: this.el.querySelector('.js-project__preview'),
       layer: this.el.querySelector('.js-project__titleLayer'),
       sections: this.el.querySelector('.js-project__sections'),
@@ -62,14 +63,21 @@ export default class ProjectView {
     this._previewY = 0;
     this._scrollState = 1;
 
+    this._titleOffset = new THREE.Vector2(0, 0);
+    this._previewOffset = new THREE.Vector2(0, 0);
+    this._mouse = new THREE.Vector2();
+
     this._bodyOffsetHeight = document.body.offsetHeight;
     this._distanceToBottom = document.body.offsetHeight;
+
+    this._medias = [];
   }
 
   _setupEvents() {
     this._ui.close.addEventListener('mouseenter', this._onCloseMouseenter);
     this._ui.close.addEventListener('mouseout', this._onCloseMouseout);
     this._ui.close.addEventListener('click', this._onCloseClick);
+    this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
     Signals.onScrollWheel.add(this._onScrollWheel);
@@ -106,6 +114,33 @@ export default class ProjectView {
         onComplete: () => {
           this._showAnimationDone = true;
         },
+      },
+    );
+
+    TweenLite.fromTo(
+      this._ui.title,
+      1.1,
+      {
+        x: '-50%',
+        y: 50,
+      },
+      {
+        delay: delay + 0.05,
+        y: 0,
+        ease: 'Power2.easeOut',
+      },
+    );
+
+    TweenLite.fromTo(
+      this._ui.preview,
+      1,
+      {
+        y: 50,
+      },
+      {
+        delay: delay + 0.05,
+        y: 0,
+        ease: 'Power4.easeOut',
       },
     );
 
@@ -189,14 +224,18 @@ export default class ProjectView {
       if (this._project.id === lastRouteResolved.params.id) {
 
         // Title
-        this._ui.title.innerHTML = this._project.title;
+        this._ui.titleOffset.innerHTML = this._project.title;
 
         // Preview
         const preview = States.resources.getImage(`${this._project.id}-preview`).media;
         while (this._ui.preview.firstChild) {
           this._ui.preview.removeChild(this._ui.preview.firstChild);
         }
-        this._ui.preview.appendChild(preview);
+        const previewOffset = document.createElement('div');
+        previewOffset.classList.add('js-project__previewOffset');
+        previewOffset.appendChild(preview);
+        this._ui.preview.appendChild(previewOffset);
+        this._ui.previewOffset = previewOffset;
 
         // Subtitle
         this._ui.subtitle.innerHTML = this._project.title;
@@ -220,6 +259,8 @@ export default class ProjectView {
           this._ui.medias.removeChild(this._ui.medias.firstChild);
         }
 
+        this._medias = [];
+
         for (let j = 0; j < this._project.medias.length; j++) {
 
           const media = document.createElement('div');
@@ -234,13 +275,15 @@ export default class ProjectView {
           } else {
             const video = document.createElement('video');
             video.controls = false;
-            video.muted = true;
+            video.muted = false;
             video.onload = () => { console.log(1); video.play(); };
             video.src = `videos/${this._project.medias[j].id}.mp4`;
 
             media.appendChild(video);
             this._ui.medias.appendChild(media);
           }
+
+          this._medias.push(media);
         }
 
         this._ui.scaleElements = this.el.querySelectorAll('.js-project__scale');
@@ -411,6 +454,12 @@ export default class ProjectView {
   }
 
   @autobind
+  _onTitleContainerMousemove(event) {
+    this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    this._mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+  }
+
+  @autobind
   _onResize() {
     this.resize();
   }
@@ -418,7 +467,7 @@ export default class ProjectView {
   resize() {
     this._bodyOffsetHeight = document.body.offsetHeight;
 
-    if (this._skipPreview) {
+    if (this._skippedPreview) {
       TweenLite.set( this._ui.titleContainer, { y: window.innerHeight * -0.99, force3D: true } );
     }
   }
@@ -473,9 +522,34 @@ export default class ProjectView {
 
   update() {
     if (this._needsUpdate) {
+      this._updateTitleContainer();
       this._updateScaleElements();
       this._updateScrollState();
+      this._checkViewport();
     }
+  }
+
+  _updateTitleContainer() {
+    const x = this._mouse.x * 10;
+    const y = this._mouse.y * -10;
+
+    this._titleOffset.x += ( (x) - this._titleOffset.x ) * 0.1;
+    this._titleOffset.y += ( (y) - this._titleOffset.y ) * 0.1;
+
+    this._previewOffset.x += ( (x * -1) - this._previewOffset.x ) * 0.15;
+    this._previewOffset.y += ( (y * -1) - this._previewOffset.y ) * 0.15;
+
+    this._ui.titleOffset.style.webkitTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
+    this._ui.titleOffset.style.MozTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
+    this._ui.titleOffset.style.msTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
+    this._ui.titleOffset.style.OTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
+    this._ui.titleOffset.style.transform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
+
+    this._ui.previewOffset.style.webkitTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
+    this._ui.previewOffset.style.MozTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
+    this._ui.previewOffset.style.msTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
+    this._ui.previewOffset.style.OTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
+    this._ui.previewOffset.style.transform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
   }
 
   _updateScaleElements() {
@@ -555,6 +629,27 @@ export default class ProjectView {
       this._ui.layer.style.OTransform = `scale3d(${this._scrollState},1,1)`;
       this._ui.layer.style.transform = `scale3d(${this._scrollState},1,1)`;
       this._ui.layer.style.transformOrigin = '0 0';
+    }
+  }
+
+  _checkViewport() {
+    for (let i = 0; i < this._medias.length; i++) {
+      const video = this._medias[i].querySelector('video');
+
+      if (video) {
+        const rect = this._medias[i].getBoundingClientRect();
+        const height = this._medias[i].offsetHeight;
+        const maxScroll = document.body.scrollTop + window.innerHeight;
+        const top = rect.top + document.body.scrollTop;
+
+        if (top >= -height && top <= maxScroll) {
+          if (video.paused) {
+            video.play();
+          }
+        } else if (!video.paused) {
+          video.pause();
+        }
+      }
     }
   }
 

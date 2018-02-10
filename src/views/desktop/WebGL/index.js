@@ -88,8 +88,8 @@ export default class WebGL {
       antialias: true,
     });
     this._renderer.setSize(width, height);
-    // this._renderer.setClearColor(0x282828);
-    this._renderer.setClearColor(0x000000);
+    this._renderer.setClearColor(0x313234);
+    // this._renderer.setClearColor(0x000000);
     // this._renderer.setPixelRatio();
     // console.log(this._renderer.getPixelRatio());
 
@@ -216,14 +216,13 @@ export default class WebGL {
     this.showProject(delay);
 
     if (transitionToBottom) {
-      this.cameraToBottom(delay, transitionIn);
+      this.cameraToBottom(delay, transitionIn, fromProject);
     }
 
     if (transitionIn) {
       this.isAnimating = true;
 
-      const customDelay = delay < 1 && delay !== 0.1 ? delay : delay + 1.5;
-      let value;
+      let customDelay = delay < 1 && delay !== 0.1 ? delay : delay + 1.5;
       let translationShow;
 
       // if (direction === 'right') {
@@ -239,6 +238,7 @@ export default class WebGL {
 
       if (fromProject) {
         translationShow = `-=${this._projectContainers[this._nextIndex].position.x}`;
+        customDelay = delay + 0.9;
       } else {
         translationShow = direction === 'right' ? `-=${this._xStep}` : `+=${this._xStep}`;
       }
@@ -274,12 +274,15 @@ export default class WebGL {
     }
   }
 
-  cameraToBottom(delay, transitionIn) {
+  cameraToBottom(delay, transitionIn, fromProject) {
+
+    const duration = fromProject ? 1.55 : 2.55;
+
     this.isAnimating = true;
     TweenLite.killTweensOf([this._camera.position, this._grain.position]);
     TweenLite.to(
       this._camera.position,
-      2.55,
+      duration,
       {
         delay,
         y: this._baseY,
@@ -287,9 +290,10 @@ export default class WebGL {
       },
     );
 
+    this._grain.show();
     TweenLite.to(
       this._grain.position,
-      2.55,
+      duration,
       {
         delay,
         y: this._baseY,
@@ -413,10 +417,10 @@ export default class WebGL {
         TweenLite.killTweensOf(this._translationShow);
         TweenLite.to(
           this,
-          1.3,
+          0.9,
           {
             _translationShow: `-=${value}`,
-            ease: 'Expo.easeInOut',
+            ease: 'Power4.easeIn',
             onComplete: () => {
               this.isAnimating = false;
               this._translationShow = this._xStep * 2;
@@ -424,7 +428,7 @@ export default class WebGL {
           },
         );
 
-        this.hideProject(0.5);
+        this.hideProject(0.4);
         break;
       case pages.ABOUT:
         this._state = 'about';
@@ -550,7 +554,7 @@ export default class WebGL {
     this._renderer.setSize( this._width, this._height );
 
     this._projectPerspectiveSize = getPerspectiveSize(this._camera, this._zDepth);
-    this._xStep = Math.max( 35, this._projectPerspectiveSize.width * 0.7 );
+    this._xStep = Math.max( 35, this._projectPerspectiveSize.width * 0.6 );
     // this._xStep = this._projectPerspectiveSize.width * 1.5;
 
     // const scaleFactor = Math.min( 1, this._width / this._scaleStep );
@@ -558,7 +562,7 @@ export default class WebGL {
     for (let i = 0; i < this._projectContainers.length; i += 1) {
 
       const x = this._xStep * i + this._xStep;
-      const y = i % 2 === 0 ? 15 : 22;
+      const y = i % 2 === 0 ? 17 : 22;
       const z = this._zDepth;
       const initialPosition = new THREE.Vector3(x, y, z);
       this._projectContainers[i].setInitialPosition(initialPosition);
@@ -573,7 +577,7 @@ export default class WebGL {
 
     if (this._background) {
       const backgroundPerspectiveSize = getPerspectiveSize(this._camera, this._background.position.z);
-      this._background.scaleBackground( backgroundPerspectiveSize.width * 1.1, backgroundPerspectiveSize.height * 1.1 );
+      this._background.scaleBackground( backgroundPerspectiveSize.width * 1.1, backgroundPerspectiveSize.height * 2 );
     }
   }
 

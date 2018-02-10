@@ -240,6 +240,7 @@ class ProjectContainer extends THREE.Object3D {
     // this._perspectiveHeight = Math.abs( ( 2 * Math.tan( ( fov / 2 ) ) * depth ) * 3.5 );
     // this._perspectiveWidth = Math.abs( ( 2 * Math.tan( ( hFOV / 2 ) ) * depth ) * 3.5 );
     this._mask.resize( camera, this.position.z );
+    this._text.resize();
 
     // if (!States.application.activateProject) {
     //

@@ -140,7 +140,7 @@ export default class DesktopAppView {
           this._webgl.show({ delay: 1 });
         }
 
-        this._project.hide({ delay: 0.1 });
+        this._project.hide({ delay: 0 });
 
         this._everyday.hide({ delay: 0.5 });
 
@@ -183,7 +183,7 @@ export default class DesktopAppView {
         } else if (!this._previousState) {
           this._everyday.show({ delay: 0.5, transitionFromDown: true });
         } else {
-          this._everyday.show({ delay: 0.7 });
+          this._everyday.show({ delay: 0.6 });
         }
         break;
       case pages.ABOUT:
