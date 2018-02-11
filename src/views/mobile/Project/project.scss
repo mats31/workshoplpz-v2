@@ -1,0 +1,271 @@
+@import '~stylesheets/common/global-imports';
+
+.project {
+  display: none;
+  position: relative;
+  opacity: 0;
+  z-index: $zindex-1;
+}
+
+.project__back {
+  position: absolute;
+  right: 70px;
+  top: 70px;
+}
+
+.project__container {
+  color: #ffffff;
+  background: #313234;
+  padding-bottom: 50rem;
+}
+
+.project__closeContainer {
+  opacity: 0.5;
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  height: 12rem;
+  width: 12rem;
+  z-index: $zindex-2;
+}
+
+.project__close {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+
+  .project__closeLine {
+    background: white;
+    height: 0.1rem;
+    width: 6rem;
+    position: relative;
+    top: 50%;
+    transform-origin: center center;
+    pointer-events: none;
+  }
+
+  .project__closeLine:first-child {
+    transform: rotate(45deg);
+  }
+
+  .project__closeLine:last-child {
+    transform: rotate(-45deg);
+  }
+}
+
+.project__titleContainer {
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: $zindex-1;
+}
+
+.project__previewContainer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  min-width: 450px;
+  width: 48.671875%;
+}
+
+.project__title {
+  @include font-title();
+  text-align: center;
+  position: relative;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  display: inline-block;
+}
+
+.project__preview {
+  // width: 48.671875%;
+  // transform: translate3d(-50%, 0, 0);
+  margin-top: -9rem;
+  position: relative;
+  z-index: $zindex-1;
+}
+
+  .project__preview img {
+    display: block;
+    width: 100%;
+  }
+
+.project__titleLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.project__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 60px;
+}
+
+  .project__scrollLine {
+    width: 1px;
+    height: 50px;
+    background: #1a1a1a;
+    left: 50%;
+    position: relative;
+    top: 0;
+  }
+
+  .project__scrollText {
+    @include font-body();
+    color: #1a1a1a;
+    margin-top: 20px;
+  }
+
+.project__sections {
+  position: relative;
+  padding-top: 12rem;
+}
+
+.project__subtitleContainer {
+  padding: 0 5.46875%;
+  margin-bottom: 9.5rem;
+}
+
+.project__subtitle {
+  @include font-title();
+  margin-bottom: 5rem;
+  opacity: 0;
+}
+
+.project__description {
+  @include font-description();
+  opacity: 0;
+}
+
+.project__firstContainer {
+  height: 100vh;
+  min-height: 69.5rem;
+  position: relative;
+  width: 100%
+}
+
+.project__flexContainer {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+
+.project__firstFlex {
+  padding-top: 4.5rem;
+}
+
+// .project__firstFlex::before {
+//   content: '';
+//   display: block;
+//   background: white;
+//   width: 55px;
+//   height: 1px;
+//   position: absolute;
+//   left: 50%;
+//   top: 0;
+//   transform: translate3d(-50%, -50%, 0);
+// }
+
+.project__column {
+  // padding: 0 5% 0 1.64%;
+  width: 23.4375%;
+}
+
+.project__firstColumn {
+  // padding: 0 6% 0 1.64%;
+  padding-left: 5.46875%;
+  width: 21.09375%;
+}
+
+.project__lastColumn {
+  // padding: 0 6% 0 1.64%;
+  padding-right: 5.46875%;
+  width: 21.09375%;
+}
+
+.project__category {
+  margin: 0 0 6rem 0;
+  @include font-subtitle();
+  opacity: 0;
+}
+
+.project__divider {
+  float: right;
+  width: 50%;
+}
+
+.project__date {
+  @include font-body();
+  margin: 0;
+  margin-bottom: 7rem;
+}
+
+.project__content {
+  opacity: 0;
+}
+
+.project__clientName {
+  margin: 0 0 10rem 0;
+  opacity: 0;
+}
+
+.project__clientVisit {
+  @include font-subtitle();
+  border-bottom: 1px solid #ffffff;
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 1rem;
+  opacity: 0;
+}
+
+.project__role {
+  margin-bottom: 9rem;
+}
+
+.project__roleDescription {
+  opacity: 0;
+}
+
+.project__pitchDescription {
+  opacity: 0;
+}
+
+.project__secondContainer {
+  position: relative;
+  width: 100%
+}
+
+.project__medias {
+  padding: 0 5.46875%;
+}
+
+.project__media {
+  margin-bottom: 13rem;
+}
+
+.project__media:last-child {
+  margin-bottom: 0;
+}
+
+  .project__media img {
+    width: 100%;
+    display: block;
+  }
+
+  .project__media video {
+    display: block;
+    width: 100%;
+  }
+
+// .project__scale, .project__scale img {
+//   transform-origin: 0% 0% 0px !important;
+// }

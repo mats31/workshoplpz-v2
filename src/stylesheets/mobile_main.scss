@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+@import "common/normalize";
+@import "common/fontface";
+@import "mobile/mobile_fonts";
+@import "common/variables";
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  // min-width: 95rem;
+}
+
+#application {
+  @include font-body();
+  cursor: none;
+
+  a{
+    cursor: none;
+  }
+}

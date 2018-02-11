@@ -1,0 +1,69 @@
+@import '~stylesheets/common/global-imports';
+
+.ui {
+  position: absolute;
+  left: 50%;
+  bottom: 8.7rem;
+  transform: translate(-50%, 0) scaleX(0);
+  z-index: $zindex-2;
+
+  .ui__line {
+    width: 5rem;
+    background: white;
+    height: 0.1rem;
+    position: relative;
+  }
+
+  .ui__topLine {
+    animation: topline 3s infinite;
+  }
+
+  .ui__bottomLine {
+    animation: bottomline 3s infinite;
+    top: 2rem;
+  }
+}
+
+@keyframes topline {
+  0% {
+    transform: translateX(0%);
+  }
+
+  25% {
+    transform: translateX(0%);
+  }
+
+  50% {
+    transform: translateX(25%);
+  }
+
+  75% {
+    transform: translateX(-25%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes bottomline {
+  0% {
+    transform: translateX(0%);
+  }
+
+  25% {
+    transform: translateX(0%);
+  }
+
+  50% {
+    transform: translateX(-25%);
+  }
+
+  75% {
+    transform: translateX(25%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
