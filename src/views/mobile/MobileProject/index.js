@@ -4,8 +4,8 @@ import * as pages from 'core/pages';
 import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible, toggle } from 'core/decorators';
-import template from './project.tpl.html';
-import './project.scss';
+import template from './mobile_project.tpl.html';
+import './mobile_project.scss';
 
 
 @visible()
@@ -77,7 +77,7 @@ export default class ProjectView {
     this._ui.close.addEventListener('mouseenter', this._onCloseMouseenter);
     this._ui.close.addEventListener('mouseout', this._onCloseMouseout);
     this._ui.close.addEventListener('click', this._onCloseClick);
-    this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
+    // this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
     Signals.onScrollWheel.add(this._onScrollWheel);

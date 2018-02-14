@@ -1,9 +1,10 @@
-@import '~stylesheets/common/global-imports';
+@import '~stylesheets/mobile/mobile-global-imports';
 
 .project {
   display: none;
   position: relative;
   opacity: 0;
+  overflow: hidden;
   z-index: $zindex-1;
 }
 
@@ -75,6 +76,7 @@
 
 .project__title {
   @include font-title();
+  font-size: 5rem;
   text-align: center;
   position: relative;
   left: 50%;
@@ -85,8 +87,11 @@
 .project__preview {
   // width: 48.671875%;
   // transform: translate3d(-50%, 0, 0);
-  margin-top: -9rem;
+  left: 50%;
+  margin-top: -2rem;
+  margin-left: -40%;
   position: relative;
+  width: 80%;
   z-index: $zindex-1;
 }
 
@@ -107,6 +112,7 @@
   position: absolute;
   left: 50%;
   bottom: 60px;
+  transform: translateX(-50%);
 }
 
   .project__scrollLine {

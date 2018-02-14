@@ -1,8 +1,8 @@
 import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible } from 'core/decorators';
-import template from './about.tpl.html';
-import './about.scss';
+import template from './mobile_about.tpl.html';
+import './mobile_about.scss';
 
 
 @visible()

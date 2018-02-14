@@ -4,10 +4,10 @@ import raf from 'raf';
 import { autobind } from 'core-decorators';
 import LoaderView from 'views/common/Loader/Loader';
 import MobileHomeView from 'views/mobile/MobileHome';
-import AboutView from 'views/desktop/About';
+import MobileAboutView from 'views/mobile/MobileAbout';
 import MobileWebGLView from 'views/mobile/MobileWebGL';
-import ProjectView from 'views/desktop/Project';
-import EverydayView from 'views/desktop/Everyday';
+import MobileProjectView from 'views/mobile/MobileProject';
+import MobileEverydayView from 'views/mobile/MobileEveryday';
 import UIView from 'views/desktop/UI';
 
 export default class MobileAppView {
@@ -52,7 +52,7 @@ export default class MobileAppView {
   }
 
   _setupAboutView() {
-    const view = new AboutView({
+    const view = new MobileAboutView({
       parent: this.el,
     });
 
@@ -68,7 +68,7 @@ export default class MobileAppView {
   }
 
   _setupProjectView() {
-    const view = new ProjectView({
+    const view = new MobileProjectView({
       parent: this.el,
     });
 
@@ -76,7 +76,7 @@ export default class MobileAppView {
   }
 
   _setupEverydayView() {
-    const view = new EverydayView({
+    const view = new MobileEverydayView({
       parent: this.el,
     });
 

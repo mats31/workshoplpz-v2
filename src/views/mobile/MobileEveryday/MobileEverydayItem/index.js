@@ -3,7 +3,7 @@ import { autobind } from 'core-decorators';
 import { visible, focused, active } from 'core/decorators';
 import createDOM from 'utils/dom/createDOM';
 import { modulo } from 'utils/math';
-import template from './everydayItem.tpl.html';
+import template from './mobile_everydayItem.tpl.html';
 
 
 @visible()
@@ -100,10 +100,10 @@ export default class EverydayItem {
   }
 
   _setupEvents() {
-    this.el.addEventListener('mousedown', this._onMousedown);
-    this.el.addEventListener('mouseenter', this._onMouseenter);
-    this.el.addEventListener('mouseleave', this._onMouseleave);
-    this.el.addEventListener('mouseout', this._onMouseleave);
+    this.el.addEventListener('touchstart', this._onMousedown);
+    // this.el.addEventListener('touchenter', this._onMouseenter);
+    // this.el.addEventListener('mouseleave', this._onMouseleave);
+    this.el.addEventListener('touchend', this._onMouseleave);
   }
 
   // State ---------------------------------------------------------------------

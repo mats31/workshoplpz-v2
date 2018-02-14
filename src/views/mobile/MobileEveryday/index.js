@@ -2,13 +2,13 @@ import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible } from 'core/decorators';
 import everydays from 'config/everydays';
-import EverydayItem from './EverydayItem';
-import template from './everyday.tpl.html';
-import './everyday.scss';
+import MobileEverydayItem from './MobileEverydayItem';
+import template from './mobile_everyday.tpl.html';
+import './mobile_everyday.scss';
 
 
 @visible()
-export default class EverydayView {
+export default class MobileEverydayView {
 
   constructor(options) {
     this.el = options.parent.appendChild(
@@ -31,7 +31,7 @@ export default class EverydayView {
 
   _setupItems() {
     for (let i = 0; i < everydays.everydayList.length; i++) {
-      const everydayItem = new EverydayItem({
+      const everydayItem = new MobileEverydayItem({
         id: everydays.everydayList[i].id,
         parent: this.el,
         index: i,
@@ -43,10 +43,10 @@ export default class EverydayView {
   }
 
   _setupEvents() {
-    this.el.addEventListener('mousedown', this._onMousedown);
-    this.el.addEventListener('mousemove', this._onMousemove);
-    this.el.addEventListener('mouseup', this._onMouseup);
-    document.addEventListener('mouseleave', this._onMouseup);
+    this.el.addEventListener('touchstart', this._onMousedown);
+    this.el.addEventListener('touchmove', this._onMousemove);
+    this.el.addEventListener('touchend', this._onMouseup);
+    // document.addEventListener('mouseleave', this._onMouseup);
 
     Signals.onResize.add(this._onResize);
     Signals.onEverydayMousedown.add(this._onEverydayMousedown);
@@ -138,18 +138,18 @@ export default class EverydayView {
   _onMousedown(event) {
     this._clicked = true;
 
-    this._mouse.x = event.clientX;
-    this._mouse.y = event.clientY;
+    this._mouse.x = event.touches[0].clientX;
+    this._mouse.y = event.touches[0].clientY;
   }
 
   @autobind
   _onMousemove(event) {
     if (this._clicked) {
 
-      this._delta = ( event.clientX - this._mouse.x ) * 2;
+      this._delta = ( event.touches[0].clientX - this._mouse.x ) * 2;
 
-      this._mouse.x = event.clientX;
-      this._mouse.y = event.clientY;
+      this._mouse.x = event.touches[0].clientX;
+      this._mouse.y = event.touches[0].clientY;
 
       clearTimeout(this._timeout);
 
