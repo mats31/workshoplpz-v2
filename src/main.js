@@ -9,6 +9,7 @@ import Router from 'core/Router';
 // import Application from 'views/desktop/Application/Application';
 // import MobileApplication from 'views/mobile/Application/Application';
 // import Router from 'core/Router';
+// import './stylesheets/main.scss';
 
 class Main {
 
@@ -20,6 +21,9 @@ class Main {
   }
 
   start() {
+    // this._application = new Application();
+    // this._onLoadApplication();
+
     if (States.MOBILE) {
       import('views/mobile/MobileApplication/MobileApplication').then( (Application) => {
         import('./stylesheets/mobile_main.scss').then( (() => {
