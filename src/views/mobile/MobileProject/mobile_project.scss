@@ -5,6 +5,7 @@
   position: relative;
   opacity: 0;
   overflow: hidden;
+  height: 100vh;
   z-index: $zindex-1;
 }
 
@@ -21,12 +22,12 @@
 }
 
 .project__closeContainer {
-  opacity: 0.5;
+  opacity: 1;
   position: fixed;
   right: 1rem;
   top: 1rem;
-  height: 12rem;
-  width: 12rem;
+  height: 10rem;
+  width: 6rem;
   z-index: $zindex-2;
 }
 
@@ -40,7 +41,7 @@
   .project__closeLine {
     background: white;
     height: 0.1rem;
-    width: 6rem;
+    width: 4rem;
     position: relative;
     top: 50%;
     transform-origin: center center;
@@ -136,8 +137,7 @@
 }
 
 .project__subtitleContainer {
-  padding: 0 5.46875%;
-  margin-bottom: 9.5rem;
+  margin-bottom: 5rem;
 }
 
 .project__subtitle {
@@ -152,10 +152,10 @@
 }
 
 .project__firstContainer {
-  height: 100vh;
-  min-height: 69.5rem;
   position: relative;
-  width: 100%
+  width: 100%;
+  padding: 0 15.625% 0 12.5%;
+  box-sizing: border-box;
 }
 
 .project__flexContainer {
@@ -199,7 +199,7 @@
 }
 
 .project__category {
-  margin: 0 0 6rem 0;
+  margin: 0 0 4.5rem 0;
   @include font-subtitle();
   opacity: 0;
 }
@@ -212,7 +212,7 @@
 .project__date {
   @include font-body();
   margin: 0;
-  margin-bottom: 7rem;
+  margin-bottom: 7.4rem;
 }
 
 .project__content {
@@ -231,6 +231,7 @@
   margin: 0;
   padding-bottom: 1rem;
   opacity: 0;
+  margin-bottom: 7.4rem;
 }
 
 .project__role {
@@ -241,17 +242,29 @@
   opacity: 0;
 }
 
+.project__pitch {
+  margin-bottom: 7.4rem;
+}
+
+.project__team {
+  margin-bottom: 7.4rem;
+}
+
 .project__pitchDescription {
   opacity: 0;
+}
+
+.project__teamDescription {
+  line-height: 3rem;
+}
+
+.project__roleDescription {
+  line-height: 3rem;
 }
 
 .project__secondContainer {
   position: relative;
   width: 100%
-}
-
-.project__medias {
-  padding: 0 5.46875%;
 }
 
 .project__media {

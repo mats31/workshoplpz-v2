@@ -276,7 +276,6 @@ export default class ProjectView {
             const video = document.createElement('video');
             video.controls = false;
             video.muted = false;
-            video.onload = () => { console.log(1); video.play(); };
             video.src = `videos/${this._project.medias[j].id}.mp4`;
 
             media.appendChild(video);

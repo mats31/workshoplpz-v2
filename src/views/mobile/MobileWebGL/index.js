@@ -10,8 +10,8 @@ import Background from './meshes/Background';
 import Grain from './meshes/Grain';
 import Ground from './meshes/Ground';
 import ProjectContainer from './meshes/ProjectContainer';
-import template from './webgl.tpl.html';
-import './webgl.scss';
+import template from './mobile_webgl.tpl.html';
+import './mobile_webgl.scss';
 
 @toggle('projectVisible', 'showProject', 'hideProject', false)
 @toggle('cameraOnTop', 'cameraToTop', 'cameraToBottom', true)
@@ -50,7 +50,7 @@ export default class MobileWebGL {
 
     this._clock = new THREE.Clock();
 
-    this._mouse = new THREE.Vector2( 0, 0 );
+    this._mouse = new THREE.Vector2( 1, 1 );
     this._previousMouse = new THREE.Vector2( 0, 0 );
 
     // this._cameraTarget = new THREE.Vector3( 0, this._baseY, -150 );
@@ -173,7 +173,6 @@ export default class MobileWebGL {
     this._el.addEventListener('touchstart', this._onWebGLMousedown);
     this._el.addEventListener('touchend', this._onWebGLMouseup);
     this._el.addEventListener('touchmove', this._onWeblGLMousemove);
-    // this._el.addEventListener('touchend', this._onWeblGLMouseleave);
 
     Signals.onResize.add(this._onResize);
     Signals.onProjectClick.add(this.onProjectClick);
@@ -384,6 +383,7 @@ export default class MobileWebGL {
     switch (page) {
       case pages.HOME:
         this._state = 'home';
+        this._mouse = new THREE.Vector2( 1, 1 );
         for (let i = 0; i < this._projectContainers.length; i++) {
           this._projectContainers[i].deactiveFocus();
           this._projectContainers[i].showText();
@@ -495,19 +495,11 @@ export default class MobileWebGL {
   }
 
   @autobind
-  _onWeblGLMouseleave() {
-    this._clicked = false;
-    this._translationDelta = 0;
-    for (let i = 0; i < this._projectContainers.length; i++) {
-      this._projectContainers[i].unpress();
-    }
-    // this._translationEase = 0;
-  }
-
-  @autobind
   _onWebGLMouseup() {
     this._clicked = false;
     this._translationDelta = 0;
+    this._mouse = new THREE.Vector2( 1, 1 );
+    this._drag = false;
     for (let i = 0; i < this._projectContainers.length; i++) {
       this._projectContainers[i].unpress();
     }
@@ -567,6 +559,8 @@ export default class MobileWebGL {
       const backgroundPerspectiveSize = getPerspectiveSize(this._camera, this._background.position.z);
       this._background.scaleBackground( backgroundPerspectiveSize.width * 1.1, backgroundPerspectiveSize.height * 2 );
     }
+
+    this._renderer.render(this._scene, this._camera);
   }
 
   // UPDATE -------------------------------------------------------------------

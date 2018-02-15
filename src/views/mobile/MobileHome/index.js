@@ -4,8 +4,8 @@ import createDOM from 'utils/dom/createDOM';
 import { autobind } from 'core-decorators';
 import { visible } from 'core/decorators';
 import MobileHomeMenuView from './MobileHomeMenu';
-import template from './home.tpl.html';
-import './home.scss';
+import template from './mobile_home.tpl.html';
+import './mobile_home.scss';
 
 
 @visible()

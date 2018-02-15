@@ -62,10 +62,13 @@ export default class ProjectView {
     this._targetTransformOriginY = 0;
     this._previewY = 0;
     this._scrollState = 1;
+    this._alpha = 0;
+    this._beta = 0;
+    this._gamma = 0;
 
     this._titleOffset = new THREE.Vector2(0, 0);
     this._previewOffset = new THREE.Vector2(0, 0);
-    this._mouse = new THREE.Vector2();
+    this._touches = new THREE.Vector2(0, 0);
 
     this._bodyOffsetHeight = document.body.offsetHeight;
     this._distanceToBottom = document.body.offsetHeight;
@@ -74,10 +77,9 @@ export default class ProjectView {
   }
 
   _setupEvents() {
-    this._ui.close.addEventListener('mouseenter', this._onCloseMouseenter);
-    this._ui.close.addEventListener('mouseout', this._onCloseMouseout);
+    window.addEventListener('deviceorientation', this._onDeviceOrientation);
     this._ui.close.addEventListener('click', this._onCloseClick);
-    // this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
+    this._ui.titleContainer.addEventListener('touchmove', this._onTitleContainerTouchmove);
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
     Signals.onScrollWheel.add(this._onScrollWheel);
@@ -275,8 +277,8 @@ export default class ProjectView {
           } else {
             const video = document.createElement('video');
             video.controls = false;
-            video.muted = false;
-            video.onload = () => { console.log(1); video.play(); };
+            video.muted = true;
+            video.playsInline = true;
             video.src = `videos/${this._project.medias[j].id}.mp4`;
 
             media.appendChild(video);
@@ -401,11 +403,12 @@ export default class ProjectView {
       this._ui.titleContainer,
       1,
       {
-        y: window.innerHeight * -0.99,
+        y: window.screen.height * -0.91,
         force3D: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
           document.body.style.overflow = 'visible';
+          this.el.style.height = 'auto';
           this._ui.preview.classList.remove('js-project__scale');
           this._ui.preview.classList.remove('project__scale');
           // this._ui.layer.classList.remove('js-project__scale');
@@ -423,40 +426,31 @@ export default class ProjectView {
   // Events --------------------------------------------------------------------
 
   @autobind
-  _onCloseMouseenter() {
-    TweenLite.killTweensOf(this._ui.close);
-    TweenLite.to(
-      this._ui.close,
-      0.3,
-      {
-        opacity: 1,
-      },
-    );
-    Signals.onProjectCloseMouseenter.dispatch();
-  }
-
-  @autobind
-  _onCloseMouseout() {
-    TweenLite.killTweensOf(this._ui.close);
-    TweenLite.to(
-      this._ui.close,
-      0.3,
-      {
-        opacity: 0.5,
-      },
-    );
-    Signals.onProjectCloseMouseout.dispatch();
+  _onDeviceOrientation(event) {
+    this._alpha = event.alpha;
+    this._beta = event.beta;
+    this._gamma = event.gamma;
   }
 
   @autobind
   _onCloseClick() {
-    States.router.navigateTo( pages.HOME );
+    if (this._showAnimationDone) {
+      States.router.navigateTo( pages.HOME );
+    }
   }
 
   @autobind
-  _onTitleContainerMousemove(event) {
-    this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    this._mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+  _onTitleContainerTouchmove(event) {
+    if (this._showAnimationDone) {
+      this._delta = event.touches[0].clientY - this._touches.y;
+
+      this._touches.x = event.touches[0].clientX;
+      this._touches.y = event.touches[0].clientY;
+
+      if (this._delta > 0 && !this._isSkippingPreview) {
+        this._skipPreview();
+      }
+    }
   }
 
   @autobind
@@ -468,7 +462,7 @@ export default class ProjectView {
     this._bodyOffsetHeight = document.body.offsetHeight;
 
     if (this._skippedPreview) {
-      TweenLite.set( this._ui.titleContainer, { y: window.innerHeight * -0.99, force3D: true } );
+      TweenLite.set( this._ui.titleContainer, { y: window.screen.height * -0.91, force3D: true } );
     }
   }
 
@@ -530,8 +524,8 @@ export default class ProjectView {
   }
 
   _updateTitleContainer() {
-    const x = this._mouse.x * 10;
-    const y = this._mouse.y * -10;
+    const x = this._gamma * 0.2;
+    const y = this._beta * -0.2;
 
     this._titleOffset.x += ( (x) - this._titleOffset.x ) * 0.1;
     this._titleOffset.y += ( (y) - this._titleOffset.y ) * 0.1;

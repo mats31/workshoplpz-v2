@@ -111,6 +111,7 @@ export default class MobileAppView {
     switch (page) {
       case pages.HOME:
         document.body.style.overflow = 'hidden';
+        document.addEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = false;
         this._loader.hide();
         this._about.hide({ delay: 0 });
@@ -139,6 +140,7 @@ export default class MobileAppView {
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
+        document.removeEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = true;
         this._loader.hide();
         this._about.hide({ delay: 0 });
@@ -153,6 +155,7 @@ export default class MobileAppView {
         break;
       case pages.EVERYDAYS:
         document.body.style.overflow = 'hidden';
+        document.addEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = false;
         this._loader.hide();
         this._about.hide({ delay: 0 });
@@ -171,7 +174,8 @@ export default class MobileAppView {
         }
         break;
       case pages.ABOUT:
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'visible';
+        document.removeEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = false;
         this._loader.hide();
         this._about.show({ delay: 0.65 });
@@ -208,6 +212,11 @@ export default class MobileAppView {
   @autobind
   onScrollWheel(event) {
     Signals.onScrollWheel.dispatch(event);
+  }
+
+  @autobind
+  _onDocumentTouchmove(event) {
+    event.preventDefault();
   }
 
   // Update --------------------------------------------------------------------
