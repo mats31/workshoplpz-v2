@@ -1,9 +1,11 @@
 @import '~stylesheets/common/global-imports';
 
-.home {
-  background-color: red;
-  display: none;
-  transform: translate3d(0,0,0);
-  position: relative;
-  z-index: $zindex-3;
+html.mobile {
+  .home {
+    background-color: red;
+    display: none;
+    transform: translate3d(0,0,0);
+    position: relative;
+    z-index: $zindex-3;
+  }
 }

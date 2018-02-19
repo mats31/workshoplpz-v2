@@ -1,70 +1,72 @@
 @import '~stylesheets/mobile/mobile-global-imports';
 
-.about {
-  display: none;
-  position: relative;
-  z-index: $zindex-1;
-  @include font-body();
-  color: white;
-  padding: 12rem 5rem 12rem 5rem;
-
-  .about__title {
-    @include font-title();
-    opacity: 0;
-    transform-origin: center top;
-    font-style: italic;
-    margin-bottom: 4rem;
-  }
-
-  .about__mail,
-  .about__twitter,
-  .about__instagram,
-  .about__vimeo,
-  .about__description {
-    opacity: 0;
-    transform-origin: center top;
-    @include font-body();
-  }
-
-  .about__description {
-    line-height: 3rem;
-    margin-bottom: 4rem;
-  }
-
-  .about__network {
-    margin-bottom: 3.5rem;
-  }
-
-  .about__network:last-child {
-    margin-bottom: 0;
-  }
-
-  .about__network a {
-    color: white;
-    display: block;
-    text-decoration: none;
-  }
-
-  .about__lines {
-    overflow: hidden;
-    height: 0.1rem;
-    width: 5.5rem;
+html.mobile {
+  .about {
+    display: none;
     position: relative;
-    top: 5px;
-    transform-origin: left center;
-  }
+    z-index: $zindex-1;
+    @include font-body();
+    color: white;
+    padding: 12rem 5rem 12rem 5rem;
 
-  .about__line {
-    background: white;
-    height: 0.1rem;
-    width: 5.5rem;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform-origin: left center;
-  }
+    .about__title {
+      @include font-title();
+      opacity: 0;
+      transform-origin: center top;
+      font-style: italic;
+      margin-bottom: 4rem;
+    }
 
-  // .about__line:last-child {
-  //   transform: scale(0, 1);
-  // }
+    .about__mail,
+    .about__twitter,
+    .about__instagram,
+    .about__vimeo,
+    .about__description {
+      opacity: 0;
+      transform-origin: center top;
+      @include font-body();
+    }
+
+    .about__description {
+      line-height: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .about__network {
+      margin-bottom: 3.5rem;
+    }
+
+    .about__network:last-child {
+      margin-bottom: 0;
+    }
+
+    .about__network a {
+      color: white;
+      display: block;
+      text-decoration: none;
+    }
+
+    .about__lines {
+      overflow: hidden;
+      height: 0.1rem;
+      width: 5.5rem;
+      position: relative;
+      top: 5px;
+      transform-origin: left center;
+    }
+
+    .about__line {
+      background: white;
+      height: 0.1rem;
+      width: 5.5rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: left center;
+    }
+
+    // .about__line:last-child {
+    //   transform: scale(0, 1);
+    // }
+  }
 }

@@ -17,6 +17,7 @@ export default class MobileAppView {
 
   constructor() {
 
+    document.documentElement.classList.add('mobile');
     this.el = document.getElementById('application');
 
     this._views = [];

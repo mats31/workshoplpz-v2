@@ -5,19 +5,19 @@
 @import "mobile/mobile_fonts";
 @import "common/variables";
 
-html {
+html.mobile {
   font-size: 62.5%;
-}
 
-body {
-  // min-width: 95rem;
-}
+  body {
+    // min-width: 95rem;
+  }
 
-#application {
-  @include font-body();
-  cursor: none;
-
-  a{
+  #application {
+    @include font-body();
     cursor: none;
+
+    a{
+      cursor: none;
+    }
   }
 }
