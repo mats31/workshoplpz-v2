@@ -11,6 +11,7 @@ import ProjectView from 'views/desktop/Project';
 import EverydayView from 'views/desktop/Everyday';
 import CursorView from 'views/desktop/Cursor';
 import UIView from 'views/desktop/UI';
+import 'stylesheets/main.scss';
 
 export default class DesktopAppView {
 

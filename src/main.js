@@ -6,10 +6,9 @@ import AssetLoader from 'core/AssetLoader';
 import States from 'core/States';
 import Signals from 'core/Signals'; /* exported Signals */
 import Router from 'core/Router';
-// import Application from 'views/desktop/Application/Application';
-// import MobileApplication from 'views/mobile/Application/Application';
+import Application from 'views/desktop/Application/Application';
+import MobileApplication from 'views/mobile/MobileApplication/MobileApplication';
 // import Router from 'core/Router';
-// import './stylesheets/main.scss';
 
 class Main {
 
@@ -24,21 +23,9 @@ class Main {
     // this._application = new Application();
     // this._onLoadApplication();
 
-    if (States.MOBILE) {
-      import('views/mobile/MobileApplication/MobileApplication').then( (Application) => {
-        import('./stylesheets/mobile_main.scss').then( (() => {
-          this._application = new Application();
-          this._onLoadApplication();
-        }));
-      });
-    } else {
-      import('views/desktop/Application/Application').then( ( Application ) => {
-        import('./stylesheets/main.scss').then( (() => {
-          this._application = new Application();
-          this._onLoadApplication();
-        }));
-      });
-    }
+    const App = States.MOBILE ? MobileApplication : Application;
+    this._application = new App();
+    this._onLoadApplication();
   }
 
   _onLoadApplication() {
