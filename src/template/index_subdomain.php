@@ -1,3 +1,8 @@
+<?php
+  require_once 'server/MobileDetect.php';
+  $detect = new Mobile_Detect;
+?>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -12,7 +17,7 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
 
-    <base href="/" >
+    <base href="/workshoplpz/" >
 
     <!-- Favicon -->
 
@@ -36,6 +41,12 @@
     <meta itemprop="description" content="">
     <meta itemprop="image" content="">
 
+    <?php if ($detect->isMobile() && !$detect->isTablet()) { ?>
+    <link href="<%= htmlWebpackPlugin.files.chunks.mobile.css %>" rel="stylesheet"></head>
+    <?php } else { ?>
+    <link href="<%= htmlWebpackPlugin.files.chunks.desktop.css %>" rel="stylesheet"></head>
+    <?php } ?>
+
   </head>
 
   <body>
@@ -43,6 +54,12 @@
     <div id="application">
 
     </div>
+
+    <?php if ($detect->isMobile() && !$detect->isTablet()) { ?>
+    <script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks.mobile.entry %>"></script>
+    <?php } else { ?>
+    <script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks.desktop.entry %>"></script>
+    <?php } ?>
 
   </body>
 

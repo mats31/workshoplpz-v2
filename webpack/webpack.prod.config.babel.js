@@ -8,7 +8,10 @@ import CleanWebpackPlugin from 'clean-webpack-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 
 export default {
-  entry: './src/main.js',
+  entry: {
+    desktop: './src/main.js',
+    mobile: './src/mobile_main.js',
+  },
   output: {
     path: path.join(__dirname, '..', 'build'),
     filename: '[name]-[hash].min.js',
@@ -87,9 +90,16 @@ export default {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      inject: 'body',
-      template: 'src/template/index.html',
+      filename: 'index.php',
+      inject: false,
+      template: 'src/template/index.php',
+      chunks: ['desktop', 'mobile'],
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index_subdomain.php',
+      inject: false,
+      template: 'src/template/index_subdomain.php',
+      chunks: ['desktop', 'mobile'],
     }),
     new webpack.ProvidePlugin({
       THREE: 'three',

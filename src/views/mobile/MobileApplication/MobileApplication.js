@@ -9,13 +9,14 @@ import MobileWebGLView from 'views/mobile/MobileWebGL';
 import MobileProjectView from 'views/mobile/MobileProject';
 import MobileEverydayView from 'views/mobile/MobileEveryday';
 import UIView from 'views/desktop/UI';
-import 'stylesheets/mobile_main.scss';
 
 export default class MobileAppView {
 
   // Setup ---------------------------------------------------------------------
 
   constructor() {
+
+    console.log('mobile');
 
     document.documentElement.classList.add('mobile');
     this.el = document.getElementById('application');

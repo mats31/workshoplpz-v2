@@ -6,10 +6,10 @@ import AssetLoader from 'core/AssetLoader';
 import States from 'core/States';
 import Signals from 'core/Signals'; /* exported Signals */
 import Router from 'core/Router';
-import Application from 'views/desktop/Application/Application';
-import 'stylesheets/main.scss';
+import MobileApplication from 'views/mobile/MobileApplication/MobileApplication';
+import 'stylesheets/mobile_main.scss';
 
-class Main {
+class MobileMain {
 
   // Setup ---------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ class Main {
   }
 
   start() {
-    this._application = new Application();
+    this._application = new MobileApplication();
     this._onLoadApplication();
   }
 
@@ -47,5 +47,5 @@ class Main {
 
 domready(() => {
 
-  new Main();
+  new MobileMain();
 });

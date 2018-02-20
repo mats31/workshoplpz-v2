@@ -6,8 +6,6 @@ import AssetLoader from 'core/AssetLoader';
 import States from 'core/States';
 import Signals from 'core/Signals'; /* exported Signals */
 import Router from 'core/Router';
-import Application from 'views/desktop/Application/Application';
-import 'stylesheets/main.scss';
 
 class Main {
 
@@ -19,8 +17,22 @@ class Main {
   }
 
   start() {
-    this._application = new Application();
-    this._onLoadApplication();
+
+    if (!States.MOBILE) {
+        import('views/desktop/Application/Application').then((App) => {
+          import('stylesheets/main.scss').then(() => {
+            this._application = new App();
+            this._onLoadApplication();
+          });
+        });
+    } else {
+        import('views/mobile/MobileApplication/MobileApplication').then((App) => {
+          import('stylesheets/mobile_main.scss').then(() => {
+            this._application = new App();
+            this._onLoadApplication();
+          });
+        });
+    }
   }
 
   _onLoadApplication() {
