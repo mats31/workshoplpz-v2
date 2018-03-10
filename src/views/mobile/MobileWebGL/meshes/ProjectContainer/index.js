@@ -51,6 +51,7 @@ class ProjectContainer extends THREE.Object3D {
     this._setupDescription();
     this._setupMask();
     this._setupPreview();
+    this._setupAccessory();
   }
 
   _setupMask() {
@@ -87,6 +88,11 @@ class ProjectContainer extends THREE.Object3D {
     this._preview.position.setZ(15);
 
     // this.add(this._preview);
+  }
+
+  _setupAccessory() {
+    const accessoryObject = States.resources.getModel('forme1-accessory').media;
+    console.log(accessoryObject);
   }
 
   // Getters --------------------------------------------------------------------

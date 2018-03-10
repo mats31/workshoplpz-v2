@@ -5,6 +5,8 @@ import { getPerspectiveSize } from 'utils/3d';
 
 import vertexShader from '../shaders/mask.vs';
 import fragmentShader from '../shaders/mask.fs';
+import accessoryVertex from '../shaders/accessory.vs';
+import accessoryFragment from '../shaders/accessory.fs';
 
 @active()
 @objectVisible()
@@ -31,6 +33,7 @@ class Mask extends THREE.Object3D {
     this._color = options.color;
 
     this._createMask();
+    this._createAccessory();
 
     this.visible = true;
   }
@@ -120,6 +123,50 @@ class Mask extends THREE.Object3D {
 
     this._initalMaskWidth = this.getMaskWidth();
     this._initalMaskHeight = this.getMaskHeight();
+  }
+
+  _createAccessory() {
+    const accessoryObject = States.resources.getModel('forme1-accessory').media;
+
+    const accessoryGeometry1 = accessoryObject.children[0].geometry.clone();
+    const baseShader = THREE.ShaderLib.phong;
+    const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
+    const accessoryMaterial1 = new THREE.ShaderMaterial({
+      uniforms: {
+        ...baseUniforms,
+        emissive: { value: new THREE.Color( this._color ) },
+        specular: { value: new THREE.Color( 0x111111 ) },
+      },
+      lights: true,
+      transparent: true,
+      vertexShader: accessoryVertex,
+      fragmentShader: accessoryFragment,
+    });
+
+    // const accessoryGeometry2 = accessoryObject.children[0].geometry.clone();
+    // const accessoryMaterial2 = new THREE.ShaderMaterial({
+    //   uniforms: {
+    //     ...baseUniforms,
+    //     emissive: { value: new THREE.Color( this._color ) },
+    //     specular: { value: new THREE.Color( 0x111111 ) },
+    //   },
+    //   vertexShader: accessoryVertex,
+    //   fragmentShader: accessoryFragment,
+    // });
+
+    this._accessory1 = new THREE.Mesh( accessoryGeometry1, accessoryMaterial1 );
+    // this._accessory2 = new THREE.Mesh( accessoryGeometry2, accessoryMaterial2 );
+
+    this._accessory1.scale.set(0.1, 0.1, 0.1);
+    this._accessory1.position.set(0, 0, 20);
+    this._accessory1.rotation.y = Math.PI * 0.7;
+
+    // this._accessory2.scale.set(0.1, 0.1, 0.1);
+    // this._accessory2.position.set(0, 0, 20);
+    // this._accessory2.rotation.y = Math.PI * 0.7;
+
+    this.add(this._accessory1);
+    // this.add(this._accessory2);
   }
 
   // State ---------------------------------------------------------------------

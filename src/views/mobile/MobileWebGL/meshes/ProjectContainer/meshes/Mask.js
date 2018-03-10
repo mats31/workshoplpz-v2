@@ -31,6 +31,7 @@ class Mask extends THREE.Object3D {
     this._color = options.color;
 
     this._createMask();
+    this._createAccessory();
 
     this.visible = true;
   }
@@ -120,6 +121,11 @@ class Mask extends THREE.Object3D {
 
     this._initalMaskWidth = this.getMaskWidth();
     this._initalMaskHeight = this.getMaskHeight();
+  }
+
+  _createAccessory() {
+    const accessoryObject = States.resources.getModel('forme1-accessory').media;
+    console.log(accessoryObject);
   }
 
   // State ---------------------------------------------------------------------

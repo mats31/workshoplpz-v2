@@ -135,7 +135,7 @@ export default class MobileWebGL {
       });
 
       const x = this._xStep * i + this._xStep;
-      const y = i % 2 === 0 ? 15 : 22;
+      const y = i % 2 === 0 ? 20 : 18.5;
       const z = this._zDepth;
       const initialPosition = new THREE.Vector3(x, y, z);
       projectContainer.setInitialPosition(initialPosition);
@@ -542,7 +542,7 @@ export default class MobileWebGL {
     for (let i = 0; i < this._projectContainers.length; i += 1) {
 
       const x = this._xStep * i + this._xStep;
-      const y = i % 2 === 0 ? 17 : 22;
+      const y = i % 2 === 0 ? 20 : 18.5;
       const z = this._zDepth;
       const initialPosition = new THREE.Vector3(x, y, z);
       this._projectContainers[i].setInitialPosition(initialPosition);

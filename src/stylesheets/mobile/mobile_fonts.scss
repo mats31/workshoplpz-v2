@@ -21,9 +21,11 @@ $fallbackFonts: Helvetica, Arial, sans-serif;
 @mixin font-title() {
     font-family: 'majesti', $fallbackFonts;
     font-weight: 300;
-    font-size: 3.5rem;
-    letter-spacing: 0rem;
-    line-height: 4rem;
+    // font-size: 3.5rem;
+    // letter-spacing: 0rem;
+    // line-height: 4rem;
+    font-size: 4.3rem;
+    line-height: 5.5rem;
     @include fontSmoothing();
 }
 
@@ -33,6 +35,13 @@ $fallbackFonts: Helvetica, Arial, sans-serif;
     font-size: 17.5rem;
     letter-spacing: 0rem;
     line-height: 1.4rem;
+    @include fontSmoothing();
+}
+
+@mixin majesti-italic() {
+    font-family: 'majesti-italic', $fallbackFonts;
+    font-size: 4.3rem;
+    line-height: 5.5rem;
     @include fontSmoothing();
 }
 
@@ -57,7 +66,7 @@ $fallbackFonts: Helvetica, Arial, sans-serif;
 @mixin font-body() {
     font-family: 'soleil', $fallbackFonts;
     font-weight: 400;
-    font-size: 1.623rem;
-    line-height: 2.4rem;
+    font-size: 2rem;
+    line-height: 3.4rem;
     @include fontSmoothing();
 }

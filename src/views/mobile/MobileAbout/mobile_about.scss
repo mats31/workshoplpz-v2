@@ -7,7 +7,7 @@ html.mobile {
     z-index: $zindex-1;
     @include font-body();
     color: white;
-    padding: 12rem 5rem 12rem 5rem;
+    padding: 7.7rem 5rem 12rem 5rem;
 
     .about__title {
       @include font-title();
@@ -28,7 +28,6 @@ html.mobile {
     }
 
     .about__description {
-      line-height: 3rem;
       margin-bottom: 4rem;
     }
 

@@ -27,7 +27,7 @@ export default class EverydayItem {
     this._friction = 0.85 + Math.random() * 0.03;
     this._velocityX = 0;
     this._imgW = this._imgH = Math.max( 300, window.innerWidth * 0.2 );
-    this._margin = this._currentMargin = this._imgW * 2;
+    this._margin = this._currentMargin = this._imgW * 1.5;
     this._moduloLength = this._currentModuloLength = this._length * this._margin;
     this._fullModuloLength = this._length * this._fullWidth;
 
@@ -49,7 +49,7 @@ export default class EverydayItem {
 
 
     const y1 = window.innerHeight * 0.5 - this._imgH * 0.5;
-    const y2 = window.innerHeight * 0.5 - this._imgH * 0.5 + window.innerHeight * 0.07;
+    const y2 = window.innerHeight * 0.5 - this._imgH * 0.5 + window.innerHeight * 0.02;
     this._basePosition = {
       x: this.index * this._margin,
       y: this.index % 2 === 0 ? y1 : y2,
@@ -82,11 +82,11 @@ export default class EverydayItem {
       this._text.style.left = '55%';
       this._text.style.top = '-70px';
     } else if (this.index % 3 === 1) {
-      this._text.style.left = '-94px';
+      this._text.style.left = '-32px';
       this._text.style.top = '90%';
     } else {
       this._text.style.left = '-21px';
-      this._text.style.top = '-100px';
+      this._text.style.top = '-60px';
     }
 
     this.el.appendChild(this._text);
@@ -238,10 +238,10 @@ export default class EverydayItem {
   }
 
   resize() {
-    this._imgW = this._imgH = Math.max( 300, window.innerWidth * 0.2 );
+    this._imgW = this._imgH = window.innerWidth * 0.75;
     this.el.style.width = `${this._imgW}px`;
 
-    this._margin = this._imgW * 2;
+    this._margin = this._imgW * 1.5;
 
     this._fullScreenRatio = window.innerHeight / this._imgH;
     this._fullWidth = this._imgW * this._fullScreenRatio;
@@ -251,7 +251,7 @@ export default class EverydayItem {
     this._fullModuloLength = this._length * this._fullWidth;
 
     const y1 = window.innerHeight * 0.5 - this._imgH * 0.5;
-    const y2 = window.innerHeight * 0.5 - this._imgH * 0.5 + window.innerHeight * 0.07;
+    const y2 = window.innerHeight * 0.5 - this._imgH * 0.5 + window.innerHeight * 0.02;
 
     this._basePosition = {
       x: this.index * this._margin,

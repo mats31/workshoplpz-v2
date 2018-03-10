@@ -95,6 +95,7 @@ export default class MobileAppView {
   }
 
   _setupEvents() {
+    window.addEventListener('touchmove', this._onTouchmove);
     window.addEventListener('resize', this.onResize);
     window.addEventListener('scroll', this.onScroll);
     window.addEventListener('mousewheel', this.onScrollWheel);
@@ -205,6 +206,13 @@ export default class MobileAppView {
   @autobind
   onResize() {
     Signals.onResize.dispatch( window.innerWidth, window.innerHeight );
+  }
+
+  @autobind
+  _onTouchmove() {
+    if (this._previousState !== pages.ABOUT) {
+      this._ui.hide();
+    }
   }
 
   @autobind
