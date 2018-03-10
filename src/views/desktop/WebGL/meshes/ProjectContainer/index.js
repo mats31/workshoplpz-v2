@@ -64,14 +64,15 @@ class ProjectContainer extends THREE.Object3D {
 
   _setupDescription() {
 
-    this._textTexture = States.resources.getTexture('orange-text').media;
+    console.log(this.projectID);
+    this._textTexture = States.resources.getTexture(`${this.projectID}-text`).media;
     // this._textTexture.wrapS = THREE.ClampToEdgeWrapping;
     // this._textTexture.wrapT = THREE.ClampToEdgeWrapping;
     this._textTexture.needsUpdate = true;
 
     this._text = new Text({
       texture: this._textTexture,
-      initialY: this._index % 2 === 0 ? 11 : -11,
+      initialY: this._index % 2 === 0 ? 9 : -9,
     });
 
     this.add(this._text);

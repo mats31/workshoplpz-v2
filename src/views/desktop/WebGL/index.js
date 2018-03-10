@@ -544,10 +544,9 @@ export default class WebGL {
 
   @autobind
   _onResize() {
-    this._width = window.innerWidth;
-    this._height = window.innerHeight;
+    this._width = Math.max( 500, window.innerWidth );
+    this._height = Math.max( 500, window.innerHeight );
 
-    this._renderer.setViewport(0, 0, this._width, this._height);
     this._camera.aspect = this._width / this._height;
     this._camera.updateProjectionMatrix();
 

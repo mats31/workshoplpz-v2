@@ -5,6 +5,8 @@ import { getPerspectiveSize } from 'utils/3d';
 
 import vertexShader from '../shaders/mask.vs';
 import fragmentShader from '../shaders/mask.fs';
+import accessoryVertex from '../shaders/accessory.vs';
+import accessoryFragment from '../shaders/accessory.fs';
 
 @active()
 @objectVisible()
@@ -15,7 +17,7 @@ class Mask extends THREE.Object3D {
 
     super();
 
-    this._defaultScale = new THREE.Vector3(1, 1, 1);
+    this._defaultScale = new THREE.Vector3(0.9, 0.9, 0.9);
     // this._defaultScale = new THREE.Vector3(0.75, 0.75, 0.75);
     this._squareScale = new THREE.Vector3();
     this._squareScaleEase = 0;
@@ -125,7 +127,58 @@ class Mask extends THREE.Object3D {
 
   _createAccessory() {
     const accessoryObject = States.resources.getModel('forme1-accessory').media;
-    console.log(accessoryObject);
+
+    const accessoryGeometry1 = accessoryObject.children[0].geometry.clone();
+    const baseShader = THREE.ShaderLib.phong;
+    const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
+    const accessoryMaterial1 = new THREE.ShaderMaterial({
+      uniforms: {
+        ...baseUniforms,
+        emissive: { value: new THREE.Color( this._color ) },
+        specular: { value: new THREE.Color( 0x111111 ) },
+        u_time: { value: 0, type: 'f' },
+        uPos: { value: 0, type: 'f' },
+        uAlpha: { value: 1, type: 'f' },
+      },
+      lights: true,
+      transparent: true,
+      side: THREE.DoubleSide,
+      vertexShader: accessoryVertex,
+      fragmentShader: accessoryFragment,
+    });
+
+    const accessoryGeometry2 = accessoryObject.children[0].geometry.clone();
+    const accessoryMaterial2 = new THREE.ShaderMaterial({
+      uniforms: {
+        ...baseUniforms,
+        emissive: { value: new THREE.Color( this._color ) },
+        specular: { value: new THREE.Color( 0x111111 ) },
+        u_time: { value: 0, type: 'f' },
+        uPos: { value: Math.PI, type: 'f' },
+        uAlpha: { value: 1, type: 'f' },
+      },
+      lights: true,
+      transparent: true,
+      side: THREE.DoubleSide,
+      vertexShader: accessoryVertex,
+      fragmentShader: accessoryFragment,
+    });
+
+    this._accessory1 = new THREE.Mesh( accessoryGeometry1, accessoryMaterial1 );
+    this._accessory2 = new THREE.Mesh( accessoryGeometry2, accessoryMaterial2 );
+
+    this._accessory1.scale.set(0.075, 0.075, 0.075);
+    this._accessory1.position.set(0, 0, 0);
+    this._accessory1.rotation.y = Math.PI * 0.7;
+    // this._accessoryObject1 = new THREE.Object3D();
+    // this._accessoryObject1.add(this._accessory1);
+
+    this._accessory2.scale.set(0.075, 0.075, 0.075);
+    this._accessory2.position.set(0, 0, 0);
+    this._accessory2.rotation.y = Math.PI * 0.7;
+
+    this.add(this._accessory1);
+    this.add(this._accessory2);
   }
 
   // State ---------------------------------------------------------------------
@@ -206,6 +259,26 @@ class Mask extends THREE.Object3D {
         ease: 'Power4.easeInOut',
       },
     );
+
+    TweenLite.killTweensOf(this._accessory1.material.uniforms.uAlpha);
+    TweenLite.to(
+      this._accessory1.material.uniforms.uAlpha,
+      0.5,
+      {
+        value: 0,
+        ease: 'Power2.easeOut',
+      },
+    );
+
+    TweenLite.killTweensOf(this._accessory2.material.uniforms.uAlpha);
+    TweenLite.to(
+      this._accessory2.material.uniforms.uAlpha,
+      0.5,
+      {
+        value: 0,
+        ease: 'Power2.easeOut',
+      },
+    );
   }
 
   deactivate() {
@@ -215,6 +288,8 @@ class Mask extends THREE.Object3D {
     this._maskMaterial.uniforms.u_morph.value = 0;
     this._maskUniforms.u_fullColor.value = 0;
     this._maskUniforms.u_ease.value = 0;
+    this._accessory1.material.uniforms.uAlpha.value = 1;
+    this._accessory2.material.uniforms.uAlpha.value = 1;
   }
 
   show({ delay = 0 } = {}) {
@@ -285,6 +360,18 @@ class Mask extends THREE.Object3D {
   // Update -------------------------------------------------------------------
 
   update( time ) {
+
+    this._accessory1.position.x += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.x ) * 0.1;
+    this._accessory1.position.z += ( Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.z ) * 0.1;
+    this._accessory1.rotation.x = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.8;
+    this._accessory1.rotation.y = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2;
+    this._accessory1.rotation.z = this._accessory1.material.uniforms.uPos.value + Math.PI * 1;
+
+    this._accessory2.position.x += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.x ) * 0.1;
+    this._accessory2.position.z += ( Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.z ) * 0.1;
+    this._accessory2.rotation.x = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.8;
+    this._accessory2.rotation.y = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2;
+    this._accessory2.rotation.z = this._accessory2.material.uniforms.uPos.value + Math.PI * 1;
 
     this._maskMaterial.uniforms.u_time.value = time;
 

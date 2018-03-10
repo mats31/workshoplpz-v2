@@ -6,7 +6,7 @@
   z-index: $zindex-1;
   @include font-body();
   color: white;
-  padding: 14rem 5.46875% 0 5.46875%;
+  padding: 17rem 5.46875% 0 5.46875%;
 
   .about__title {
     @include font-title();
@@ -14,6 +14,11 @@
     font-size: 11.6rem;
     line-height: 11.6rem;
     margin-bottom: 7rem;
+
+    @media screen and (min-width: 1560px) {
+      font-size: 16rem;
+      line-height: 15.8rem;
+    }
 
     @media screen and (max-width: 1125px) {
       font-size: 8rem;
