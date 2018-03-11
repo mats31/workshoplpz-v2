@@ -229,7 +229,6 @@ export default class MobileAppView {
   @autobind
   _onDocumentTouchmove(event) {
     event.preventDefault();
-    console.log(12322);
 
     if (this._previousState !== pages.ABOUT) {
       this._ui.hide();

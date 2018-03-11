@@ -413,7 +413,6 @@ export default class ProjectView {
         force3D: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
-          console.log(1342);
           document.body.style.overflow = 'visible';
           this.el.removeEventListener('touchmove', this._onTouchmove);
           this.el.style.height = 'auto';
@@ -515,8 +514,6 @@ export default class ProjectView {
 
   @autobind
   _onScrollWheel(event) {
-
-    console.log(12);
 
     if (this._showAnimationDone) {
       this._delta = event.deltaY;
