@@ -221,11 +221,29 @@
 
 .project__clientVisit {
   @include font-subtitle();
-  border-bottom: 1px solid #ffffff;
   display: inline-block;
   margin: 0;
   padding-bottom: 1rem;
   opacity: 0;
+}
+
+.about__lines {
+  overflow: hidden;
+  height: 0.1rem;
+  width: 5.5rem;
+  position: relative;
+  top: 11px;
+  transform-origin: left center;
+}
+
+.about__line {
+  background: white;
+  height: 0.1rem;
+  width: 5.5rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: left center;
 }
 
 .project__role {

@@ -12,6 +12,7 @@ const projects = {
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
       reward: 'Award 2016 Design for all of the Orange young designer competition',
+      url: 'http://www.google.fr',
       medias: [
         { id: 'picture-skyfall-0', type: 'image' },
         { id: 'picture-skyfall-1', type: 'image' },
@@ -32,6 +33,7 @@ const projects = {
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
       reward: 'Award 2016 Design for all of the Orange young designer competition',
+      url: 'http://www.google.fr',
       medias: [
         { id: 'picture-skyfall-0', type: 'image' },
         { id: 'picture-skyfall-1', type: 'image' },
@@ -52,6 +54,7 @@ const projects = {
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
       reward: 'Award 2016 Design for all of the Orange young designer competition',
+      url: 'http://www.google.fr',
       medias: [
         { id: 'picture-skyfall-0', type: 'image' },
         { id: 'picture-skyfall-1', type: 'image' },
@@ -72,6 +75,7 @@ const projects = {
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
       reward: 'Award 2016 Design for all of the Orange young designer competition',
+      url: 'http://www.google.fr',
       medias: [
         { id: 'picture-skyfall-0', type: 'image' },
         { id: 'picture-skyfall-1', type: 'image' },
@@ -92,6 +96,7 @@ const projects = {
       team: 'Lei Xing<br/>Jantana Hennard<br/>Maximilien Jourdain<br/>Tonny Houziaux',
       role: 'Art Direction<br/>Conceptor<br/>Illustrator<br/>Motion Designer',
       reward: 'Award 2016 Design for all of the Orange young designer competition',
+      url: 'http://www.google.fr',
       medias: [
         { id: 'picture-skyfall-0', type: 'image' },
         { id: 'picture-skyfall-1', type: 'image' },

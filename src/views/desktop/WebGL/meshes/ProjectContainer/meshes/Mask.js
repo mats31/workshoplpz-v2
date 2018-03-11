@@ -344,6 +344,28 @@ class Mask extends THREE.Object3D {
         ease: 'Power2.easeOut',
       },
     );
+
+    TweenLite.killTweensOf(this._accessory1.material.uniforms.uAlpha);
+    TweenLite.to(
+      this._accessory1.material.uniforms.uAlpha,
+      1,
+      {
+        delay,
+        value: 1,
+        ease: 'Power2.easeOut',
+      },
+    );
+
+    TweenLite.killTweensOf(this._accessory2.material.uniforms.uAlpha);
+    TweenLite.to(
+      this._accessory2.material.uniforms.uAlpha,
+      1,
+      {
+        delay,
+        value: 1,
+        ease: 'Power2.easeOut',
+      },
+    );
   }
 
   hide({ delay = 0 } = {}) {
@@ -360,6 +382,28 @@ class Mask extends THREE.Object3D {
             this.visible = false;
           }
         },
+      },
+    );
+
+    TweenLite.killTweensOf(this._accessory1.material.uniforms.uAlpha);
+    TweenLite.to(
+      this._accessory1.material.uniforms.uAlpha,
+      0.7,
+      {
+        delay,
+        value: 0,
+        ease: 'Power2.easeOut',
+      },
+    );
+
+    TweenLite.killTweensOf(this._accessory2.material.uniforms.uAlpha);
+    TweenLite.to(
+      this._accessory2.material.uniforms.uAlpha,
+      0.7,
+      {
+        delay,
+        value: 0,
+        ease: 'Power2.easeOut',
       },
     );
   }

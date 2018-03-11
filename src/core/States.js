@@ -5,7 +5,9 @@ class States {
   constructor() {
 
     this.md = new MobileDetect(window.navigator.userAgent);
+    window.md = this.md;
 
+    this.VERSION = this.md.version();
     this.MOBILE = this.md.phone();
     this.TABLET = this.md.tablet();
     this.IOS = this.md.is('iOS');

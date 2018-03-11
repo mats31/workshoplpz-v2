@@ -25,8 +25,8 @@ html.mobile {
   .project__closeContainer {
     opacity: 1;
     position: fixed;
-    right: 1rem;
-    top: 1rem;
+    right: 2rem;
+    top: 0rem;
     height: 10rem;
     width: 6rem;
     z-index: $zindex-2;
@@ -113,14 +113,14 @@ html.mobile {
   .project__scroll {
     position: absolute;
     left: 50%;
-    bottom: 110px;
+    top: 68%;
     transform: translateX(-50%);
   }
 
     .project__scrollLine {
       width: 1px;
       height: 50px;
-      background: #1a1a1a;
+      background: white;
       left: 50%;
       position: relative;
       top: 0;
@@ -128,7 +128,7 @@ html.mobile {
 
     .project__scrollText {
       @include font-body();
-      color: #1a1a1a;
+      color: white;
       margin-top: 20px;
     }
 

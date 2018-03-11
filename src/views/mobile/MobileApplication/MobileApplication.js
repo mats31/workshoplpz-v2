@@ -95,7 +95,7 @@ export default class MobileAppView {
   }
 
   _setupEvents() {
-    window.addEventListener('touchmove', this._onTouchmove);
+    // window.addEventListener('touchmove', this._onTouchmove);
     window.addEventListener('resize', this.onResize);
     window.addEventListener('scroll', this.onScroll);
     window.addEventListener('mousewheel', this.onScrollWheel);
@@ -144,6 +144,7 @@ export default class MobileAppView {
         break;
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
+        // document.addEventListener('touchmove', this._onDocumentTouchmove);
         document.removeEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = true;
         this._loader.hide();
@@ -208,12 +209,12 @@ export default class MobileAppView {
     Signals.onResize.dispatch( window.innerWidth, window.innerHeight );
   }
 
-  @autobind
-  _onTouchmove() {
-    if (this._previousState !== pages.ABOUT) {
-      this._ui.hide();
-    }
-  }
+  // @autobind
+  // _onTouchmove() {
+  //   if (this._previousState !== pages.ABOUT) {
+  //     this._ui.hide();
+  //   }
+  // }
 
   @autobind
   onScroll(event) {
@@ -228,6 +229,11 @@ export default class MobileAppView {
   @autobind
   _onDocumentTouchmove(event) {
     event.preventDefault();
+    console.log(12322);
+
+    if (this._previousState !== pages.ABOUT) {
+      this._ui.hide();
+    }
   }
 
   // Update --------------------------------------------------------------------

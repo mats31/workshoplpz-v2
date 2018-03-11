@@ -31,6 +31,7 @@ export default class ProjectView {
       layer: this.el.querySelector('.js-project__titleLayer'),
       sections: this.el.querySelector('.js-project__sections'),
       subtitle: this.el.querySelector('.js-project__subtitle'),
+      visit: this.el.querySelector('.js-project__clientVisit'),
       description: this.el.querySelector('.js-project__description'),
       categories: this.el.querySelectorAll('.js-project__category'),
       contents: this.el.querySelectorAll('.js-project__content'),
@@ -77,6 +78,8 @@ export default class ProjectView {
     this._ui.close.addEventListener('mouseenter', this._onCloseMouseenter);
     this._ui.close.addEventListener('mouseout', this._onCloseMouseout);
     this._ui.close.addEventListener('click', this._onCloseClick);
+    this._ui.visit.addEventListener('mouseenter', this._onVisitEnter);
+    this._ui.visit.addEventListener('click', this._onVisitClick);
     this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
@@ -161,6 +164,14 @@ export default class ProjectView {
   }
 
   hide({ delay = 0 } = {}) {
+    for (let i = 0; i < this._medias.length; i++) {
+      const video = this._medias[i].querySelector('video');
+
+      if (video) {
+        video.pause();
+      }
+    }
+
     TweenLite.to(
       this.el,
       1,
@@ -432,6 +443,64 @@ export default class ProjectView {
       },
     );
     Signals.onProjectCloseMouseenter.dispatch();
+  }
+
+  @autobind
+  _onVisitEnter() {
+    const firstLine = this._ui.visit.querySelector('.js-about__line:first-child');
+    const secondLine = this._ui.visit.querySelector('.js-about__line:last-child');
+
+    TweenLite.killTweensOf(firstLine);
+    TweenLite.set(firstLine, { transformOrigin: 'right center' });
+    TweenLite.fromTo(
+      firstLine,
+      0.5,
+      {
+        scaleX: 1,
+      },
+      {
+        scaleX: 0,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    const delay = 0.15;
+
+    TweenLite.killTweensOf(secondLine);
+    TweenLite.set(secondLine, { transformOrigin: 'left center' });
+    TweenLite.fromTo(
+      secondLine,
+      0.5,
+      {
+        scaleX: 0,
+      },
+      {
+        delay,
+        scaleX: 1,
+        ease: 'Power4.easeOut',
+        onComplete: () => {
+          TweenLite.set(
+            firstLine,
+            {
+              scaleX: 1,
+              transformOrigin: 'left center',
+            },
+          );
+          TweenLite.set(
+            secondLine,
+            {
+              scaleX: 0,
+              transformOrigin: 'left center',
+            },
+          );
+        },
+      },
+    );
+  }
+
+  @autobind
+  _onVisitClick() {
+    window.open(this._project.url, '_blank');
   }
 
   @autobind

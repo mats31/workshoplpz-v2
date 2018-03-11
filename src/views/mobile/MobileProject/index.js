@@ -94,6 +94,7 @@ export default class ProjectView {
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
+    this.el.addEventListener('touchmove', this._onTouchmove);
     this.el.style.display = 'block';
 
     this._activateLayerScalable();
@@ -399,15 +400,22 @@ export default class ProjectView {
 
     this._deactivateLayerScalable();
 
+    // console.log(( window.screen.height - 70 ) * -1);
+    // console.log(window.screen.height);
+    // console.log(window.screen);
+
     TweenLite.to(
       this._ui.titleContainer,
       1,
       {
-        y: window.screen.height * -0.91,
+        // y: window.screen.width === 1125 && window.screen.height === 2436 ? ( window.screen.height - 85 ) * -1 : ( window.screen.height - 10 ) * -1,
+        y: window.screen.width === 375 && window.screen.height === 812 ? ( window.screen.height - 75 ) * -1 : ( window.screen.height - 50 ) * -1,
         force3D: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
+          console.log(1342);
           document.body.style.overflow = 'visible';
+          this.el.removeEventListener('touchmove', this._onTouchmove);
           this.el.style.height = 'auto';
           this._ui.preview.classList.remove('js-project__scale');
           this._ui.preview.classList.remove('project__scale');
@@ -424,6 +432,11 @@ export default class ProjectView {
   }
 
   // Events --------------------------------------------------------------------
+
+  @autobind
+  _onTouchmove(event) {
+    event.preventDefault();
+  }
 
   @autobind
   _onDeviceOrientation(event) {
@@ -462,7 +475,8 @@ export default class ProjectView {
     this._bodyOffsetHeight = document.body.offsetHeight;
 
     if (this._skippedPreview) {
-      TweenLite.set( this._ui.titleContainer, { y: window.screen.height * -0.91, force3D: true } );
+      // TweenLite.set( this._ui.titleContainer, { y: window.screen.height * -0.91, force3D: true } );
+      TweenLite.set( this._ui.titleContainer, { y: window.screen.width === 375 && window.screen.height === 812 ? ( window.screen.height - 75 ) * -1 : ( window.screen.height - 50 ) * -1, force3D: true } );
     }
   }
 
@@ -501,6 +515,8 @@ export default class ProjectView {
 
   @autobind
   _onScrollWheel(event) {
+
+    console.log(12);
 
     if (this._showAnimationDone) {
       this._delta = event.deltaY;
