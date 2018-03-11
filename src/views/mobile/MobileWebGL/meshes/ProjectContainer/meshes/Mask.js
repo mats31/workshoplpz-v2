@@ -177,6 +177,18 @@ class Mask extends THREE.Object3D {
     this._accessory2.position.set(0, 0, 0);
     this._accessory2.rotation.y = Math.PI * 0.7;
 
+    this._accessory1.position.x = Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14;
+    this._accessory1.position.z = Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14;
+    this._accessory1.rotation.x = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.8;
+    this._accessory1.rotation.y = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2;
+    this._accessory1.rotation.z = this._accessory1.material.uniforms.uPos.value + Math.PI * 1;
+
+    this._accessory2.position.x = Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14;
+    this._accessory2.position.z = Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14;
+    this._accessory2.rotation.x = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.8;
+    this._accessory2.rotation.y = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2;
+    this._accessory2.rotation.z = this._accessory2.material.uniforms.uPos.value + Math.PI * 1;
+
     this.add(this._accessory1);
     this.add(this._accessory2);
   }
@@ -361,17 +373,19 @@ class Mask extends THREE.Object3D {
 
   update( time ) {
 
-    this._accessory1.position.x += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.x ) * 0.1;
-    this._accessory1.position.z += ( Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.z ) * 0.1;
-    this._accessory1.rotation.x = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.8;
-    this._accessory1.rotation.y = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2;
-    this._accessory1.rotation.z = this._accessory1.material.uniforms.uPos.value + Math.PI * 1;
-
-    this._accessory2.position.x += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.x ) * 0.1;
-    this._accessory2.position.z += ( Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.z ) * 0.1;
-    this._accessory2.rotation.x = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.8;
-    this._accessory2.rotation.y = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2;
-    this._accessory2.rotation.z = this._accessory2.material.uniforms.uPos.value + Math.PI * 1;
+    // if (this._accessoryNeedsUpdate) {
+    //   this._accessory1.position.x += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.x ) * 0.1;
+    //   this._accessory1.position.z += ( Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.z ) * 0.1;
+    //   this._accessory1.rotation.x = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.8;
+    //   this._accessory1.rotation.y = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2;
+    //   this._accessory1.rotation.z = this._accessory1.material.uniforms.uPos.value + Math.PI * 1;
+    //
+    //   this._accessory2.position.x += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.x ) * 0.1;
+    //   this._accessory2.position.z += ( Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.z ) * 0.1;
+    //   this._accessory2.rotation.x = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.8;
+    //   this._accessory2.rotation.y = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2;
+    //   this._accessory2.rotation.z = this._accessory2.material.uniforms.uPos.value + Math.PI * 1;
+    // }
 
     this._maskMaterial.uniforms.u_time.value = time;
 
