@@ -47,6 +47,7 @@ const ressources = {
     { id: 'picture-skyfall-1', url: 'textures/picture-skyfall-1.png', description: 'First orange picture' },
     { id: 'picture-skyfall-2', url: 'textures/picture-skyfall-2.png', description: 'First orange picture' },
     { id: 'picture-skyfall-3', url: 'textures/picture-skyfall-3.png', description: 'First orange picture' },
+    { id: 'map', url: 'textures/map.jpg', description: 'First orange picture' },
   ],
 
   models: [

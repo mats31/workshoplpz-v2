@@ -48,7 +48,7 @@ void main() {
 	vec4 diffuseColor = vec4( diffuse, opacity );
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 
-	vec2 uvs = vec2( vUV.x + u_time * 0.01, vUV.y );
+	vec2 uvs = vec2( vUV.x, vUV.y );
 	vec4 texture = texture2D(t_diffuse, uvs);
 
 	// vec3 totalEmissiveRadiance = emissive * (vRandomColor * u_ease );

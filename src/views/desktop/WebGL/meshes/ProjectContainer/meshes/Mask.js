@@ -90,6 +90,10 @@ class Mask extends THREE.Object3D {
     texture.wrapT = THREE.RepeatWrapping;
     texture.needsUpdate = true;
 
+    const mapTexture = States.resources.getTexture('map').media;
+    mapTexture.needsUpdate = true;
+
+
     const baseShader = THREE.ShaderLib.phong;
     const baseUniforms = THREE.UniformsUtils.clone(baseShader.uniforms);
     this._maskUniforms = {
@@ -107,6 +111,7 @@ class Mask extends THREE.Object3D {
       u_morph: { type: 'f', value: this._morphValue },
       u_alpha: { type: 'f', value: 1 },
       t_diffuse: { type: 't', value: texture },
+      normalMap: { type: 't', value: mapTexture },
     };
 
     this._maskMaterial = new THREE.ShaderMaterial({
