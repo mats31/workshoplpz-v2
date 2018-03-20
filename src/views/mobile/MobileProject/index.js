@@ -280,7 +280,7 @@ export default class ProjectView {
             video.controls = false;
             video.muted = true;
             video.playsInline = true;
-            video.src = `videos/${this._project.medias[j].id}.mp4`;
+            video.src = `videos/${this._project.id}/${this._project.medias[j].file}.mp4`;
 
             media.appendChild(video);
             this._ui.medias.appendChild(media);

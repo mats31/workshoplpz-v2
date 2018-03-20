@@ -56,6 +56,7 @@ class ProjectContainer extends THREE.Object3D {
   _setupMask() {
 
     this._mask = new Mask({
+      projectID: this.projectID,
       color: this._maskColor,
     });
 
@@ -64,7 +65,6 @@ class ProjectContainer extends THREE.Object3D {
 
   _setupDescription() {
 
-    console.log(this.projectID);
     this._textTexture = States.resources.getTexture(`${this.projectID}-text`).media;
     // this._textTexture.wrapS = THREE.ClampToEdgeWrapping;
     // this._textTexture.wrapT = THREE.ClampToEdgeWrapping;

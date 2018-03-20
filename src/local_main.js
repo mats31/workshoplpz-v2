@@ -6,6 +6,7 @@ import AssetLoader from 'core/AssetLoader';
 import States from 'core/States';
 import Signals from 'core/Signals'; /* exported Signals */
 import Router from 'core/Router';
+import LoaderView from 'views/common/Loader';
 
 class Main {
 
@@ -13,7 +14,16 @@ class Main {
 
   constructor() {
 
+    this._loader = this._setupLoader();
     Signals.onAssetsLoaded.add(this.onAssetsLoaded);
+  }
+
+  _setupLoader() {
+    const view = new LoaderView({
+      parent: document.body,
+    });
+
+    return view;
   }
 
   start() {

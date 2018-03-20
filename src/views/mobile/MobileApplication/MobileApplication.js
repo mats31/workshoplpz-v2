@@ -2,7 +2,7 @@ import States from 'core/States';
 import * as pages from 'core/pages';
 import raf from 'raf';
 import { autobind } from 'core-decorators';
-import LoaderView from 'views/common/Loader/Loader';
+// import LoaderView from 'views/common/Loader/Loader';
 import MobileHomeView from 'views/mobile/MobileHome';
 import MobileAboutView from 'views/mobile/MobileAbout';
 import MobileWebGLView from 'views/mobile/MobileWebGL';
@@ -22,7 +22,7 @@ export default class MobileAppView {
     this.el = document.getElementById('application');
 
     this._views = [];
-    this._loader = this._setupLoaderView();
+    // this._loader = this._setupLoaderView();
     this._home = this._setupHomeView();
     this._about = this._setupAboutView();
     this._webgl = this._setupWebGLView();
@@ -32,19 +32,19 @@ export default class MobileAppView {
 
     this._previousState = null;
 
-    this._views.push(this._loader, this._home);
+    this._views.push(this._home);
 
     this._start();
     this._setupEvents();
   }
 
-  _setupLoaderView() {
-    const view = new LoaderView({
-      parent: this.el,
-    });
-
-    return view;
-  }
+  // _setupLoaderView() {
+  //   const view = new LoaderView({
+  //     parent: this.el,
+  //   });
+  //
+  //   return view;
+  // }
 
   _setupHomeView() {
     const view = new MobileHomeView({
@@ -117,7 +117,7 @@ export default class MobileAppView {
         document.body.style.overflow = 'hidden';
         document.addEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = false;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.hide({ delay: 0 });
         this._home.show({ delay: 1 });
         this._about.hide({ delay: 0 });
@@ -147,7 +147,7 @@ export default class MobileAppView {
         // document.addEventListener('touchmove', this._onDocumentTouchmove);
         document.removeEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = true;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.hide({ delay: 0 });
         this._home.hide({ delay: 0 });
         this._about.hide({ delay: 0 });
@@ -162,7 +162,7 @@ export default class MobileAppView {
         document.body.style.overflow = 'hidden';
         document.addEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = false;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.hide({ delay: 0 });
         this._home.show({ delay: 1 });
         this._about.hide({ delay: 0 });
@@ -182,7 +182,7 @@ export default class MobileAppView {
         document.body.style.overflow = 'visible';
         document.removeEventListener('touchmove', this._onDocumentTouchmove);
         States.application.activateProject = false;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.show({ delay: 0.65 });
         this._home.show({ delay: 1 });
         this._ui.hide({ delay: 0 });

@@ -51,12 +51,12 @@ class ProjectContainer extends THREE.Object3D {
     this._setupDescription();
     this._setupMask();
     this._setupPreview();
-    this._setupAccessory();
   }
 
   _setupMask() {
 
     this._mask = new Mask({
+      projectID: this.projectID,
       color: this._maskColor,
     });
 
@@ -65,7 +65,7 @@ class ProjectContainer extends THREE.Object3D {
 
   _setupDescription() {
 
-    this._textTexture = States.resources.getTexture('orange-text').media;
+    this._textTexture = States.resources.getTexture(`${this.projectID}-text`).media;
     // this._textTexture.wrapS = THREE.ClampToEdgeWrapping;
     // this._textTexture.wrapT = THREE.ClampToEdgeWrapping;
     this._textTexture.needsUpdate = true;
@@ -88,11 +88,6 @@ class ProjectContainer extends THREE.Object3D {
     this._preview.position.setZ(15);
 
     // this.add(this._preview);
-  }
-
-  _setupAccessory() {
-    const accessoryObject = States.resources.getModel('forme1-accessory').media;
-    console.log(accessoryObject);
   }
 
   // Getters --------------------------------------------------------------------

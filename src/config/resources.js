@@ -4,7 +4,6 @@ const ressources = {
     { id: 'twitter', url: 'images/twitter.png', description: 'Twitter' },
     { id: 'orange-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
     { id: 'parcea-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
-    { id: 'daphne-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
     { id: 'constellation-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
     { id: 'richelieu-preview', url: 'images/retrograph-preview.png', description: 'Orange preview' },
     { id: 'orange-0', url: 'images/orange-0.png', description: 'First orange picture' },
@@ -12,6 +11,11 @@ const ressources = {
     { id: 'picture-skyfall-1', url: 'images/picture-skyfall-1.png', description: 'First orange picture' },
     { id: 'picture-skyfall-2', url: 'images/picture-skyfall-2.png', description: 'First orange picture' },
     { id: 'picture-skyfall-3', url: 'images/picture-skyfall-3.png', description: 'First orange picture' },
+    { id: 'daphne-preview', url: 'images/daphne/preview.png', description: 'Orange preview' },
+    { id: 'daphne-media-0', url: 'images/daphne/media-0.jpg', description: '' },
+    { id: 'daphne-media-2', url: 'images/daphne/media-2.jpg', description: '' },
+    { id: 'daphne-media-3', url: 'images/daphne/media-3.jpg', description: '' },
+    { id: 'daphne-media-4', url: 'images/daphne/media-4.jpg', description: '' },
     { id: 'everyday-01', url: 'images/everyday-01.jpg', description: '' },
     { id: 'everyday-02', url: 'images/everyday-02.jpg', description: '' },
     { id: 'everyday-03', url: 'images/everyday-03.jpg', description: '' },
@@ -48,7 +52,11 @@ const ressources = {
   models: [
     { id: 'forme1-start', url: 'models/forme1-start-test.obj' },
     { id: 'forme1-final', url: 'models/forme1-final.obj' },
-    { id: 'forme1-accessory', url: 'models/forme1-accessory.obj' },
+    { id: 'daphne', url: 'models/daphne2.obj' },
+    { id: 'constellation', url: 'models/forme1-accessory.obj' },
+    { id: 'orange', url: 'models/forme1-accessory.obj' },
+    { id: 'parcea', url: 'models/forme1-accessory.obj' },
+    { id: 'richelieu', url: 'models/forme1-accessory.obj' },
   ],
 
   svgs: [

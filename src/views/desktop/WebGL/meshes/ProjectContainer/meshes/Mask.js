@@ -31,6 +31,7 @@ class Mask extends THREE.Object3D {
     this._initalMaskWidth = 0;
     this._initalMaskHeight = 0;
     this._color = options.color;
+    this.projectID = options.projectID;
 
     this._createMask();
     this._createAccessory();
@@ -126,7 +127,7 @@ class Mask extends THREE.Object3D {
   }
 
   _createAccessory() {
-    const accessoryObject = States.resources.getModel('forme1-accessory').media;
+    const accessoryObject = States.resources.getModel(this.projectID).media;
 
     const accessoryGeometry1 = accessoryObject.children[0].geometry.clone();
     const baseShader = THREE.ShaderLib.phong;
@@ -170,14 +171,10 @@ class Mask extends THREE.Object3D {
     this._accessory1.scale.set(0.075, 0.075, 0.075);
     this._accessory1.position.set(0, 0, 0);
     this._accessory1.rotation.y = Math.PI * 0.7;
-    // this._accessoryObject1 = new THREE.Object3D();
-    // this._accessoryObject1.add(this._accessory1);
 
     this._accessory2.scale.set(0.075, 0.075, 0.075);
     this._accessory2.position.set(0, 0, 0);
     this._accessory2.rotation.y = Math.PI * 0.7;
-    // this._accessoryObject2 = new THREE.Object3D();
-    // this._accessoryObject2.add(this._accessory2);
 
     this.add(this._accessory1);
     this.add(this._accessory2);

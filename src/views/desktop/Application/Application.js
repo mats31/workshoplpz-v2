@@ -3,7 +3,7 @@ import * as pages from 'core/pages';
 import raf from 'raf';
 import PerformanceTest from 'helpers/PerformanceTest'
 import { autobind } from 'core-decorators';
-import LoaderView from 'views/common/Loader/Loader';
+// import LoaderView from 'views/common/Loader/Loader';
 import HomeView from 'views/desktop/Home';
 import AboutView from 'views/desktop/About';
 import WebGLView from 'views/desktop/WebGL';
@@ -24,7 +24,7 @@ export default class DesktopAppView {
     this.el = document.getElementById('application');
 
     this._views = [];
-    this._loader = this._setupLoaderView();
+    // this._loader = this._setupLoaderView();
     this._home = this._setupHomeView();
     this._about = this._setupAboutView();
     this._webgl = this._setupWebGLView();
@@ -35,19 +35,19 @@ export default class DesktopAppView {
 
     this._previousState = null;
 
-    this._views.push(this._loader, this._home);
+    this._views.push(this._home);
 
     this._start();
     this._setupEvents();
   }
 
-  _setupLoaderView() {
-    const view = new LoaderView({
-      parent: this.el,
-    });
-
-    return view;
-  }
+  // _setupLoaderView() {
+  //   const view = new LoaderView({
+  //     parent: this.el,
+  //   });
+  //
+  //   return view;
+  // }
 
   _setupHomeView() {
     const view = new HomeView({
@@ -126,7 +126,7 @@ export default class DesktopAppView {
       case pages.HOME:
         document.body.style.overflow = 'hidden';
         States.application.activateProject = false;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.hide({ delay: 0 });
         this._home.show({ delay: 1 });
         this._about.hide({ delay: 0 });
@@ -155,7 +155,7 @@ export default class DesktopAppView {
       case pages.PROJECT:
         document.body.style.overflow = 'visible';
         States.application.activateProject = true;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.hide({ delay: 0 });
         this._home.hide({ delay: 0 });
         this._about.hide({ delay: 0 });
@@ -170,7 +170,7 @@ export default class DesktopAppView {
       case pages.EVERYDAYS:
         document.body.style.overflow = 'hidden';
         States.application.activateProject = false;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.hide({ delay: 0 });
         this._home.show({ delay: 1 });
         this._about.hide({ delay: 0 });
@@ -190,7 +190,7 @@ export default class DesktopAppView {
       case pages.ABOUT:
         document.body.style.overflow = 'hidden';
         States.application.activateProject = false;
-        this._loader.hide();
+        // this._loader.hide();
         this._about.show({ delay: 0.65 });
         this._home.show({ delay: 1 });
         this._ui.hide({ delay: 0 });

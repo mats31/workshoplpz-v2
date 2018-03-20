@@ -10,4 +10,13 @@
 
   height: 100vh;
   width: 100vw;
+
+  .loader__container {
+    width: 10rem;
+    height: 10rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+  }
 }
