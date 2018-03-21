@@ -85,7 +85,7 @@ class Mask extends THREE.Object3D {
     this._maskGeometry.addAttribute( 'a_finalPosition', new THREE.BufferAttribute( finalModel.children[0].geometry.attributes.position.array, 3 ) );
     this._maskGeometry.addAttribute( 'a_randomColor', new THREE.BufferAttribute( randomColors, 1 ) );
 
-    const texture = States.resources.getTexture('orange-preview').media;
+    const texture = States.resources.getTexture(`${this.projectID}-preview`).media;
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.needsUpdate = true;
