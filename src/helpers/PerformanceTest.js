@@ -28,6 +28,8 @@ class PerformanceTest {
 
         if (States.IS_FF) return 'high';
 
+        if (this.gpu.series === '580') return 'high';
+
         return 'low';
 
       case 'Intel':
