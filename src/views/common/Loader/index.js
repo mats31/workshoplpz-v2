@@ -51,14 +51,14 @@ export default class LoaderView {
   show({ delay = 0 } = {}) {
     this.el.style.display = 'block';
 
-    TweenLite.to(
-      this.el,
-      1,
-      {
-        opacity: 1,
-        ease: 'Power2.easeOut',
-      },
-    );
+    // TweenLite.to(
+    //   this.el,
+    //   1,
+    //   {
+    //     opacity: 1,
+    //     ease: 'Power2.easeOut',
+    //   },
+    // );
   }
 
   hide({ delay = 0 } = {}) {
