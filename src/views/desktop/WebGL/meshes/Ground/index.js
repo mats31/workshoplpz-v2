@@ -9,6 +9,7 @@ class Ground extends THREE.Object3D {
     super();
 
     this.translation = 0;
+    this.translationTarget = 0;
 
     this.geometry = new THREE.PlaneGeometry( 550, 550, 200, 200 );
     // this.geometry = new THREE.PlaneGeometry( 200, 200, 10, 10 );
@@ -45,7 +46,8 @@ class Ground extends THREE.Object3D {
 
   update(time, translationEase) {
 
-    this.translation = translationEase * 0.0035;
+    this.translationTarget += translationEase * 0.01;
+    this.translation += ( this.translationTarget - this.translation ) * 0.04;
 
     this.material.uniforms.u_time.value = time;
     this.material.uniforms.u_translation.value = this.translation;

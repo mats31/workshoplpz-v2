@@ -588,9 +588,7 @@ export default class WebGL {
 
       this._updateRaycast();
       this._updateProjectContainers(time);
-      if (States.version !== 'low') {
-        this._ground.update(time, this._translationEase );
-      }
+
       this._grain.update(time);
       this._renderer.render(this._scene, this._camera);
     }
@@ -628,11 +626,16 @@ export default class WebGL {
 
     const translationDelta = this._translationDelta * 60;
     const translationWheel = this._translationWheel * 0.02;
+    const groundTranslation = Math.abs(translationDelta) - Math.abs( translationWheel ) > 0 ? translationDelta : translationWheel;
     const translationShow = this._translationShow;
 
     const delta = translationDelta + translationWheel;
     const maxTranslation = Math.max( Math.abs(translationDelta), Math.abs(translationWheel) );
     // const maxTranslation = Math.max( -5, Math.min( 5, Math.abs(translationDelta) ) );
+
+    if (States.version !== 'low') {
+      this._ground.update(time, groundTranslation );
+    }
 
     for ( let i = 0; i < this._projectContainers.length; i++ ) {
 
