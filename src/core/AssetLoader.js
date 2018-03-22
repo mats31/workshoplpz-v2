@@ -97,7 +97,7 @@ class AssetLoader {
           console.log( `${( ( xhr.loaded / xhr.total ) * 100)} % loaded` );
         },
         ( xhr ) => {
-          reject( `Une erreur est survenue lors du chargement de la texture : ${xhr}` );
+          reject( `Une erreur est survenue lors du chargement de la texture : ${media.url}` );
         },
       );
     });
