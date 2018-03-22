@@ -34,6 +34,11 @@ const ressources = {
     // { id: 'video', url: 'videos/video.mp4' },
   ],
 
+  sounds: [
+    { id: 'whoosh1', url: 'audio/whoosh.mp3', analyser: false },
+    { id: 'whoosh2', url: 'audio/whoosh.wav', analyser: false },
+  ],
+
   textures: [
     { id: 'uv', url: 'textures/uv.jpg', description: '' },
     { id: 'daphne-preview', url: 'textures/daphne-preview.jpg', description: '' },

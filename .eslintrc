@@ -7,6 +7,7 @@
     "$": true,
     "app": true,
     "alert": true,
+    "AudioController": true,
     "canvg": true,
     "console": true,
     "document": true,

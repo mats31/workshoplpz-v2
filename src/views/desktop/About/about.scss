@@ -87,6 +87,23 @@
     transform-origin: left center;
   }
 
+  .about__mathis {
+    margin-bottom: 10rem;
+    margin-top: 10rem;
+    opacity: 0;
+  }
+
+    .about__mathis a {
+      text-decoration: none;
+      color: white;
+      opacity: 0.5;
+      transition: opacity 0.25s ease-out;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
   // .about__line:last-child {
   //   transform: scale(0, 1);
   // }

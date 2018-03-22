@@ -64,6 +64,18 @@ html.mobile {
       transform-origin: left center;
     }
 
+    .about__mathis {
+      opacity: 0;
+      font-size: 1.3rem;
+    }
+
+      .about__mathis a {
+        display: inline;
+        text-decoration: none;
+        color: white;
+        text-decoration: underline;
+      }
+
     // .about__line:last-child {
     //   transform: scale(0, 1);
     // }

@@ -20,6 +20,7 @@ export default class AboutView {
       instagram: this.el.querySelector('.js-about__instagram'),
       vimeo: this.el.querySelector('.js-about__vimeo'),
       description: this.el.querySelector('.js-about__description'),
+      mathis: this.el.querySelector('.js-about__mathis'),
       firstLines: this.el.querySelectorAll('.js-about__lines .js-about__line:first-child'),
       secondLines: this.el.querySelectorAll('.js-about__lines .js-about__line:last-child'),
     };
@@ -38,7 +39,7 @@ export default class AboutView {
     this._setupEvents();
     this.el.style.display = 'block';
 
-    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.vimeo, this._ui.description, this._ui.firstLines, this._ui.secondLines]);
+    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.vimeo, this._ui.description, this._ui.mathis, this._ui.firstLines, this._ui.secondLines]);
 
     TweenLite.fromTo(
       this._ui.title,
@@ -134,6 +135,22 @@ export default class AboutView {
       },
     );
 
+    TweenLite.fromTo(
+      this._ui.mathis,
+      1,
+      {
+        y: 10,
+        scaleY: 1.5,
+      },
+      {
+        delay: delay + 0.25,
+        y: 0,
+        scaleY: 1,
+        opacity: 1,
+        ease: 'Power4.easeOut',
+      },
+    );
+
     TweenMax.staggerFromTo(
       this._ui.firstLines,
       1,
@@ -158,7 +175,7 @@ export default class AboutView {
 
   hide({ delay = 0 } = {}) {
 
-    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.vimeo, this._ui.description, this._ui.firstLines, this._ui.secondLines]);
+    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.vimeo, this._ui.description, this._ui.mathis, this._ui.firstLines, this._ui.secondLines]);
     TweenLite.to(
       this._ui.title,
       1,
@@ -211,6 +228,16 @@ export default class AboutView {
 
     TweenLite.to(
       this._ui.description,
+      1,
+      {
+        delay,
+        opacity: 0,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    TweenLite.to(
+      this._ui.mathis,
       1,
       {
         delay,

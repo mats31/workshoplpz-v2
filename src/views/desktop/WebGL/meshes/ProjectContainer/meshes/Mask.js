@@ -1,6 +1,6 @@
 import States from 'core/States';
 import { active, focused, objectVisible } from 'core/decorators';
-import { lerp } from 'utils/math';
+import { lerp, randomFloat } from 'utils/math';
 import { getPerspectiveSize } from 'utils/3d';
 
 import vertexShader from '../shaders/mask.vs';
@@ -144,6 +144,7 @@ class Mask extends THREE.Object3D {
         specular: { value: new THREE.Color( 0x111111 ) },
         u_time: { value: 0, type: 'f' },
         uPos: { value: 0, type: 'f' },
+        uOffset: { value: new THREE.Vector3(Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1)), type: 'v3' },
         uAlpha: { value: 1, type: 'f' },
       },
       lights: true,
@@ -161,6 +162,7 @@ class Mask extends THREE.Object3D {
         specular: { value: new THREE.Color( 0x111111 ) },
         u_time: { value: 0, type: 'f' },
         uPos: { value: Math.PI, type: 'f' },
+        uOffset: { value: new THREE.Vector3(Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1)), type: 'v3' },
         uAlpha: { value: 1, type: 'f' },
       },
       lights: true,
@@ -458,14 +460,16 @@ class Mask extends THREE.Object3D {
   update( time ) {
 
     if (this._accessoryNeedsUpdate) {
-      this._accessory1.position.x += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.x ) * 0.1;
-      this._accessory1.position.z += ( Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.z ) * 0.1;
+      this._accessory1.position.x += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory1.material.uniforms.uOffset.value.x ) * 14 - this._accessory1.position.x ) * 0.1;
+      this._accessory1.position.y += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory1.material.uniforms.uOffset.value.y ) * 14 - this._accessory1.position.y ) * 0.1;
+      this._accessory1.position.z += ( Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory1.material.uniforms.uOffset.value.z ) * 14 - this._accessory1.position.z ) * 0.1;
       this._accessory1.rotation.x = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.8;
       this._accessory1.rotation.y = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2;
       this._accessory1.rotation.z = this._accessory1.material.uniforms.uPos.value + Math.PI * 1;
 
-      this._accessory2.position.x += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.x ) * 0.1;
-      this._accessory2.position.z += ( Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.z ) * 0.1;
+      this._accessory2.position.x += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory2.material.uniforms.uOffset.value.x ) * 14 - this._accessory2.position.x ) * 0.1;
+      this._accessory2.position.y += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory2.material.uniforms.uOffset.value.y ) * 14 - this._accessory2.position.y ) * 0.1;
+      this._accessory2.position.z += ( Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory2.material.uniforms.uOffset.value.z ) * 14 - this._accessory2.position.z ) * 0.1;
       this._accessory2.rotation.x = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.8;
       this._accessory2.rotation.y = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2;
       this._accessory2.rotation.z = this._accessory2.material.uniforms.uPos.value + Math.PI * 1;
@@ -486,8 +490,8 @@ class Mask extends THREE.Object3D {
     // this._mesh.rotation.x = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
     // this._mesh.rotation.z = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
 
-    this._mesh.rotation.x = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
-    this._mesh.rotation.z = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
+    // this._mesh.rotation.x = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
+    // this._mesh.rotation.z = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
 
     // this._mesh.rotation.x += 0.1;
     // this._mesh.rotation.y += 0.1;

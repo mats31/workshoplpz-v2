@@ -1,7 +1,7 @@
 import States from 'core/States';
 import * as pages from 'core/pages';
 import raf from 'raf';
-import PerformanceTest from 'helpers/PerformanceTest'
+import PerformanceTest from 'helpers/PerformanceTest';
 import { autobind } from 'core-decorators';
 // import LoaderView from 'views/common/Loader/Loader';
 import HomeView from 'views/desktop/Home';
@@ -32,6 +32,9 @@ export default class DesktopAppView {
     this._everyday = this._setupEverydayView();
     this._cursor = this._setupCursorView();
     this._ui = this._setupUIView();
+
+    this._whoosh1 = States.resources.getSound('whoosh1').media;
+    this._whoosh2 = States.resources.getSound('whoosh2').media;
 
     this._previousState = null;
 
@@ -133,6 +136,7 @@ export default class DesktopAppView {
 
         if (this._previousState === pages.EVERYDAYS) {
           this._webgl.show({ delay: 0.7, direction: 'left' });
+          AudioController.playSound('whoosh1', { delay: 0.5 });
         } else if (this._previousState === pages.ABOUT) {
           this._webgl.show({ delay: 0, transitionIn: false });
         } else if (this._previousState === pages.PROJECT) {
@@ -184,11 +188,12 @@ export default class DesktopAppView {
         } else if (!this._previousState) {
           this._everyday.show({ delay: 0.5, transitionFromDown: true });
         } else {
+          AudioController.playSound('whoosh2', { delay: 0.5 });
           this._everyday.show({ delay: 0.6 });
         }
         break;
       case pages.ABOUT:
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'visible';
         States.application.activateProject = false;
         // this._loader.hide();
         this._about.show({ delay: 0.65 });
