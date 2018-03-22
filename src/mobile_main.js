@@ -2,6 +2,7 @@
 import { autobind } from 'core-decorators';
 import domready from 'domready';
 import gsap from 'gsap';
+import AudioController from 'helpers/AudioController'; /* exported AudioController */
 import AssetLoader from 'core/AssetLoader';
 import States from 'core/States';
 import Signals from 'core/Signals'; /* exported Signals */

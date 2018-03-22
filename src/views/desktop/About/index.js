@@ -33,6 +33,13 @@ export default class AboutView {
     this._ui.vimeo.addEventListener('mouseenter', this._onVimeoMouseenter);
   }
 
+  _removeEvents() {
+    this._ui.mail.removeEventListener('mouseenter', this._onMailMouseenter);
+    this._ui.twitter.removeEventListener('mouseenter', this._onTwitterMouseenter);
+    this._ui.instagram.removeEventListener('mouseenter', this._onInstagramMouseenter);
+    this._ui.vimeo.removeEventListener('mouseenter', this._onVimeoMouseenter);
+  }
+
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
@@ -174,6 +181,7 @@ export default class AboutView {
   }
 
   hide({ delay = 0 } = {}) {
+    this._removeEvents();
 
     TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.vimeo, this._ui.description, this._ui.mathis, this._ui.firstLines, this._ui.secondLines]);
     TweenLite.to(
