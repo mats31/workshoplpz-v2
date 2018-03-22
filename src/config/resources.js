@@ -52,8 +52,8 @@ const ressources = {
   ],
 
   sounds: [
-    { id: 'whoosh1', url: 'audio/whoosh.mp3', analyser: false },
-    { id: 'whoosh2', url: 'audio/whoosh.wav', analyser: false },
+    // { id: 'whoosh1', url: 'audio/whoosh.mp3', analyser: false },
+    // { id: 'whoosh2', url: 'audio/whoosh.wav', analyser: false },
   ],
 
   textures: [

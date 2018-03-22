@@ -33,9 +33,6 @@ export default class DesktopAppView {
     this._cursor = this._setupCursorView();
     this._ui = this._setupUIView();
 
-    this._whoosh1 = States.resources.getSound('whoosh1').media;
-    this._whoosh2 = States.resources.getSound('whoosh2').media;
-
     this._previousState = null;
 
     this._views.push(this._home);
@@ -136,7 +133,7 @@ export default class DesktopAppView {
 
         if (this._previousState === pages.EVERYDAYS) {
           this._webgl.show({ delay: 0.7, direction: 'left' });
-          AudioController.playSound('whoosh1', { delay: 0.5 });
+          // AudioController.playSound('whoosh1', { delay: 0.5 });
         } else if (this._previousState === pages.ABOUT) {
           this._webgl.show({ delay: 0, transitionIn: false });
         } else if (this._previousState === pages.PROJECT) {
@@ -188,7 +185,7 @@ export default class DesktopAppView {
         } else if (!this._previousState) {
           this._everyday.show({ delay: 0.5, transitionFromDown: true });
         } else {
-          AudioController.playSound('whoosh2', { delay: 0.5 });
+          // AudioController.playSound('whoosh2', { delay: 0.5 });
           this._everyday.show({ delay: 0.6 });
         }
         break;

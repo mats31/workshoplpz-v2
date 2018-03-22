@@ -144,7 +144,7 @@ class Mask extends THREE.Object3D {
         specular: { value: new THREE.Color( 0x111111 ) },
         u_time: { value: 0, type: 'f' },
         uPos: { value: 0, type: 'f' },
-        uOffset: { value: new THREE.Vector3(Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1)), type: 'v3' },
+        uOffset: { value: randomFloat(-Math.PI * 0.9, Math.PI * 0.9), type: 'f' },
         uAlpha: { value: 1, type: 'f' },
       },
       lights: true,
@@ -162,7 +162,7 @@ class Mask extends THREE.Object3D {
         specular: { value: new THREE.Color( 0x111111 ) },
         u_time: { value: 0, type: 'f' },
         uPos: { value: Math.PI, type: 'f' },
-        uOffset: { value: new THREE.Vector3(Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1), Math.PI * randomFloat(-1, 1)), type: 'v3' },
+        uOffset: { value: randomFloat(-Math.PI * 0.9, Math.PI * 0.9), type: 'f' },
         uAlpha: { value: 1, type: 'f' },
       },
       lights: true,
@@ -217,6 +217,17 @@ class Mask extends THREE.Object3D {
       },
     );
 
+    TweenLite.killTweensOf(this._accessory1.material.uniforms.uOffset);
+    this._accessoryNeedsUpdate = true;
+    TweenLite.to(
+      this._accessory1.material.uniforms.uOffset,
+      2,
+      {
+        value: this._accessory1.material.uniforms.uOffset.value * -1,
+        ease: 'Power4.easeOut',
+      },
+    );
+
     TweenLite.killTweensOf(this._accessory2.material.uniforms.uPos);
     TweenLite.to(
       this._accessory2.material.uniforms.uPos,
@@ -227,6 +238,17 @@ class Mask extends THREE.Object3D {
         onComplete: () => {
           this._accessoryNeedsUpdate = false;
         },
+      },
+    );
+
+    TweenLite.killTweensOf(this._accessory2.material.uniforms.uOffset);
+    this._accessoryNeedsUpdate = true;
+    TweenLite.to(
+      this._accessory2.material.uniforms.uOffset,
+      2,
+      {
+        value: this._accessory2.material.uniforms.uOffset.value * -1,
+        ease: 'Power4.easeOut',
       },
     );
   }
@@ -257,6 +279,17 @@ class Mask extends THREE.Object3D {
       },
     );
 
+    TweenLite.killTweensOf(this._accessory1.material.uniforms.uOffset);
+    this._accessoryNeedsUpdate = true;
+    TweenLite.to(
+      this._accessory1.material.uniforms.uOffset,
+      2,
+      {
+        value: this._accessory1.material.uniforms.uOffset.value * -1,
+        ease: 'Power4.easeOut',
+      },
+    );
+
     TweenLite.killTweensOf(this._accessory2.material.uniforms.uPos);
     TweenLite.to(
       this._accessory2.material.uniforms.uPos,
@@ -267,6 +300,17 @@ class Mask extends THREE.Object3D {
         onComplete: () => {
           this._accessoryNeedsUpdate = false;
         },
+      },
+    );
+
+    TweenLite.killTweensOf(this._accessory2.material.uniforms.uOffset);
+    this._accessoryNeedsUpdate = true;
+    TweenLite.to(
+      this._accessory2.material.uniforms.uOffset,
+      2,
+      {
+        value: this._accessory2.material.uniforms.uOffset.value * -1,
+        ease: 'Power4.easeOut',
       },
     );
   }
@@ -460,16 +504,16 @@ class Mask extends THREE.Object3D {
   update( time ) {
 
     if (this._accessoryNeedsUpdate) {
-      this._accessory1.position.x += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory1.material.uniforms.uOffset.value.x ) * 14 - this._accessory1.position.x ) * 0.1;
-      this._accessory1.position.y += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory1.material.uniforms.uOffset.value.y ) * 14 - this._accessory1.position.y ) * 0.1;
-      this._accessory1.position.z += ( Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory1.material.uniforms.uOffset.value.z ) * 14 - this._accessory1.position.z ) * 0.1;
+      this._accessory1.position.x += ( Math.cos( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.x ) * 0.1;
+      this._accessory1.position.y += ( Math.sin( this._accessory1.material.uniforms.uOffset.value ) * 14 - this._accessory1.position.y ) * 0.1;
+      this._accessory1.position.z += ( Math.sin( this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory1.position.z ) * 0.1;
       this._accessory1.rotation.x = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.8;
       this._accessory1.rotation.y = this._accessory1.material.uniforms.uPos.value + Math.PI * 0.2;
       this._accessory1.rotation.z = this._accessory1.material.uniforms.uPos.value + Math.PI * 1;
 
-      this._accessory2.position.x += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory2.material.uniforms.uOffset.value.x ) * 14 - this._accessory2.position.x ) * 0.1;
-      this._accessory2.position.y += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory2.material.uniforms.uOffset.value.y ) * 14 - this._accessory2.position.y ) * 0.1;
-      this._accessory2.position.z += ( Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 + this._accessory2.material.uniforms.uOffset.value.z ) * 14 - this._accessory2.position.z ) * 0.1;
+      this._accessory2.position.x += ( Math.cos( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.x ) * 0.1;
+      this._accessory2.position.y += ( Math.sin( this._accessory2.material.uniforms.uOffset.value ) * 14 - this._accessory2.position.y ) * 0.1;
+      this._accessory2.position.z += ( Math.sin( this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2 ) * 14 - this._accessory2.position.z ) * 0.1;
       this._accessory2.rotation.x = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.8;
       this._accessory2.rotation.y = this._accessory2.material.uniforms.uPos.value + Math.PI * 0.2;
       this._accessory2.rotation.z = this._accessory2.material.uniforms.uPos.value + Math.PI * 1;

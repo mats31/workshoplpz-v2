@@ -7,6 +7,7 @@
   @include font-body();
   color: white;
   padding: 17rem 5.46875% 0 5.46875%;
+  margin-bottom: 10rem;
 
   .about__title {
     @include font-title();
@@ -99,8 +100,8 @@
   }
 
   .about__mathis {
-    margin-bottom: 10rem;
-    margin-top: 10rem;
+    // margin-bottom: 10rem;
+    margin-top: 7.7rem;
     opacity: 0;
   }
 
