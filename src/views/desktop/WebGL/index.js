@@ -446,7 +446,7 @@ export default class WebGL {
   _onScrollWheel(event) {
 
     if (!States.application.activateProject && !this.isAnimating) {
-      const deltaY = event.deltaY;
+      const deltaY = Math.min( 170, Math.max( -170, event.deltaY ) );
 
       // this._translationWheel = Math.max( -2.5, Math.min( 2.5, deltaY * 0.1 ) );
       this._translationWheel = deltaY;

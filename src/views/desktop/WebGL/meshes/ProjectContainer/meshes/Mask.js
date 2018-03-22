@@ -102,7 +102,7 @@ class Mask extends THREE.Object3D {
       u_direction: { type: 'v2', value: new THREE.Vector2( Math.random() > 0.5 ? 1 : -1, Math.random() > 0.5 ? 1 : -1 ) },
       u_resolution: { type: 'v2', value: new THREE.Vector2( window.innerWidth, window.innerHeight ) },
       u_time: { type: 'f', value: 0 },
-      u_speed: { type: 'f', value: Math.random() * 0.35 + 0.1 },
+      u_speed: { type: 'f', value: Math.random() * 0.35 + 0.02 },
       u_fullColor: { type: 'f', value: 0 },
       u_translationOffset: { type: 'f', value: 0 },
       emissive: { value: new THREE.Color( this._color ) },
@@ -306,7 +306,7 @@ class Mask extends THREE.Object3D {
 
     TweenLite.to(
       this._maskUniforms.u_fullColor,
-      1.5,
+      1,
       {
         delay: 0.34,
         value: 1,
@@ -490,8 +490,8 @@ class Mask extends THREE.Object3D {
     // this._mesh.rotation.x = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
     // this._mesh.rotation.z = time * 0.1 * this._maskUniforms.u_speed.value * this._activeRotation;
 
-    // this._mesh.rotation.x = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
-    // this._mesh.rotation.z = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value ) * Math.PI * this._activeRotation;
+    this._mesh.rotation.x = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value * 20 ) * Math.PI * 0.15 * this._activeRotation;
+    this._mesh.rotation.z = Math.sin( time * 0.025 * this._maskUniforms.u_speed.value * 20 ) * Math.PI * 0.15 * this._activeRotation;
 
     // this._mesh.rotation.x += 0.1;
     // this._mesh.rotation.y += 0.1;

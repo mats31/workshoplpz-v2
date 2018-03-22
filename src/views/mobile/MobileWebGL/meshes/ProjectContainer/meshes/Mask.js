@@ -266,7 +266,7 @@ class Mask extends THREE.Object3D {
 
     TweenLite.to(
       this._maskUniforms.u_fullColor,
-      1.5,
+      1,
       {
         delay: 0.34,
         value: 1,

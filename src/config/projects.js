@@ -84,7 +84,7 @@ const projects = {
         { file: 'media-3', type: 'video' },
         { file: 'media-4', type: 'video' },
       ],
-      color: 'rgb(205, 175, 165)',
+      color: 'rgb(222, 224, 223)',
     },
     {
       id: 'skyfall',
@@ -104,7 +104,7 @@ const projects = {
         { id: 'skyfall-media-2', type: 'image' },
         { id: 'skyfall-media-3', type: 'image' },
       ],
-      color: 'rgb(205, 175, 165)',
+      color: 'rgb(217, 221, 245)',
     },
   ],
 };

@@ -150,6 +150,7 @@ html.mobile {
   .project__description {
     @include font-description();
     opacity: 0;
+    line-height: 2.6rem;
   }
 
   .project__firstContainer {

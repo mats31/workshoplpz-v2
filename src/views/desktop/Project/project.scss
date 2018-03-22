@@ -144,6 +144,7 @@
 .project__description {
   @include font-description();
   opacity: 0;
+  line-height: 2.6rem;
 }
 
 .project__firstContainer {
@@ -269,7 +270,7 @@
 
 .project__media {
   margin-bottom: 13rem;
-  background: rgba(255, 255, 255, 0.1);
+  // background: rgba(255, 255, 255, 0.1);
   min-width: 40rem;
   min-height: 40rem;
 }
