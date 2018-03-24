@@ -240,6 +240,17 @@ html.mobile {
     margin-bottom: 9rem;
   }
 
+  .project__clientVisit a {
+    text-decoration: none;
+    color: white;
+  }
+
+  .project__team a, {
+    text-decoration: none;
+    color: white;
+    opacity: 0.8;
+  }
+
   .project__roleDescription {
     opacity: 0;
   }

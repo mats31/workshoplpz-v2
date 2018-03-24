@@ -76,7 +76,7 @@ const projects = {
       team: '<a href="http://anaisiris.com/" target="_blank">Anaïs Lefebvre</a><br/><a href="http://steviaplease.me" target="_blank">Camille Frairrot</a><br/><a href="https://jackyfong.com" target="_blank">Jacky Fong</a><br/><a href="https://twitter.com/anthelme_dumont" target="_blank">Anthelme Dumont</a>',
       role: 'Art Director<br/>UI / UX',
       reward: '',
-      url: '<a href="https://www.behance.net/gallery/54737151/Fuse-WebGL-Experience">Visit the Behance</a>',
+      url: '<a href="https://www.behance.net/gallery/54737151/Fuse-WebGL-Experience" target="_blank">Visit the Behance</a>',
       medias: [
         { id: 'fuse-media-0', type: 'image' },
         { file: 'media-1', type: 'video' },
