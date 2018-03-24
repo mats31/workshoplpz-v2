@@ -26,6 +26,7 @@ class Grain extends THREE.Object3D {
       uniforms: {
         u_map: { type: 't', value: map },
         u_alpha: { type: 'f', value: 1 },
+        uTime: { type: 'f', value: 0 },
       },
       wireframe: false,
     });
@@ -62,7 +63,9 @@ class Grain extends THREE.Object3D {
     );
   }
 
-  update(time) {}
+  update(time) {
+    this._material.uniforms.uTime.value = time;
+  }
 }
 
 export default Grain;

@@ -1,3 +1,4 @@
+import { autobind } from 'core-decorators';
 import States from 'core/States';
 import vertexShader from './shaders/ground.vs';
 import fragmentShader from './shaders/ground.fs';
@@ -40,6 +41,19 @@ class Ground extends THREE.Object3D {
       uniforms: this.material.uniforms,
     });
     this.add(this.mesh);
+
+    this._addEvents();
+  }
+
+  _addEvents() {
+    Signals.onEverydayDrag.add(this._onEverydayDrag);
+  }
+
+  // Events ----------------------
+
+  @autobind
+  _onEverydayDrag(delta) {
+    this.translationTarget += delta * 0.0003;
   }
 
   // Update -----------------------------------------------

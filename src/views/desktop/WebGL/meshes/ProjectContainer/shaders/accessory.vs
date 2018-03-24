@@ -27,8 +27,8 @@ attribute float a_randomColor;
 uniform float uPos;
 uniform float u_time;
 
-varying vec3 vWorldPosition;
-varying vec2 vUV;
+// varying vec3 vWorldPosition;
+// varying vec2 vUV;
 varying float vRandomColor;
 
 mat4 rotationMatrix(vec3 axis, float angle)
@@ -130,7 +130,7 @@ void main() {
 	#include <envmap_vertex>
 	#include <shadowmap_vertex>
 
-  vUV = uv;
+  // vUV = uv;
   vRandomColor = a_randomColor;
 
 }

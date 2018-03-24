@@ -66,6 +66,7 @@ class ProjectContainer extends THREE.Object3D {
   _setupDescription() {
 
     this._textTexture = States.resources.getTexture(`${this.projectID}-text`).media;
+    this._textTexture.minFilter = THREE.LinearFilter;
     // this._textTexture.wrapS = THREE.ClampToEdgeWrapping;
     // this._textTexture.wrapT = THREE.ClampToEdgeWrapping;
     this._textTexture.needsUpdate = true;

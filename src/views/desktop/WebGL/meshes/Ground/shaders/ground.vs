@@ -99,7 +99,7 @@ uniform float u_translation;
 
 // varying vec2 vUV;
 // varying vec3 vNormal;
-varying vec3 vWorldPosition;
+// varying vec3 vWorldPosition;
 varying vec3 vPosition;
 
 void main() {

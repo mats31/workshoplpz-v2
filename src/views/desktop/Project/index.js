@@ -36,6 +36,7 @@ export default class ProjectView {
       categories: this.el.querySelectorAll('.js-project__category'),
       contents: this.el.querySelectorAll('.js-project__content'),
       date: this.el.querySelector('.js-project__date'),
+      visitText: this.el.querySelector('.js-project__clientVisitText'),
       pitchDescription: this.el.querySelector('.js-project__pitchDescription'),
       teamDescription: this.el.querySelector('.js-project_teamDescription'),
       roleDescription: this.el.querySelector('.js-project__roleDescription'),
@@ -257,6 +258,10 @@ export default class ProjectView {
         // Client name
         this._ui.date.innerHTML = this._project.date;
 
+        // Visit url;
+        this._ui.visit.style.display = this._project.url === '' ? 'none' : 'block';
+        this._ui.visitText.innerHTML = this._project.url;
+
         // Pitch
         this._ui.pitchDescription.innerHTML = this._project.pitch;
 
@@ -376,6 +381,19 @@ export default class ProjectView {
         },
       );
     }
+
+    TweenLite.fromTo(
+      this._ui.secondContainer,
+      1,
+      {
+        opacity: 0,
+      },
+      {
+        delay: 0.5,
+        opacity: 1,
+        ease: 'Power4.easeOut',
+      },
+    );
   }
 
   _activateMediaScalable() {

@@ -27,7 +27,7 @@ attribute float a_randomColor;
 uniform float uPos;
 uniform float u_time;
 
-varying vec3 vWorldPosition;
+// varying vec3 vWorldPosition;
 varying vec2 vUV;
 varying float vRandomColor;
 

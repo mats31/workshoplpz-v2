@@ -50,6 +50,7 @@ export default class EverydayView {
 
     Signals.onResize.add(this._onResize);
     Signals.onEverydayMousedown.add(this._onEverydayMousedown);
+    Signals.onScrollWheel.add(this._onScrollWheel);
   }
 
   // State ---------------------------------------------------------------------
@@ -147,6 +148,7 @@ export default class EverydayView {
     if (this._clicked) {
 
       this._delta = ( event.clientX - this._mouse.x ) * 2;
+      Signals.onEverydayDrag.dispatch(this._delta);
 
       this._mouse.x = event.clientX;
       this._mouse.y = event.clientY;
@@ -174,6 +176,17 @@ export default class EverydayView {
     for (let i = 0; i < this._everydayItems.length; i++) {
       this._everydayItems[i].activate(index);
     }
+  }
+
+  @autobind
+  _onScrollWheel(event) {
+    this._delta = Math.min( 50, Math.max( -50, event.deltaY ) );
+
+    clearTimeout(this._scrollWheelTimeout);
+
+    this._scrollWheelTimeout = setTimeout( () => {
+      this._delta = 0;
+    }, 50);
   }
 
   @autobind

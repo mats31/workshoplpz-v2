@@ -445,6 +445,8 @@ export default class WebGL {
   @autobind
   _onScrollWheel(event) {
 
+    console.log(event.originalEvent);
+
     if (!States.application.activateProject && !this.isAnimating) {
       const deltaY = Math.min( 170, Math.max( -170, event.deltaY ) );
 

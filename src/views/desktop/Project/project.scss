@@ -149,8 +149,9 @@
 }
 
 .project__firstContainer {
-  height: 100vh;
-  min-height: 69.5rem;
+  // height: 100vh;
+  // min-height: 69.5rem;
+  margin-bottom: 7rem;
   position: relative;
   width: 100%
 }
@@ -222,7 +223,8 @@
 }
 
 .project__clientVisit {
-  @include font-subtitle();
+  // @include font-subtitle();
+  @include font-body();
   display: inline-block;
   margin: 0;
   padding-bottom: 1rem;
@@ -252,6 +254,22 @@
   margin-bottom: 9rem;
 }
 
+.project__clientVisit a {
+  text-decoration: none;
+  color: white;
+}
+
+.project_team a, {
+  text-decoration: none;
+  color: white;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .project__roleDescription {
   opacity: 0;
 }
@@ -262,7 +280,8 @@
 
 .project__secondContainer {
   position: relative;
-  width: 100%
+  width: 100%;
+  opacity: 0;
 }
 
 .project__medias {

@@ -703,7 +703,7 @@ THREE.OBJLoader.prototype = {
 
 				}
 
-				material.shading = sourceMaterial.smooth ? THREE.SmoothShading : THREE.FlatShading;
+				// material.shading = sourceMaterial.smooth ? THREE.SmoothShading : THREE.FlatShading;
 
 				createdMaterials.push(material);
 

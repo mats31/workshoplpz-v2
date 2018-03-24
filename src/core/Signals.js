@@ -25,6 +25,7 @@ class Signals {
     this.onEverydayMousedown = new Signal();
     this.onEverydayMouseenter = new Signal();
     this.onEverydayMouseout = new Signal();
+    this.onEverydayDrag = new Signal();
 
     // Cursor
     this.onCursorSlide = new Signal();

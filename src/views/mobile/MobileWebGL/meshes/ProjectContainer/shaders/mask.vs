@@ -30,7 +30,7 @@ uniform float u_speed;
 uniform float u_morph;
 uniform float u_translationOffset;
 
-varying vec3 vWorldPosition;
+// varying vec3 vWorldPosition;
 varying vec2 vUV;
 varying float vRandomColor;
 

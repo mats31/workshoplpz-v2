@@ -29,21 +29,21 @@ class Main {
 
   start() {
 
-    if (!States.MOBILE) {
+    // if (!States.MOBILE) {
         import('views/desktop/Application/Application').then((App) => {
           import('stylesheets/main.scss').then(() => {
             this._application = new App();
             this._onLoadApplication();
           });
         });
-    } else {
-        import('views/mobile/MobileApplication/MobileApplication').then((App) => {
-          import('stylesheets/mobile_main.scss').then(() => {
-            this._application = new App();
-            this._onLoadApplication();
-          });
-        });
-    }
+  //   } else {
+  //       import('views/mobile/MobileApplication/MobileApplication').then((App) => {
+  //         import('stylesheets/mobile_main.scss').then(() => {
+  //           this._application = new App();
+  //           this._onLoadApplication();
+  //         });
+  //       });
+  //   }
   }
 
   _onLoadApplication() {
