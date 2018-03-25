@@ -100,10 +100,8 @@ export default class EverydayItem {
   }
 
   _setupEvents() {
-    this.el.addEventListener('touchstart', this._onMousedown);
-    // this.el.addEventListener('touchenter', this._onMouseenter);
-    // this.el.addEventListener('mouseleave', this._onMouseleave);
-    this.el.addEventListener('touchend', this._onMouseleave);
+    this.el.addEventListener('touchstart', this._onTouchstart);
+    this.el.addEventListener('touchend', this._onTouchend);
   }
 
   // State ---------------------------------------------------------------------
@@ -195,18 +193,10 @@ export default class EverydayItem {
   // Events --------------------------------------------------------------------
 
   @autobind
-  _onMousedown() {
+  _onTouchstart() {
 
     let translationFactor;
     let customIndex;
-
-    // if (this._currentPos.x > 0) {
-    //   translationFactor = Math.floor( Math.abs(this._currentPos.x - this._margin + this._imgW) / ( this._length * this._margin) );
-    //   const firstItem = this.index === 0 && Math.abs(this._currentPos.x) < Math.abs(this._margin * ( this._length - 1 )) ? this._length : 0;
-    //   const secondItem = this.index === 1 && Math.abs(this._currentPos.x) < Math.abs(this._margin * ( this._length - 2 )) ? this._length : 0;
-    //   const thirdItem = this.index === 2 && Math.abs(this._currentPos.x) < Math.abs(this._margin * ( this._length - 3 )) ? this._length : 0;
-    //   customIndex = ( this.index - this._length ) - translationFactor * this._length + firstItem + secondItem + thirdItem;
-    // }
 
     if (this._currentPos.x > 0) {
 
@@ -224,14 +214,7 @@ export default class EverydayItem {
   }
 
   @autobind
-  _onMouseenter() {
-    if (!this.active()) {
-      this.focus();
-    }
-  }
-
-  @autobind
-  _onMouseleave() {
+  _onTouchend() {
     if (!this.active()) {
       this.blur();
     }

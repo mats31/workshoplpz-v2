@@ -100,10 +100,15 @@ export default class EverydayItem {
   }
 
   _setupEvents() {
-    this.el.addEventListener('mousedown', this._onMousedown);
-    this.el.addEventListener('mouseenter', this._onMouseenter);
-    this.el.addEventListener('mouseleave', this._onMouseleave);
-    this.el.addEventListener('mouseout', this._onMouseleave);
+    if (!States.TABLET) {
+      this.el.addEventListener('mousedown', this._onMousedown);
+      this.el.addEventListener('mouseenter', this._onMouseenter);
+      this.el.addEventListener('mouseleave', this._onMouseleave);
+      this.el.addEventListener('mouseout', this._onMouseleave);
+    } else {
+      this.el.addEventListener('touchstart', this._onMousedown);
+      this.el.addEventListener('touchend', this._onMouseleave);
+    }
   }
 
   // State ---------------------------------------------------------------------
@@ -199,14 +204,6 @@ export default class EverydayItem {
 
     let translationFactor;
     let customIndex;
-
-    // if (this._currentPos.x > 0) {
-    //   translationFactor = Math.floor( Math.abs(this._currentPos.x - this._margin + this._imgW) / ( this._length * this._margin) );
-    //   const firstItem = this.index === 0 && Math.abs(this._currentPos.x) < Math.abs(this._margin * ( this._length - 1 )) ? this._length : 0;
-    //   const secondItem = this.index === 1 && Math.abs(this._currentPos.x) < Math.abs(this._margin * ( this._length - 2 )) ? this._length : 0;
-    //   const thirdItem = this.index === 2 && Math.abs(this._currentPos.x) < Math.abs(this._margin * ( this._length - 3 )) ? this._length : 0;
-    //   customIndex = ( this.index - this._length ) - translationFactor * this._length + firstItem + secondItem + thirdItem;
-    // }
 
     if (this._currentPos.x > 0) {
 

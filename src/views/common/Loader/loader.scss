@@ -1,3 +1,5 @@
+@import '~stylesheets/common/global-imports';
+
 .loader{
   background: black;
   color: white;
@@ -18,5 +20,17 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
+  }
+
+  .loader__text {
+    @include font-body();
+    display: none;
+    width: 50%;
+    position: absolute;
+    left: 50%;
+    bottom: 10rem;
+    text-align: center;
+    transform: translate(-50%, 0);
+    font-size: 1.3rem;
   }
 }

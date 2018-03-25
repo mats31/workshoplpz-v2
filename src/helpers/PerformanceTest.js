@@ -15,7 +15,7 @@ class PerformanceTest {
 
   getOptimalVersionName() {
     if (!this.gpu) return 'low';
-    if (States.IS_FF) return 'low';
+    // if (States.IS_FF) return 'low';
 
     switch (this.gpu.type) {
       case 'NVIDIA':

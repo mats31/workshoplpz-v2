@@ -68,6 +68,7 @@ export default class ProjectView {
     this._titleOffset = new THREE.Vector2(0, 0);
     this._previewOffset = new THREE.Vector2(0, 0);
     this._mouse = new THREE.Vector2();
+    this._touches = new THREE.Vector2(0, 0);
 
     this._bodyOffsetHeight = document.body.offsetHeight;
     this._distanceToBottom = document.body.offsetHeight;
@@ -82,6 +83,11 @@ export default class ProjectView {
     this._ui.visit.addEventListener('mouseenter', this._onVisitEnter);
     this._ui.visit.addEventListener('click', this._onVisitClick);
     this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
+
+    if (States.TABLET) {
+      this._ui.titleContainer.addEventListener('touchmove', this._onTitleContainerTouchmove);
+    }
+
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
     Signals.onScrollWheel.add(this._onScrollWheel);
@@ -108,9 +114,21 @@ export default class ProjectView {
       },
     );
 
+    // TweenLite.set(
+    //   this.el,
+    //   {
+    //     delay: delay + 0.05,
+    //     opacity: 1,
+    //     ease: 'Power4.easeOut',
+    //     onComplete: () => {
+    //       this._showAnimationDone = true;
+    //     },
+    //   },
+    // );
+
     TweenLite.to(
       this.el,
-      0.4,
+      1,
       {
         delay: delay + 0.05,
         opacity: 1,
@@ -199,6 +217,7 @@ export default class ProjectView {
     TweenLite.set( this._ui.description, { opacity: 0 });
     TweenLite.set( this._ui.categories, { opacity: 0 });
     TweenLite.set( this._ui.contents, { opacity: 0 });
+    TweenLite.set( this._ui.secondContainer, { opacity: 0 });
 
     this._project = null;
     this._needsUpdate = false;
@@ -245,6 +264,7 @@ export default class ProjectView {
         }
         const previewOffset = document.createElement('div');
         previewOffset.classList.add('js-project__previewOffset');
+        previewOffset.classList.add('project__previewOffset');
         previewOffset.appendChild(preview);
         this._ui.preview.appendChild(previewOffset);
         this._ui.previewOffset = previewOffset;
@@ -543,6 +563,20 @@ export default class ProjectView {
   _onTitleContainerMousemove(event) {
     this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this._mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+  }
+
+  @autobind
+  _onTitleContainerTouchmove(event) {
+    if (this._showAnimationDone) {
+      this._delta = event.touches[0].clientY - this._touches.y;
+
+      this._touches.x = event.touches[0].clientX;
+      this._touches.y = event.touches[0].clientY;
+
+      if (this._delta > 0 && !this._isSkippingPreview) {
+        this._skipPreview();
+      }
+    }
   }
 
   @autobind

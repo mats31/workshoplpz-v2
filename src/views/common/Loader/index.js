@@ -20,6 +20,7 @@ export default class LoaderView {
 
     this._ui = {
       loaderContainer: this.el.querySelector('.js-loader__container'),
+      loaderText: this.el.querySelector('.js-loader__text'),
     };
 
     this.setupDOM();
@@ -51,14 +52,9 @@ export default class LoaderView {
   show({ delay = 0 } = {}) {
     this.el.style.display = 'block';
 
-    // TweenLite.to(
-    //   this.el,
-    //   1,
-    //   {
-    //     opacity: 1,
-    //     ease: 'Power2.easeOut',
-    //   },
-    // );
+    if (States.IS_FF || States.IS_SAFARI) {
+      this._ui.loaderText.style.display = 'block';
+    }
   }
 
   hide({ delay = 0 } = {}) {

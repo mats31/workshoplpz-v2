@@ -1,4 +1,5 @@
 import createDOM from 'utils/dom/createDOM';
+import States from 'core/States';
 import { autobind } from 'core-decorators';
 import { visible } from 'core/decorators';
 import everydays from 'config/everydays';
@@ -43,10 +44,16 @@ export default class EverydayView {
   }
 
   _setupEvents() {
-    this.el.addEventListener('mousedown', this._onMousedown);
-    this.el.addEventListener('mousemove', this._onMousemove);
-    this.el.addEventListener('mouseup', this._onMouseup);
-    document.addEventListener('mouseleave', this._onMouseup);
+    if (!States.TABLET) {
+      this.el.addEventListener('mousedown', this._onMousedown);
+      this.el.addEventListener('mousemove', this._onMousemove);
+      this.el.addEventListener('mouseup', this._onMouseup);
+      document.addEventListener('mouseleave', this._onMouseup);
+    } else {
+      this.el.addEventListener('touchstart', this._onTouchstart);
+      this.el.addEventListener('touchmove', this._onTouchmove);
+      this.el.addEventListener('touchend', this._onTouchend);
+    }
 
     Signals.onResize.add(this._onResize);
     Signals.onEverydayMousedown.add(this._onEverydayMousedown);
@@ -144,6 +151,14 @@ export default class EverydayView {
   }
 
   @autobind
+  _onTouchstart(event) {
+    this._clicked = true;
+
+    this._mouse.x = event.touches[0].clientX;
+    this._mouse.y = event.touches[0].clientY;
+  }
+
+  @autobind
   _onMousemove(event) {
     if (this._clicked) {
 
@@ -162,7 +177,37 @@ export default class EverydayView {
   }
 
   @autobind
+  _onTouchmove(event) {
+    if (this._clicked) {
+
+      Signals.onCursorSlide.dispatch();
+
+      this._delta = ( event.touches[0].clientX - this._mouse.x ) * 2;
+      Signals.onEverydayDrag.dispatch(this._delta);
+
+      this._mouse.x = event.touches[0].clientX;
+      this._mouse.y = event.touches[0].clientY;
+
+      clearTimeout(this._timeout);
+
+      this._timeout = setTimeout( () => {
+        this._delta = 0;
+      }, 50);
+    }
+  }
+
+  @autobind
   _onMouseup() {
+    this._clicked = false;
+    this._delta = 0;
+
+    for (let i = 0; i < this._everydayItems.length; i++) {
+      this._everydayItems[i].deactivate();
+    }
+  }
+
+  @autobind
+  _onTouchend() {
     this._clicked = false;
     this._delta = 0;
 

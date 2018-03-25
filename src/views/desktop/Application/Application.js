@@ -30,7 +30,9 @@ export default class DesktopAppView {
     this._webgl = this._setupWebGLView();
     this._project = this._setupProjectView();
     this._everyday = this._setupEverydayView();
-    this._cursor = this._setupCursorView();
+    if (!States.TABLET) {
+      this._cursor = this._setupCursorView();
+    }
     this._ui = this._setupUIView();
 
     this._previousState = null;
@@ -210,7 +212,9 @@ export default class DesktopAppView {
 
     this._home.updatePage(page);
     this._webgl.updatePage(page);
-    this._cursor.updatePage(page);
+    if (this._cursor) {
+      this._cursor.updatePage(page);
+    }
     this._ui.updatePage(page);
 
     this._previousState = page;
@@ -240,6 +244,8 @@ export default class DesktopAppView {
     this._webgl.update();
     this._project.update();
     this._everyday.update();
-    this._cursor.update();
+    if (this._cursor) {
+      this._cursor.update();
+    }
   }
 }

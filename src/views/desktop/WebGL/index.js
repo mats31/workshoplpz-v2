@@ -169,11 +169,18 @@ export default class WebGL {
   }
 
   _setupEvents() {
-    this._el.addEventListener('click', this._onWebGLClick);
-    this._el.addEventListener('mousedown', this._onWebGLMousedown);
-    this._el.addEventListener('mouseup', this._onWebGLMouseup);
-    this._el.addEventListener('mousemove', this._onWeblGLMousemove);
-    this._el.addEventListener('mouseleave', this._onWeblGLMouseleave);
+
+    if (!States.TABLET) {
+      this._el.addEventListener('click', this._onWebGLClick);
+      this._el.addEventListener('mousedown', this._onWebGLMousedown);
+      this._el.addEventListener('mouseup', this._onWebGLMouseup);
+      this._el.addEventListener('mousemove', this._onWeblGLMousemove);
+      this._el.addEventListener('mouseleave', this._onWeblGLMouseleave);
+    } else {
+      this._el.addEventListener('touchstart', this._onWebGLTouchstart);
+      this._el.addEventListener('touchend', this._onWebGLTouchend);
+      this._el.addEventListener('touchmove', this._onWeblGLTouchmove);
+    }
 
     Signals.onScrollWheel.add(this._onScrollWheel);
     Signals.onResize.add(this._onResize);
@@ -445,8 +452,6 @@ export default class WebGL {
   @autobind
   _onScrollWheel(event) {
 
-    console.log(event.originalEvent);
-
     if (!States.application.activateProject && !this.isAnimating) {
       const deltaY = Math.min( 170, Math.max( -170, event.deltaY ) );
 
@@ -500,6 +505,46 @@ export default class WebGL {
   }
 
   @autobind
+  _onWeblGLTouchmove(event) {
+    if (!States.application.activateProject) {
+
+      const step = 0.65;
+
+      this._mouse.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
+      this._mouse.y = -( event.touches[0].clientY / window.innerHeight ) * 2 + 1;
+
+      if (!this._clicked) {
+
+        if ( Math.abs(this._mouse.x) > step ) {
+
+          this._translationTarget = map( Math.abs( this._mouse.x ), 0.7, 1, 0, 2 ) * Math.sign( this._mouse.x * -1 );
+
+        } else {
+
+          this._translationTarget = 0;
+        }
+
+        this._drag = false;
+      } else {
+
+        Signals.onCursorSlide.dispatch();
+
+        this._drag = true;
+        // this._translationDelta = Math.min( 5, Math.max( -5, ( this._mouse.x - this._previousMouse.x ) * 20 ) );
+        this._translationDelta = this._mouse.x - this._previousMouse.x;
+      }
+
+      this._previousMouse.x = this._mouse.x;
+    }
+
+    clearTimeout(this._mousemoveTimeout);
+
+    this._mousemoveTimeout = setTimeout( () => {
+      this._translationDelta = 0;
+    }, 50);
+  }
+
+  @autobind
   _onWeblGLMouseleave() {
     this._clicked = false;
     this._translationDelta = 0;
@@ -516,12 +561,42 @@ export default class WebGL {
     for (let i = 0; i < this._projectContainers.length; i++) {
       this._projectContainers[i].unpress();
     }
-    // this._zoomFov();
+  }
+
+  @autobind
+  _onWebGLTouchend() {
+    this._clicked = false;
+    this._drag = false;
+    this._translationDelta = 0;
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].unpress();
+    }
+
+    if (!this._drag) {
+
+      for (let i = 0; i < this._projectContainers.length; i++) {
+
+        this._projectContainers[i].onClick();
+      }
+    }
   }
 
   @autobind
   _onWebGLMousedown() {
     this._clicked = true;
+    for (let i = 0; i < this._projectContainers.length; i++) {
+      this._projectContainers[i].press();
+    }
+    // this._dezoomFov();
+  }
+
+  @autobind
+  _onWebGLTouchstart(event) {
+    this._clicked = true;
+    this._mouse.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
+    this._mouse.y = -( event.touches[0].clientY / window.innerHeight ) * 2 + 1;
+    this._previousMouse.x = this._mouse.x;
+
     for (let i = 0; i < this._projectContainers.length; i++) {
       this._projectContainers[i].press();
     }

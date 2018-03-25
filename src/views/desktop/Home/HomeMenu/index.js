@@ -46,6 +46,7 @@ export default class HomeMenuView {
     this._setupEvents();
 
     this.el.style.display = 'block';
+    TweenLite.killTweensOf(this.el);
     TweenLite.to(
       this.el,
       1,
@@ -59,6 +60,7 @@ export default class HomeMenuView {
   hide({ delay = 0 } = {}) {
     this._removeEvents();
 
+    TweenLite.killTweensOf(this.el);
     TweenLite.to(
       this.el,
       1,

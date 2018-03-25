@@ -4,6 +4,7 @@
   background-color: red;
   display: none;
   transform: translate3d(0,0,0);
-  position: relative;
+  position: fixed;
   z-index: $zindex-2;
+  width: 100%;
 }

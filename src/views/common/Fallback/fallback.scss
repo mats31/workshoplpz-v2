@@ -1,0 +1,24 @@
+@import '~stylesheets/common/global-imports';
+
+.fallback {
+  display: none;
+  @include font-body();
+  background: black;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: $zindex-10;
+
+  .fallback__text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    text-align: center;
+    font-size: 1rem;
+  }
+}
