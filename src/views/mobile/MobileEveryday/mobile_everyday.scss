@@ -21,6 +21,8 @@ html.mobile {
       transform-origin: center center;
       user-select: none;
       outline: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
     }
 
       .everyday__itemSelect {
@@ -52,6 +54,9 @@ html.mobile {
       .everyday__item img {
         display: block;
         position: relative;
+        touch-callout: none;
+        user-select: none;
+        pointer-events: none;
         width: 100%;
         z-index: $zindex-2;
       }

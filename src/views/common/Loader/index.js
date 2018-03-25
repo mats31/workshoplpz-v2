@@ -52,7 +52,7 @@ export default class LoaderView {
   show({ delay = 0 } = {}) {
     this.el.style.display = 'block';
 
-    if (States.IS_FF || States.IS_SAFARI) {
+    if (States.IS_FF || States.IS_SAFARI && !States.MOBILE) {
       this._ui.loaderText.style.display = 'block';
     }
   }
