@@ -5,35 +5,37 @@ import resources from 'config/resources';
 class AssetLoader {
 
   constructor() {
-    this.assetsToLoad = 0;
-    this.assetsLoaded = 0;
+    if (!States.IS_IE) {
+      this.assetsToLoad = 0;
+      this.assetsLoaded = 0;
 
-    if (typeof resources.images !== 'undefined' && resources.images.length > 0) {
-      this.assetsToLoad += resources.images.length;
-      this.loadImages();
+      if (typeof resources.images !== 'undefined' && resources.images.length > 0) {
+        this.assetsToLoad += resources.images.length;
+        this.loadImages();
+      }
+
+      if (typeof resources.textures !== 'undefined' && resources.textures.length > 0) {
+        this.assetsToLoad += resources.textures.length;
+        this.loadTextures();
+      }
+
+      if (typeof resources.videos !== 'undefined' && resources.videos.length > 0) {
+        this.assetsToLoad += resources.videos.length;
+        this.loadVideos();
+      }
+
+      if (typeof resources.sounds !== 'undefined' && resources.sounds.length > 0) {
+        this.assetsToLoad += resources.sounds.length;
+        this.loadSounds();
+      }
+
+      if (typeof resources.models !== 'undefined' && resources.models.length > 0) {
+        this.assetsToLoad += resources.models.length;
+        this.loadModels();
+      }
+
+      if (this.assetsToLoad === 0) Signals.onAssetsLoaded.dispatch(100);
     }
-
-    if (typeof resources.textures !== 'undefined' && resources.textures.length > 0) {
-      this.assetsToLoad += resources.textures.length;
-      this.loadTextures();
-    }
-
-    if (typeof resources.videos !== 'undefined' && resources.videos.length > 0) {
-      this.assetsToLoad += resources.videos.length;
-      this.loadVideos();
-    }
-
-    if (typeof resources.sounds !== 'undefined' && resources.sounds.length > 0) {
-      this.assetsToLoad += resources.sounds.length;
-      this.loadSounds();
-    }
-
-    if (typeof resources.models !== 'undefined' && resources.models.length > 0) {
-      this.assetsToLoad += resources.models.length;
-      this.loadModels();
-    }
-
-    if (this.assetsToLoad === 0) Signals.onAssetsLoaded.dispatch(100);
   }
 
   loadImages() {
