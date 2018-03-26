@@ -8,6 +8,7 @@ import States from 'core/States';
 import Signals from 'core/Signals'; /* exported Signals */
 import Router from 'core/Router';
 import Application from 'views/desktop/Application/Application';
+import FallbackView from 'views/common/Fallback';
 import LoaderView from 'views/common/Loader';
 import 'stylesheets/main.scss';
 
@@ -17,8 +18,12 @@ class Main {
 
   constructor() {
 
-    this._loader = this._setupLoader();
-    Signals.onAssetsLoaded.add(this.onAssetsLoaded);
+    if (States.IS_IE) {
+      this._fallback = this._setupFallback();
+    } else {
+      this._loader = this._setupLoader();
+      Signals.onAssetsLoaded.add(this.onAssetsLoaded);
+    }
   }
 
   _setupLoader() {
