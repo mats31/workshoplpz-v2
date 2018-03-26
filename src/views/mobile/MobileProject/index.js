@@ -81,6 +81,7 @@ export default class ProjectView {
   _setupEvents() {
     window.addEventListener('deviceorientation', this._onDeviceOrientation);
     this._ui.close.addEventListener('click', this._onCloseClick);
+    this._ui.titleContainer.addEventListener('touchstart', this._onTitleContainerTouchstart);
     this._ui.titleContainer.addEventListener('touchmove', this._onTitleContainerTouchmove);
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
@@ -88,6 +89,9 @@ export default class ProjectView {
   }
 
   _removeEvents() {
+    this._ui.close.removeEventListener('click', this._onCloseClick);
+    this._ui.titleContainer.removeEventListener('touchstart', this._onTitleContainerTouchstart);
+    this._ui.titleContainer.removeEventListener('touchmove', this._onTitleContainerTouchmove);
     Signals.onResize.remove(this._onResize);
     Signals.onScroll.remove(this._onScroll);
     Signals.onScrollWheel.remove(this._onScrollWheel);
@@ -458,6 +462,12 @@ export default class ProjectView {
   }
 
   @autobind
+  _onTitleContainerTouchstart(event) {
+    this._touches.x = event.touches[0].clientX;
+    this._touches.y = event.touches[0].clientY;
+  }
+
+  @autobind
   _onTitleContainerTouchmove(event) {
     if (this._showAnimationDone) {
       this._delta = event.touches[0].clientY - this._touches.y;
@@ -465,7 +475,7 @@ export default class ProjectView {
       this._touches.x = event.touches[0].clientX;
       this._touches.y = event.touches[0].clientY;
 
-      if (this._delta > 0 && !this._isSkippingPreview) {
+      if (this._delta < -10 && !this._isSkippingPreview) {
         this._skipPreview();
       }
     }

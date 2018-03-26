@@ -37,14 +37,12 @@ export default class DesktopHomeView {
   // State ---------------------------------------------------------------------
 
   show({ delay = 0 } = {}) {
-    console.log('wtttttttf');
     this.el.style.display = 'block';
 
     this._homeMenu.show({ delay });
   }
 
   hide({ delay = 0 } = {}) {
-    console.log('wtttttttf2');
     this._homeMenu.hide({ delay });
 
     TweenLite.delayedCall( delay + 1, () => {

@@ -85,6 +85,7 @@ export default class ProjectView {
     this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
 
     if (States.TABLET) {
+      this._ui.titleContainer.addEventListener('touchstart', this._onTitleContainerTouchstart);
       this._ui.titleContainer.addEventListener('touchmove', this._onTitleContainerTouchmove);
     }
 
@@ -445,11 +446,17 @@ export default class ProjectView {
 
     this._deactivateLayerScalable();
 
+    let y = window.innerHeight * -0.99;
+
+    if (States.IOS) {
+        y = window.innerWidth > window.innerHeight ? window.screen.width * -1 + 50 : window.screen.height * -1 + 50;
+    }
+
     TweenLite.to(
       this._ui.titleContainer,
       1,
       {
-        y: window.innerHeight * -0.99,
+        y,
         force3D: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
@@ -566,17 +573,25 @@ export default class ProjectView {
   }
 
   @autobind
+  _onTitleContainerTouchstart(event) {
+    this._touches.x = event.touches[0].clientX;
+    this._touches.y = event.touches[0].clientY;
+  }
+
+  @autobind
   _onTitleContainerTouchmove(event) {
-    if (this._showAnimationDone) {
+    // if (this._showAnimationDone ) {
+      event.preventDefault();
+
       this._delta = event.touches[0].clientY - this._touches.y;
 
       this._touches.x = event.touches[0].clientX;
       this._touches.y = event.touches[0].clientY;
 
-      if (this._delta > 0 && !this._isSkippingPreview) {
+      if (this._delta < -1 && !this._isSkippingPreview) {
         this._skipPreview();
       }
-    }
+    // }
   }
 
   @autobind
@@ -588,7 +603,14 @@ export default class ProjectView {
     this._bodyOffsetHeight = document.body.offsetHeight;
 
     if (this._skippedPreview) {
-      TweenLite.set( this._ui.titleContainer, { y: window.innerHeight * -0.99, force3D: true } );
+
+        let y = window.innerHeight * -0.99;
+
+        if (States.IOS) {
+            y = window.innerWidth > window.innerHeight ? window.screen.width * -1 + 50 : window.screen.height * -1 + 50;
+        }
+
+      TweenLite.set( this._ui.titleContainer, { y, force3D: true } );
     }
   }
 

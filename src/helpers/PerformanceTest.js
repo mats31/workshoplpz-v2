@@ -10,6 +10,8 @@ class PerformanceTest {
     this.unmaskedRenderer = this.debugRendererInfo ? this.context.getParameter(this.debugRendererInfo.UNMASKED_RENDERER_WEBGL) : '';
     this.gpu = this.getGPU();
     this.version = this.getOptimalVersionName();
+    console.log(this.gpu);
+    console.log(this.version);
     console.log(`%c PerformanceTest.version: ${this.version} `, 'background: #45343D; padding:5px; font-size: 11px; color: #ffffff');
   }
 
@@ -34,16 +36,12 @@ class PerformanceTest {
 
       case 'Intel':
 
-        if (
-          window.devicePixelRatio > 1 &&
-          States.IS_FF &&
-          window.screen.width > 1280
-        ) return 'high';
+        if (this.gpu.model === 'Intel Iris Pro') return 'high';
 
         return 'low';
 
       default:
-        return 'low';
+        return 'high';
     }
   }
 
@@ -60,6 +58,8 @@ class PerformanceTest {
           tier: null,
           revision: null,
         };
+
+        console.log(this.unmaskedRenderer);
 
         data.model = this.unmaskedRenderer.replace(/NVIDIA GeForce |AMD Radeon |Apple | OpenGL Engine/g, '');
 
