@@ -6,6 +6,7 @@
 @import "common/variables";
 
 html {
+  cursor: none;
   font-size: 62.5%;
   background: black;
 
@@ -15,7 +16,7 @@ html {
 
   #application {
     @include font-body();
-    cursor: none;
+    // cursor: none;
 
     a{
       cursor: none;
