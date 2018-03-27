@@ -35,8 +35,8 @@ class ProjectContainer extends THREE.Object3D {
     this._depthTranslation = 0;
     this._perspectiveWidth = 0;
     this._scaleFactor = 1;
-    this._spring = 0.005;
-    this._friction = 0.85 + Math.random() * 0.05;
+    this._spring = 0.02;
+    this._friction = 0.77 + Math.random() * 0.05;
     this._currentTranslation = 0;
     this._targetTranslation = 0;
     this._velocityX = 0;

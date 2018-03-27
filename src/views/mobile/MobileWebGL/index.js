@@ -609,11 +609,11 @@ export default class MobileWebGL {
     // this._translationWheel += -this._translationWheel * 0.05;
     // this._translationEase += this._translationDelta + this._translationWheel + this._translationShow;
 
-    const translationDelta = this._translationDelta * 60;
+    const translationDelta = this._translationDelta * 35;
     // console.log(translationDelta);
     const translationShow = this._translationShow;
 
-    const delta = translationDelta;
+    const delta = Math.min(10, Math.max(-10, translationDelta) );
     const maxTranslation = Math.abs(translationDelta);
 
     for ( let i = 0; i < this._projectContainers.length; i++ ) {
