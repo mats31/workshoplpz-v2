@@ -281,7 +281,8 @@ export default class ProjectView {
 
         // Visit url;
         this._ui.visit.style.display = this._project.url === '' ? 'none' : 'block';
-        this._ui.visitText.innerHTML = this._project.url;
+        this._ui.visitText.querySelector('a').setAttribute('href', this._project.url);
+        this._ui.visitText.querySelector('a').innerHTML = this._project.urlText;
 
         // Pitch
         this._ui.pitchDescription.innerHTML = this._project.pitch;
