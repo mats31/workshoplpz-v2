@@ -18,6 +18,18 @@ class Main {
 
   constructor() {
 
+    const styles = [
+      'background: linear-gradient(#FC466B, #3F5EFB)',
+      'border: 1px solid #00ff00',
+      'color: white',
+      'display: block',
+      'line-height: 20px',
+      'text-align: center',
+      'font-weight: bold',
+    ].join(';');
+
+    console.log('%c Make love not war ! ❤️', styles);
+
     if (States.IS_IE) {
       this._fallback = this._setupFallback();
     } else {

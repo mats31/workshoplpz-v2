@@ -6,6 +6,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+// const WebpackClearConsole = require("webpack-clear-console").WebpackClearConsole;
 
 export default {
   entry: {
@@ -111,5 +112,6 @@ export default {
     new ExtractTextPlugin('[name]-[hash].min.css', { allChunks: true }),
     new CleanWebpackPlugin(['build'], { root: path.resolve(__dirname, '..') }),
     new UglifyJsPlugin(),
+    // new WebpackClearConsole(),
   ],
 };

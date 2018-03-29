@@ -28,6 +28,7 @@ export default class WebGL {
     this._state = 'home';
 
     this._drag = false;
+    this._isDragging = false;
     this._isShowing = false;
     this._needsUpdate = true;
     this._grain = null;
@@ -508,6 +509,8 @@ export default class WebGL {
   _onWeblGLTouchmove(event) {
     if (!States.application.activateProject) {
 
+      this._isDragging = true;
+
       const step = 0.65;
 
       this._mouse.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
@@ -579,6 +582,8 @@ export default class WebGL {
         this._projectContainers[i].onClick();
       }
     }
+
+    this._isDragging = false;
   }
 
   @autobind
@@ -616,7 +621,9 @@ export default class WebGL {
 
   @autobind
   onProjectClick( id, y ) {
-    States.router.navigateTo( pages.PROJECT, { id } );
+    if (!this._isDragging) {
+      States.router.navigateTo( pages.PROJECT, { id } );
+    }
   }
 
   @autobind

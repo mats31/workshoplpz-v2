@@ -10,9 +10,9 @@ class PerformanceTest {
     this.unmaskedRenderer = this.debugRendererInfo ? this.context.getParameter(this.debugRendererInfo.UNMASKED_RENDERER_WEBGL) : '';
     this.gpu = this.getGPU();
     this.version = this.getOptimalVersionName();
-    console.log(this.gpu);
-    console.log(this.version);
-    console.log(`%c PerformanceTest.version: ${this.version} `, 'background: #45343D; padding:5px; font-size: 11px; color: #ffffff');
+    // console.log(this.gpu);
+    // console.log(this.version);
+    // console.log(`%c PerformanceTest.version: ${this.version} `, 'background: #45343D; padding:5px; font-size: 11px; color: #ffffff');
   }
 
   getOptimalVersionName() {
@@ -58,8 +58,6 @@ class PerformanceTest {
           tier: null,
           revision: null,
         };
-
-        console.log(this.unmaskedRenderer);
 
         data.model = this.unmaskedRenderer.replace(/NVIDIA GeForce |AMD Radeon |Apple | OpenGL Engine/g, '');
 

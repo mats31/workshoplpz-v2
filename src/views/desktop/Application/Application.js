@@ -17,7 +17,7 @@ export default class DesktopAppView {
   // Setup ---------------------------------------------------------------------
 
   constructor() {
-    console.log('desktop');
+    // console.log('desktop');
 
     States.version = PerformanceTest.version;
 
