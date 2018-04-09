@@ -21,9 +21,10 @@ export default class LoaderView {
     this._ui = {
       loaderContainer: this.el.querySelector('.js-loader__container'),
       loaderText: this.el.querySelector('.js-loader__text'),
+      loaderValue: this.el.querySelector('.js-loader__value'),
     };
 
-    this.setupDOM();
+    // this.setupDOM();
     this.setupEvents();
 
     this.show();
@@ -43,7 +44,7 @@ export default class LoaderView {
   }
 
   setupEvents() {
-    // Signals.onAssetLoaded.add(this.onAssetsLoaded);
+    Signals.onAssetLoaded.add(this.onAssetLoaded);
     Signals.onAssetsLoaded.add(this.onAssetsLoaded);
   }
 
@@ -74,9 +75,11 @@ export default class LoaderView {
   @autobind
   onAssetLoaded(percent) {
     const value = `${percent}%`;
+    console.log(value);
 
-    this.counter.innerHTML = value;
+    this._ui.loaderValue.innerHTML = value;
   }
+
   @autobind
   onAssetsLoaded(percent) {
 

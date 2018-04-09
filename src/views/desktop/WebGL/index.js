@@ -43,6 +43,7 @@ export default class WebGL {
     this._scaleStep = 1024;
     this._translationEase = 0;
     this._translationDelta = 0;
+    this._translationKeyboard = 0;
     this._translationWheel = 0;
     this._translationShow = 0;
     this._mainAngle = 0;
@@ -177,6 +178,10 @@ export default class WebGL {
       this._el.addEventListener('mouseup', this._onWebGLMouseup);
       this._el.addEventListener('mousemove', this._onWeblGLMousemove);
       this._el.addEventListener('mouseleave', this._onWeblGLMouseleave);
+
+      Signals.onKeydownLeft.add(this.onKeydownLeft);
+      Signals.onKeydownRight.add(this.onKeydownRight);
+      Signals.onKeyup.add(this.onKeyup);
     } else {
       this._el.addEventListener('touchstart', this._onWebGLTouchstart);
       this._el.addEventListener('touchend', this._onWebGLTouchend);
@@ -397,6 +402,8 @@ export default class WebGL {
           this._projectContainers[i].deactiveFocus();
           this._projectContainers[i].showText();
         }
+
+        this._ground.goToProject();
         break;
       case pages.PROJECT:
         this._state = 'project';
@@ -436,6 +443,7 @@ export default class WebGL {
           },
         );
 
+        this._ground.goToEverydays();
         this.hideProject(0.4);
         break;
       case pages.ABOUT:
@@ -627,6 +635,21 @@ export default class WebGL {
   }
 
   @autobind
+  onKeydownLeft() {
+    this._translationKeyboard = -1;
+  }
+
+  @autobind
+  onKeydownRight() {
+    this._translationKeyboard = 1;
+  }
+
+  @autobind
+  onKeyup() {
+    this._translationKeyboard = 0;
+  }
+
+  @autobind
   _onResize() {
     this._width = Math.max( 500, window.innerWidth );
     this._height = Math.max( 500, window.innerHeight );
@@ -708,7 +731,7 @@ export default class WebGL {
     // this._translationWheel += -this._translationWheel * 0.05;
     // this._translationEase += this._translationDelta + this._translationWheel + this._translationShow;
 
-    const translationDelta = this._translationDelta * 60;
+    const translationDelta = this._translationDelta * 60 + this._translationKeyboard;
     const translationWheel = this._translationWheel * 0.02;
     const groundTranslation = Math.abs(translationDelta) - Math.abs( translationWheel ) > 0 ? translationDelta : translationWheel;
     const translationShow = this._translationShow;

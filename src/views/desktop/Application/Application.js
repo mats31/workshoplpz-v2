@@ -112,6 +112,8 @@ export default class DesktopAppView {
     window.addEventListener('scroll', this.onScroll);
     window.addEventListener('mousewheel', this.onScrollWheel);
     window.addEventListener('wheel', this.onScrollWheel);
+    document.addEventListener('keydown', this.onKeydown);
+    document.addEventListener('keyup', this.onKeyup);
 
     this.onResize();
   }
@@ -126,7 +128,8 @@ export default class DesktopAppView {
 
     switch (page) {
       case pages.HOME:
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowY = 'hidden';
         States.application.activateProject = false;
         // this._loader.hide();
         this._about.hide({ delay: 0 });
@@ -156,7 +159,8 @@ export default class DesktopAppView {
         // this._cursor.show({ delay: 2 });
         break;
       case pages.PROJECT:
-        document.body.style.overflow = 'visible';
+        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowY = 'visible';
         States.application.activateProject = true;
         // this._loader.hide();
         this._about.hide({ delay: 0 });
@@ -171,7 +175,8 @@ export default class DesktopAppView {
         // this._cursor.show({ delay: 0 });
         break;
       case pages.EVERYDAYS:
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowY = 'hidden';
         States.application.activateProject = false;
         // this._loader.hide();
         this._about.hide({ delay: 0 });
@@ -192,7 +197,8 @@ export default class DesktopAppView {
         }
         break;
       case pages.ABOUT:
-        document.body.style.overflow = 'visible';
+        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowY = 'visible';
         States.application.activateProject = false;
         // this._loader.hide();
         this._about.show({ delay: 0.65 });
@@ -233,6 +239,20 @@ export default class DesktopAppView {
   @autobind
   onScrollWheel(event) {
     Signals.onScrollWheel.dispatch(event);
+  }
+
+  @autobind
+  onKeydown(event) {
+    if (event.keyCode === 37) {
+      Signals.onKeydownLeft.dispatch();
+    } else if (event.keyCode === 39) {
+      Signals.onKeydownRight.dispatch();
+    }
+  }
+
+  @autobind
+  onKeyup() {
+    Signals.onKeyup.dispatch();
   }
 
   // Update --------------------------------------------------------------------

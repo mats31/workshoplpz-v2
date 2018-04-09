@@ -18,6 +18,7 @@ export default class EverydayView {
 
     this._delta = 0;
     this._translationShow = 0;
+    this._deltaKeyboard = 0;
 
     this._mouse = { x: 0, y: 0 };
 
@@ -49,6 +50,10 @@ export default class EverydayView {
       this.el.addEventListener('mousemove', this._onMousemove);
       this.el.addEventListener('mouseup', this._onMouseup);
       document.addEventListener('mouseleave', this._onMouseup);
+
+      Signals.onKeydownLeft.add(this._onKeydownLeft);
+      Signals.onKeydownRight.add(this._onKeydownRight);
+      Signals.onKeyup.add(this._onKeyup);
     } else {
       this.el.addEventListener('touchstart', this._onTouchstart);
       this.el.addEventListener('touchmove', this._onTouchmove);
@@ -207,6 +212,21 @@ export default class EverydayView {
   }
 
   @autobind
+  _onKeydownLeft() {
+    this._deltaKeyboard = Math.max( this._deltaKeyboard -25, -25 );
+  }
+
+  @autobind
+  _onKeydownRight() {
+    this._deltaKeyboard = Math.min( this._deltaKeyboard + 25, 25 );
+  }
+
+  @autobind
+  _onKeyup() {
+    this._deltaKeyboard = 0;
+  }
+
+  @autobind
   _onTouchend() {
     this._clicked = false;
     this._delta = 0;
@@ -249,8 +269,10 @@ export default class EverydayView {
 
   update() {
     if (this.needsUpdate) {
+      const delta = this._delta + this._deltaKeyboard;
+
       for (let i = 0; i < this._everydayItems.length; i++) {
-        this._everydayItems[i].update(this._delta, this._translationShow);
+        this._everydayItems[i].update(delta, this._translationShow);
       }
     }
   }

@@ -11,6 +11,7 @@ class Ground extends THREE.Object3D {
 
     this.translation = 0;
     this.translationTarget = 0;
+    this._translationShow = 0;
 
     this.geometry = new THREE.PlaneGeometry( 550, 550, 200, 200 );
     // this.geometry = new THREE.PlaneGeometry( 200, 200, 10, 10 );
@@ -51,6 +52,30 @@ class Ground extends THREE.Object3D {
 
   // Events ----------------------
 
+  goToProject() {
+    TweenLite.killTweensOf(this._translationShow);
+    TweenLite.to(
+      this,
+      2.15,
+      {
+        _translationShow: '+=1.1',
+        ease: 'Power2.easeInOut',
+      },
+    );
+  }
+
+  goToEverydays() {
+    TweenLite.killTweensOf(this._translationShow);
+    TweenLite.to(
+      this,
+      2.15,
+      {
+        _translationShow: '-=1.1',
+        ease: 'Power2.easeInOut',
+      },
+    );
+  }
+
   @autobind
   _onEverydayDrag(delta) {
     this.translationTarget += delta * 0.0003;
@@ -64,7 +89,7 @@ class Ground extends THREE.Object3D {
     this.translation += ( this.translationTarget - this.translation ) * 0.04;
 
     this.material.uniforms.u_time.value = time;
-    this.material.uniforms.u_translation.value = this.translation;
+    this.material.uniforms.u_translation.value = this.translation + this._translationShow;
   }
 }
 

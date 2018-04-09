@@ -22,6 +22,17 @@
     transform: translate(-50%,-50%);
   }
 
+  .loader__value {
+    @include font-title();
+    font-size: 4rem;
+    line-height: 4rem;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 150%);
+  }
+
   .loader__text {
     @include font-body();
     display: none;

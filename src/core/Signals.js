@@ -30,6 +30,11 @@ class Signals {
     // Cursor
     this.onCursorSlide = new Signal();
     this.onCursorUnslide = new Signal();
+
+    // Keyboard
+    this.onKeydownLeft = new Signal();
+    this.onKeydownRight = new Signal();
+    this.onKeyup = new Signal();
   }
 }
 
