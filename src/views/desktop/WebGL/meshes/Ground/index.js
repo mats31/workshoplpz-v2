@@ -60,7 +60,7 @@ class Ground extends THREE.Object3D {
         this,
         2.15,
         {
-          _translationShow: '+=1.1',
+          _translationShow: '+=0.9',
           ease: 'Power2.easeInOut',
         },
       );
@@ -74,7 +74,7 @@ class Ground extends THREE.Object3D {
         this,
         2.15,
         {
-          _translationShow: '-=1.1',
+          _translationShow: '-=0.9',
           ease: 'Power2.easeInOut',
         },
       );
