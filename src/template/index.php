@@ -26,7 +26,7 @@
     <meta property="og:image" content="http://www.celialopez.fr/images/share/facebook.jpg"/>
     <meta property="og:url" content="http://www.celialopez.fr"/>
     <meta property="og:site_name" content="Célia LOPEZ"/>
-    <meta name="og:description" content="Worldwide freelance interactive & 3D designer"/>
+    <meta property="og:description" content="Worldwide freelance interactive & 3D designer"/>
 
     <!-- Twitter meta -->
     <meta name="twitter:card" content="summary_large_image">
