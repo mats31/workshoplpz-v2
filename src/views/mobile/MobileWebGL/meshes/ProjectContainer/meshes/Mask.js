@@ -127,7 +127,6 @@ class Mask extends THREE.Object3D {
   }
 
   _createAccessory() {
-    console.log(this.projectID);
     const accessoryObject = States.resources.getModel(this.projectID).media;
 
     const accessoryGeometry1 = accessoryObject.children[0].geometry.clone();

@@ -9,6 +9,7 @@ export default class Router {
   constructor(options) {
     this.updatePageCallback = options.updatePageCallback;
     this.assetsLoaded = false;
+    this.previousRouteName = '';
 
     this.setupRouter();
     this.setupEvents();
@@ -58,27 +59,32 @@ export default class Router {
   @autobind
   onRouteNotFound() {
     this.updatePageCallback(pages.HOME);
+    this.previousRouteName = pages.HOME;
   }
 
   @autobind
   onRouteHome() {
     this.updatePageCallback(pages.HOME);
+    this.previousRouteName = pages.HOME;
   }
 
 
   @autobind
   onRouteEverydays() {
     this.updatePageCallback(pages.EVERYDAYS);
+    this.previousRouteName = pages.EVERYDAYS;
   }
 
   @autobind
   onRouteProject() {
     this.updatePageCallback(pages.PROJECT);
+    this.previousRouteName = pages.PROJECT;
   }
 
   @autobind
   onRouteAbout() {
     this.updatePageCallback(pages.ABOUT);
+    this.previousRouteName = pages.ABOUT;
   }
 
 }

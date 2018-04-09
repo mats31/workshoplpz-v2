@@ -74,8 +74,8 @@ export default class LoaderView {
   // Events --------------------------------------------------------------------
   @autobind
   onAssetLoaded(percent) {
-    const value = `${percent}%`;
-    console.log(value);
+    const intPercent = parseInt(percent, 10);
+    const value = `${intPercent}%`;
 
     this._ui.loaderValue.innerHTML = value;
   }

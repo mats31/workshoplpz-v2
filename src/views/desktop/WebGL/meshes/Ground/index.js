@@ -1,5 +1,6 @@
 import { autobind } from 'core-decorators';
 import States from 'core/States';
+import * as pages from 'core/pages';
 import vertexShader from './shaders/ground.vs';
 import fragmentShader from './shaders/ground.fs';
 import vertexDepthShader from './shaders/groundDepth.vs';
@@ -53,27 +54,31 @@ class Ground extends THREE.Object3D {
   // Events ----------------------
 
   goToProject() {
-    TweenLite.killTweensOf(this._translationShow);
-    TweenLite.to(
-      this,
-      2.15,
-      {
-        _translationShow: '+=1.1',
-        ease: 'Power2.easeInOut',
-      },
-    );
+    if (States.router.previousRouteName !== pages.ABOUT) {
+      TweenLite.killTweensOf(this._translationShow);
+      TweenLite.to(
+        this,
+        2.15,
+        {
+          _translationShow: '+=1.1',
+          ease: 'Power2.easeInOut',
+        },
+      );
+    }
   }
 
   goToEverydays() {
-    TweenLite.killTweensOf(this._translationShow);
-    TweenLite.to(
-      this,
-      2.15,
-      {
-        _translationShow: '-=1.1',
-        ease: 'Power2.easeInOut',
-      },
-    );
+    if (States.router.previousRouteName !== pages.ABOUT) {
+      TweenLite.killTweensOf(this._translationShow);
+      TweenLite.to(
+        this,
+        2.15,
+        {
+          _translationShow: '-=1.1',
+          ease: 'Power2.easeInOut',
+        },
+      );
+    }
   }
 
   @autobind
