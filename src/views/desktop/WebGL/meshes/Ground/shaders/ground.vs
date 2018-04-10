@@ -123,7 +123,7 @@ void main() {
 	#include <begin_vertex>
 
   float offset = snoise( vec2( transformed.x * 0.007 + u_translation, transformed.y * 0.01 ) ) * 20.;
-  transformed.z += abs( offset );
+  transformed.z += abs( offset ) + sin( u_time * 0.5 + position.y * 0.1 ) * 2.;
 
 	vPosition = transformed;
 

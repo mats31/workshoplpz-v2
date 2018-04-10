@@ -51,6 +51,7 @@ export default class ProjectView {
     this._skippedPreview = false;
     this._isSkippingPreview = false;
     this._showAnimationDone = false;
+    this._scrollNeedsUpdate = false;
 
     this._delta = 0;
     this._currentScrollY = 0;
@@ -64,6 +65,8 @@ export default class ProjectView {
     this._targetTransformOriginY = 0;
     this._previewY = 0;
     this._scrollState = 1;
+    this._targetOffsetY = 0;
+    this._currentOffsetY = 0;
 
     this._titleOffset = new THREE.Vector2(0, 0);
     this._previewOffset = new THREE.Vector2(0, 0);
@@ -239,6 +242,8 @@ export default class ProjectView {
     this._targetTransformOriginY = 0;
     this._previewY = 0;
     this._scrollState = 1;
+    this._targetOffsetY = 0;
+    this._currentOffsetY = 0;
 
     this._bodyOffsetHeight = document.body.offsetHeight;
     this._distanceToBottom = document.body.offsetHeight;
@@ -461,7 +466,9 @@ export default class ProjectView {
         force3D: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
-          document.body.style.overflow = 'visible';
+          if (States.TABLET) {
+            document.body.style.overflow = 'visible';
+          }
           this._ui.preview.classList.remove('js-project__scale');
           this._ui.preview.classList.remove('project__scale');
           // this._ui.layer.classList.remove('js-project__scale');
@@ -582,16 +589,16 @@ export default class ProjectView {
   @autobind
   _onTitleContainerTouchmove(event) {
     // if (this._showAnimationDone ) {
-      event.preventDefault();
+    event.preventDefault();
 
-      this._delta = event.touches[0].clientY - this._touches.y;
+    this._delta = event.touches[0].clientY - this._touches.y;
 
-      this._touches.x = event.touches[0].clientX;
-      this._touches.y = event.touches[0].clientY;
+    this._touches.x = event.touches[0].clientX;
+    this._touches.y = event.touches[0].clientY;
 
-      if (this._delta < -1 && !this._isSkippingPreview) {
-        this._skipPreview();
-      }
+    if (this._delta < -1 && !this._isSkippingPreview) {
+      this._skipPreview();
+    }
     // }
   }
 
@@ -605,11 +612,11 @@ export default class ProjectView {
 
     if (this._skippedPreview) {
 
-        let y = window.innerHeight * -0.99;
+      let y = window.innerHeight * -0.99;
 
-        if (States.IOS) {
-            y = window.innerWidth > window.innerHeight ? window.screen.width * -1 + 50 : window.screen.height * -1 + 50;
-        }
+      if (States.IOS) {
+        y = window.innerWidth > window.innerHeight ? window.screen.width * -1 + 50 : window.screen.height * -1 + 50;
+      }
 
       TweenLite.set( this._ui.titleContainer, { y, force3D: true } );
     }
@@ -657,6 +664,15 @@ export default class ProjectView {
       if (event.deltaY > 0 && !this._isSkippingPreview) {
         this._skipPreview();
       }
+
+      if (this._skippedPreview) {
+        this._targetOffsetY = Math.max( -this._ui.sections.offsetHeight, Math.min( 0, this._targetOffsetY - event.deltaY * 0.5 ) );
+        this._scrollNeedsUpdate = true;
+
+        if (Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight > 0.99) {
+          States.router.navigateTo( pages.HOME );
+        }
+      }
     }
   }
 
@@ -668,6 +684,9 @@ export default class ProjectView {
       this._updateTitleContainer();
       this._updateScaleElements();
       this._updateScrollState();
+      if (States.TABLET) {
+        this._updateScrollOffset();
+      }
       this._checkViewport();
     }
   }
@@ -758,7 +777,7 @@ export default class ProjectView {
 
   _updateScrollState() {
     if (this._revealedSections) {
-      const scrollStateTarget = 1 - this._currentScrollY / ( this._bodyOffsetHeight - window.innerHeight );
+      const scrollStateTarget = 1 - Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight;
 
       if (Math.abs(scrollStateTarget - this._scrollState) < 0.001) {
         this._scrollState = scrollStateTarget;
@@ -772,6 +791,23 @@ export default class ProjectView {
       this._ui.layer.style.OTransform = `scale3d(${this._scrollState},1,1)`;
       this._ui.layer.style.transform = `scale3d(${this._scrollState},1,1)`;
       this._ui.layer.style.transformOrigin = '0 0';
+    }
+  }
+
+  _updateScrollOffset() {
+    if (this._scrollNeedsUpdate) {
+      this._currentOffsetY += ( this._targetOffsetY - this._currentOffsetY ) * 0.1;
+
+      this._ui.sections.style.webkitTransform = `translate3d(0,${this._currentOffsetY}px,0)`;
+      this._ui.sections.style.MozTransform = `translate3d(0,${this._currentOffsetY}px,0)`;
+      this._ui.sections.style.msTransform = `translate3d(0,${this._currentOffsetY}px,0)`;
+      this._ui.sections.style.OTransform = `translate3d(0,${this._currentOffsetY}px,0)`;
+      this._ui.sections.style.transform = `translate3d(0,${this._currentOffsetY}px,0)`;
+
+      if (Math.abs(this._targetOffsetY - this._currentOffsetY) < 0.01) {
+        this._currentOffsetY = this._targetOffsetY;
+        this._scrollNeedsUpdate = false;
+      }
     }
   }
 

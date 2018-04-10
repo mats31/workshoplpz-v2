@@ -52,8 +52,11 @@ export default class WebGL {
 
     this._clock = new THREE.Clock();
 
-    this._mouse = new THREE.Vector2( 9999, 9999 );
-    this._previousMouse = new THREE.Vector2( 9999, 9999 );
+    // this._mouse = new THREE.Vector2( 9999, 9999 );
+    // this._previousMouse = new THREE.Vector2( 9999, 9999 );
+
+    this._mouse = new THREE.Vector2( 0, 0 );
+    this._previousMouse = new THREE.Vector2( 0, 0 );
 
     // this._cameraTarget = new THREE.Vector3( 0, this._baseY, -150 );
     // this._cameraPosition = new THREE.Vector3( 0, this._baseY, 0 );
@@ -678,12 +681,12 @@ export default class WebGL {
     if (this._grain) {
 
       const grainPerspectiveSize = getPerspectiveSize(this._camera, this._grain.position.z);
-      this._grain.scaleGrain( grainPerspectiveSize.width, grainPerspectiveSize.height );
+      this._grain.scaleGrain( grainPerspectiveSize.width * 1.3, grainPerspectiveSize.height * 1.3 );
     }
 
     if (this._background) {
       const backgroundPerspectiveSize = getPerspectiveSize(this._camera, this._background.position.z);
-      this._background.scaleBackground( backgroundPerspectiveSize.width * 1.1, backgroundPerspectiveSize.height * 2 );
+      this._background.scaleBackground( backgroundPerspectiveSize.width * 1.3, backgroundPerspectiveSize.height * 2 );
     }
   }
 
@@ -695,6 +698,7 @@ export default class WebGL {
 
       this._updateRaycast();
       this._updateProjectContainers(time);
+      this._updateCamera();
 
       this._grain.update(time);
       this._renderer.render(this._scene, this._camera);
@@ -719,8 +723,13 @@ export default class WebGL {
 
   _updateCamera() {
 
-    this._camera.fov += ( this._targetFov - this._camera.fov ) * 0.1;
-    this._camera.updateProjectionMatrix();
+    if (!this.cameraOnTop()) {
+      this._camera.rotation.x += ( this._mouse.y * 0.1 - this._camera.rotation.x) * 0.1;
+      this._camera.rotation.y += ( this._mouse.x * -0.1 - this._camera.rotation.y ) * 0.1;
+    } else {
+      this._camera.rotation.x += ( -this._camera.rotation.x) * 0.1;
+      this._camera.rotation.y += ( -this._camera.rotation.y ) * 0.1;
+    }
   }
 
   _updateProjectContainers(time) {
