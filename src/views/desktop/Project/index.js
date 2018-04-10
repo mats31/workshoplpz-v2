@@ -684,7 +684,7 @@ export default class ProjectView {
       this._updateTitleContainer();
       this._updateScaleElements();
       this._updateScrollState();
-      if (States.TABLET) {
+      if (!States.TABLET) {
         this._updateScrollOffset();
       }
       this._checkViewport();
