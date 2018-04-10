@@ -221,8 +221,13 @@ export default class EverydayItem {
   }
 
   resize() {
-    this._imgW = this._imgH = window.innerWidth * 0.75;
-    this.el.style.width = `${this._imgW}px`;
+    if (window.innerWidth < window.innerHeight) {
+      this._imgW = this._imgH = window.innerWidth * 0.75;
+      this.el.style.width = `${this._imgW}px`;
+    } else {
+      this._imgW = this._imgH = window.innerHeight * 0.5;
+      this.el.style.width = `${this._imgW}px`;
+    }
 
     this._margin = this._imgW * 1.5;
 
