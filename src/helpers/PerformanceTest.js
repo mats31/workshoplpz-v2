@@ -16,7 +16,6 @@ class PerformanceTest {
   }
 
   getOptimalVersionName() {
-    console.log(this.gpu);
     if (!this.gpu) return 'low';
     // if (States.IS_FF) return 'low';
 
@@ -33,10 +32,10 @@ class PerformanceTest {
 
         if (this.gpu.series === '580') return 'high';
 
-        return 'high';
+        return 'low';
 
       case 'Intel':
-
+        if (parseInt(this.gpu.series, 10) > 530) return 'high';
         if (this.gpu.model === 'Intel Iris Pro') return 'high';
 
         return 'low';
