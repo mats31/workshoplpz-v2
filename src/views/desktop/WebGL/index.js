@@ -406,7 +406,9 @@ export default class WebGL {
           this._projectContainers[i].showText();
         }
 
-        this._ground.goToProject();
+        if (this._ground) {
+          this._ground.goToProject();
+        }
         break;
       case pages.PROJECT:
         this._state = 'project';
@@ -446,7 +448,10 @@ export default class WebGL {
           },
         );
 
-        this._ground.goToEverydays();
+        if (this._ground) {
+          this._ground.goToEverydays();
+        }
+
         this.hideProject(0.4);
         break;
       case pages.ABOUT:
