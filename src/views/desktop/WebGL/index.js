@@ -724,11 +724,11 @@ export default class WebGL {
   _updateCamera() {
 
     if (!this.cameraOnTop()) {
-      this._camera.rotation.x += ( this._mouse.y * 0.1 - this._camera.rotation.x) * 0.1;
-      this._camera.rotation.y += ( this._mouse.x * -0.1 - this._camera.rotation.y ) * 0.1;
+      this._camera.rotation.x += ( this._mouse.y * 0.05 - this._camera.rotation.x) * 0.05;
+      this._camera.rotation.y += ( this._mouse.x * -0.05 - this._camera.rotation.y ) * 0.05;
     } else {
-      this._camera.rotation.x += ( -this._camera.rotation.x) * 0.1;
-      this._camera.rotation.y += ( -this._camera.rotation.y ) * 0.1;
+      this._camera.rotation.x += ( -this._camera.rotation.x) * 0.05;
+      this._camera.rotation.y += ( -this._camera.rotation.y ) * 0.05;
     }
   }
 
