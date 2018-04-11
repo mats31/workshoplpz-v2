@@ -401,6 +401,7 @@ export default class WebGL {
   updatePage(page) {
     switch (page) {
       case pages.HOME:
+        this._firstClick = false;
         this._state = 'home';
         for (let i = 0; i < this._projectContainers.length; i++) {
           this._projectContainers[i].deactiveFocus();
