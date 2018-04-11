@@ -486,6 +486,7 @@ export default class WebGL {
 
   @autobind
   _onWeblGLMousemove(event) {
+    this._firstClick = true;
     if (!States.application.activateProject) {
 
       const step = 0.65;
