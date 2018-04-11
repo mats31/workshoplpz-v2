@@ -27,6 +27,7 @@ class Grain extends THREE.Object3D {
         u_map: { type: 't', value: map },
         u_alpha: { type: 'f', value: 1 },
         uTime: { type: 'f', value: 0 },
+        uRes: { type: 'v2', value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
       },
       wireframe: false,
     });
@@ -36,6 +37,7 @@ class Grain extends THREE.Object3D {
   }
 
   scaleGrain( width, height ) {
+    this._material.uniforms.uRes.value.set(window.innerWidth, window.innerHeight);
     this.scale.set( width, height, 1 );
   }
 
