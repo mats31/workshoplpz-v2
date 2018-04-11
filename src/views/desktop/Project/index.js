@@ -54,6 +54,7 @@ export default class ProjectView {
     this._showAnimationDone = false;
     this._scrollNeedsUpdate = false;
     this._keepScrollDisplay = false;
+    this._waitForPlay = false;
 
     this._delta = 0;
     this._currentScrollY = 0;
@@ -325,7 +326,7 @@ export default class ProjectView {
           } else {
             const video = document.createElement('video');
             video.controls = false;
-            video.muted = false;
+            video.muted = true;
             video.src = `videos/${this._project.id}/${this._project.medias[j].file}.mp4`;
 
             media.appendChild(video);
@@ -881,7 +882,7 @@ export default class ProjectView {
     for (let i = 0; i < this._medias.length; i++) {
       const video = this._medias[i].querySelector('video');
 
-      if (video && video.readyState === 4) {
+      if (video) {
         const rect = this._medias[i].getBoundingClientRect();
         const height = this._medias[i].offsetHeight;
         const maxScroll = document.body.scrollTop + window.innerHeight;
@@ -893,6 +894,7 @@ export default class ProjectView {
           }
         } else if (!video.paused) {
           video.pause();
+          // console.log('pause');
         }
       }
     }
