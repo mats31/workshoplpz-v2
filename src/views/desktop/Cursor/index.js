@@ -440,7 +440,6 @@ export default class CursorView {
   }
 
   focus() {
-
     // Line1 ---
     TweenLite.killTweensOf(this._line1.point1);
     this._line1.needsUpdate = true;
@@ -460,6 +459,9 @@ export default class CursorView {
       {
         x: this._width * 0.5,
         y: this._height * 1,
+        onComplete: () => {
+          this._line1.needsUpdate = false;
+        },
       },
     );
 
@@ -482,6 +484,9 @@ export default class CursorView {
       {
         x: this._width * 1,
         y: this._height * 0.5,
+        onComplete: () => {
+          this._line2.needsUpdate = false;
+        },
       },
     );
   }
