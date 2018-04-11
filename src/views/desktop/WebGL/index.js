@@ -524,6 +524,7 @@ export default class WebGL {
 
   @autobind
   _onWeblGLTouchmove(event) {
+    this._firstClick = true;
     if (!States.application.activateProject) {
 
       this._isDragging = true;
