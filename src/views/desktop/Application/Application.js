@@ -32,7 +32,10 @@ export default class DesktopAppView {
     this._everyday = this._setupEverydayView();
     if (!States.TABLET) {
       this._cursor = this._setupCursorView();
+    } else {
+      document.documentElement.classList.add('tablet');
     }
+
     this._ui = this._setupUIView();
 
     this._previousState = null;

@@ -13,6 +13,7 @@ class States {
     this.IOS = this.md.is('iOS');
     this.ANDROID = this.md.is('AndroidOS');
     this.IS_IE = window.navigator.userAgent.indexOf('MSIE ') > 0 || !!window.navigator.userAgent.match(/Trident.*rv\:11\./);
+    this.IS_EDGE = /Edge\/\d./i.test(window.navigator.userAgent);
     this.IS_LTE_IE_10 = ( Function('/*@cc_on return document.documentMode===10@*/')() ) !== undefined;
     this.IS_SAFARI = !!window.navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
     this.IS_CHROME = /Chrome/i.test(window.navigator.userAgent);

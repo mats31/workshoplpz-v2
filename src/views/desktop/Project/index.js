@@ -29,6 +29,7 @@ export default class ProjectView {
       titleOffset: this.el.querySelector('.js-project__titleOffset'),
       preview: this.el.querySelector('.js-project__preview'),
       layer: this.el.querySelector('.js-project__titleLayer'),
+      keepScroll: this.el.querySelector('.js-project__keepScroll'),
       sections: this.el.querySelector('.js-project__sections'),
       subtitle: this.el.querySelector('.js-project__subtitle'),
       visit: this.el.querySelector('.js-project__clientVisit'),
@@ -52,6 +53,7 @@ export default class ProjectView {
     this._isSkippingPreview = false;
     this._showAnimationDone = false;
     this._scrollNeedsUpdate = false;
+    this._keepScrollDisplay = false;
 
     this._delta = 0;
     this._currentScrollY = 0;
@@ -90,11 +92,12 @@ export default class ProjectView {
     if (States.TABLET) {
       this._ui.titleContainer.addEventListener('touchstart', this._onTitleContainerTouchstart);
       this._ui.titleContainer.addEventListener('touchmove', this._onTitleContainerTouchmove);
+    } else {
+      Signals.onScrollWheel.add(this._onScrollWheel);
     }
 
     Signals.onResize.add(this._onResize);
     Signals.onScroll.add(this._onScroll);
-    Signals.onScrollWheel.add(this._onScrollWheel);
   }
 
   _removeEvents() {
@@ -195,6 +198,8 @@ export default class ProjectView {
       }
     }
 
+    TweenLite.set( this._ui.keepScroll, { opacity: 0, display: 'none' });
+
     TweenLite.to(
       this.el,
       1,
@@ -222,6 +227,7 @@ export default class ProjectView {
     TweenLite.set( this._ui.categories, { opacity: 0 });
     TweenLite.set( this._ui.contents, { opacity: 0 });
     TweenLite.set( this._ui.secondContainer, { opacity: 0 });
+    TweenLite.set( this._ui.keepScroll, { opacity: 0, display: 'none' });
 
     this._project = null;
     this._needsUpdate = false;
@@ -229,6 +235,7 @@ export default class ProjectView {
     this._skippedPreview = false;
     this._isSkippingPreview = false;
     this._showAnimationDone = false;
+    this._keepScrollDisplay = false;
 
     this._delta = 0;
     this._currentScrollY = 0;
@@ -455,7 +462,7 @@ export default class ProjectView {
     let y = window.innerHeight * -0.99;
 
     if (States.IOS) {
-        y = window.innerWidth > window.innerHeight ? window.screen.width * -1 + 50 : window.screen.height * -1 + 50;
+      y = window.innerWidth > window.innerHeight ? window.screen.width * -1 + 50 : window.screen.height * -1 + 50;
     }
 
     TweenLite.to(
@@ -644,6 +651,33 @@ export default class ProjectView {
         this._activateMediaScalable();
       }
 
+      if (this._distanceToBottom <= 400 && this._skippedPreview && !this._keepScrollDisplay) {
+        this._keepScrollDisplay = true;
+        this._ui.keepScroll.style.display = 'block';
+        TweenLite.to(
+          this._ui.keepScroll,
+          1,
+          {
+            opacity: 0.3,
+            ease: 'Power2.easeOut',
+          },
+        );
+      } else if (this._distanceToBottom > 400 && this._skippedPreview) {
+        this._keepScrollDisplay = false;
+        TweenLite.killTweensOf(this._ui.keepScroll);
+        TweenLite.to(
+          this._ui.keepScroll,
+          1,
+          {
+            opacity: 0,
+            ease: 'Power2.easeOut',
+            onComplete: () => {
+              this._ui.keepScroll.style.display = 'none';
+            },
+          },
+        );
+      }
+
       if (this._distanceToBottom <= 0 && this._skippedPreview) {
         States.router.navigateTo( pages.HOME );
       }
@@ -665,9 +699,37 @@ export default class ProjectView {
         this._skipPreview();
       }
 
-      if (this._skippedPreview) {
+      if (this._skippedPreview && !States.IS_EDGE) {
         this._targetOffsetY = Math.max( -this._ui.sections.offsetHeight, Math.min( 0, this._targetOffsetY - event.deltaY * 0.5 ) );
         this._scrollNeedsUpdate = true;
+
+        if (Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight >= 0.8 && !this._keepScrollDisplay) {
+          this._keepScrollDisplay = true;
+          this._ui.keepScroll.style.display = 'block';
+          TweenLite.killTweensOf(this._ui.keepScroll);
+          TweenLite.to(
+            this._ui.keepScroll,
+            1,
+            {
+              opacity: 0.3,
+              ease: 'Power2.easeOut',
+            },
+          );
+        } else if (Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight < 0.8) {
+          this._keepScrollDisplay = false;
+          TweenLite.killTweensOf(this._ui.keepScroll);
+          TweenLite.to(
+            this._ui.keepScroll,
+            1,
+            {
+              opacity: 0,
+              ease: 'Power2.easeOut',
+              onComplete: () => {
+                this._ui.keepScroll.style.display = 'none';
+              },
+            },
+          );
+        }
 
         if (Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight > 0.99) {
           States.router.navigateTo( pages.HOME );
@@ -684,7 +746,7 @@ export default class ProjectView {
       this._updateTitleContainer();
       this._updateScaleElements();
       this._updateScrollState();
-      if (!States.TABLET) {
+      if (!States.TABLET && !States.IS_EDGE) {
         this._updateScrollOffset();
       }
       this._checkViewport();
@@ -777,7 +839,11 @@ export default class ProjectView {
 
   _updateScrollState() {
     if (this._revealedSections) {
-      const scrollStateTarget = 1 - Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight;
+      let scrollStateTarget = 1 - Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight;
+
+      if (States.TABLET) {
+        scrollStateTarget = 1 - this._currentScrollY / ( this._bodyOffsetHeight - window.innerHeight );
+      }
 
       if (Math.abs(scrollStateTarget - this._scrollState) < 0.001) {
         this._scrollState = scrollStateTarget;
@@ -815,7 +881,7 @@ export default class ProjectView {
     for (let i = 0; i < this._medias.length; i++) {
       const video = this._medias[i].querySelector('video');
 
-      if (video) {
+      if (video && video.readyState === 4) {
         const rect = this._medias[i].getBoundingClientRect();
         const height = this._medias[i].offsetHeight;
         const maxScroll = document.body.scrollTop + window.innerHeight;

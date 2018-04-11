@@ -31,6 +31,7 @@ export default class WebGL {
     this._isDragging = false;
     this._isShowing = false;
     this._needsUpdate = true;
+    this._firstClick = false;
     this._grain = null;
 
     this._previousIndex = 0;
@@ -604,6 +605,7 @@ export default class WebGL {
 
   @autobind
   _onWebGLMousedown() {
+    this._firstClick = true;
     this._clicked = true;
     for (let i = 0; i < this._projectContainers.length; i++) {
       this._projectContainers[i].press();
@@ -613,6 +615,7 @@ export default class WebGL {
 
   @autobind
   _onWebGLTouchstart(event) {
+    this._firstClick = true;
     this._clicked = true;
     this._mouse.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
     this._mouse.y = -( event.touches[0].clientY / window.innerHeight ) * 2 + 1;
@@ -701,7 +704,10 @@ export default class WebGL {
     if (this._needsUpdate) {
       const time = this._clock.getElapsedTime();
 
-      this._updateRaycast();
+      if (this._firstClick) {
+        this._updateRaycast();
+      }
+
       this._updateProjectContainers(time);
       this._updateCamera();
 

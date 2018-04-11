@@ -2,13 +2,9 @@
 
 .project {
   display: none;
-  position: fixed;
-  left: 0;
-  top: 0;
+  position: relative;
   opacity: 0;
   z-index: $zindex-1;
-  height: 100vh;
-  width: 100vw;
 }
 
 .project__back {
@@ -75,6 +71,10 @@
   transform: translate3d(-50%, -50%, 0);
   min-width: 450px;
   width: 48.671875%;
+
+  html.tablet & {
+    top: 40%;
+  }
 }
 
 .project__title {
@@ -112,6 +112,21 @@
   left: 50%;
   bottom: 60px;
   transform: translateX(-50%);
+
+  html.tablet & {
+    bottom: 100px;
+  }
+}
+
+.project__keepScroll {
+  position: fixed;
+  bottom: 10rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  color: white;
+  opacity: 0;
+  display: none;
+  z-index: $zindex-2;
 }
 
   .project__scrollLine {

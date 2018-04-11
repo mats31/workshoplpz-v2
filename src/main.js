@@ -46,6 +46,14 @@ class Main {
     return view;
   }
 
+  _setupFallback() {
+    const view = new FallbackView({
+      parent: document.body,
+    });
+
+    return view;
+  }
+
   start() {
     this._application = new Application();
     this._onLoadApplication();

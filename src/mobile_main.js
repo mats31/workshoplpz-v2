@@ -18,12 +18,8 @@ class MobileMain {
 
   constructor() {
 
-    if (States.IS_IE) {
-      this._fallback = this._setupFallback();
-    } else {
-      this._loader = this._setupLoader();
-      Signals.onAssetsLoaded.add(this.onAssetsLoaded);
-    }
+    this._loader = this._setupLoader();
+    Signals.onAssetsLoaded.add(this.onAssetsLoaded);
   }
 
   _setupLoader() {
