@@ -580,6 +580,7 @@ export default class WebGL {
   @autobind
   _onWebGLMouseup() {
     this._clicked = false;
+    this._drag = false;
     this._translationDelta = 0;
     for (let i = 0; i < this._projectContainers.length; i++) {
       this._projectContainers[i].unpress();
