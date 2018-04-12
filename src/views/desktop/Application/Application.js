@@ -163,7 +163,7 @@ export default class DesktopAppView {
         break;
       case pages.PROJECT:
         document.body.style.overflowX = 'hidden';
-        document.body.style.overflowY = 'visible';
+        document.body.style.overflowY = 'hidden';
         States.application.activateProject = true;
         // this._loader.hide();
         this._about.hide({ delay: 0 });

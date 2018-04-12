@@ -253,6 +253,14 @@ export default class ProjectView {
     this._targetOffsetY = 0;
     this._currentOffsetY = 0;
 
+    if (!States.IS_EDGE && !States.TABLET) {
+      this._ui.sections.style.webkitTransform = 'translate3d(0,0,0)';
+      this._ui.sections.style.MozTransform = 'translate3d(0,0,0)';
+      this._ui.sections.style.msTransform = 'translate3d(0,0,0)';
+      this._ui.sections.style.OTransform = 'translate3d(0,0,0)';
+      this._ui.sections.style.transform = 'translate3d(0,0,0)';
+    }
+
     this._bodyOffsetHeight = document.body.offsetHeight;
     this._distanceToBottom = document.body.offsetHeight;
 
@@ -474,8 +482,8 @@ export default class ProjectView {
         force3D: true,
         ease: 'Power4.easeOut',
         onComplete: () => {
-          if (States.TABLET) {
-            document.body.style.overflow = 'visible';
+          if (States.TABLET || States.IS_EDGE) {
+            document.body.style.overflowY = 'visible';
           }
           this._ui.preview.classList.remove('js-project__scale');
           this._ui.preview.classList.remove('project__scale');
