@@ -702,14 +702,15 @@ export default class ProjectView {
   _onScrollWheel(event) {
 
     if (this._showAnimationDone) {
-      this._delta = event.deltaY;
+      const baseDeltaY = States.IS_FF && event.deltaMode === 1 ? event.deltaY * 40 : event.deltaY;
+      this._delta = baseDeltaY;
 
-      if (event.deltaY > 0 && !this._isSkippingPreview) {
+      if (baseDeltaY > 0 && !this._isSkippingPreview) {
         this._skipPreview();
       }
 
       if (this._skippedPreview && !States.IS_EDGE) {
-        this._targetOffsetY = Math.max( -this._ui.sections.offsetHeight, Math.min( 0, this._targetOffsetY - event.deltaY * 0.5 ) );
+        this._targetOffsetY = Math.max( -this._ui.sections.offsetHeight, Math.min( 0, this._targetOffsetY - baseDeltaY * 0.5 ) );
         this._scrollNeedsUpdate = true;
 
         if (Math.abs(this._currentOffsetY) / this._ui.sections.offsetHeight >= 0.8 && !this._keepScrollDisplay) {
