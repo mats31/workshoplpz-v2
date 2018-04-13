@@ -32,13 +32,13 @@ class PerformanceTest {
 
         if (this.gpu.series === '580') return 'high';
 
-        return 'low';
+        return 'high';
 
       case 'Intel':
         if (parseInt(this.gpu.series, 10) > 530) return 'high';
         if (this.gpu.model === 'Intel Iris Pro') return 'high';
 
-        return 'low';
+        return 'high';
 
       default:
         return 'high';
