@@ -25,22 +25,20 @@ export default class ProjectView {
       close: this.el.querySelector('.js-project__closeContainer'),
       firstContainer: this.el.querySelector('.js-project__firstContainer'),
       titleContainer: this.el.querySelector('.js-project__titleContainer'),
-      title: this.el.querySelector('.js-project__title'),
-      titleOffset: this.el.querySelector('.js-project__titleOffset'),
+      previewContainer: this.el.querySelector('.js-project__previewContainer'),
       preview: this.el.querySelector('.js-project__preview'),
       layer: this.el.querySelector('.js-project__titleLayer'),
       keepScroll: this.el.querySelector('.js-project__keepScroll'),
       sections: this.el.querySelector('.js-project__sections'),
       subtitle: this.el.querySelector('.js-project__subtitle'),
+      resume: this.el.querySelector('.js-project__resume'),
       visit: this.el.querySelector('.js-project__clientVisit'),
       description: this.el.querySelector('.js-project__description'),
       categories: this.el.querySelectorAll('.js-project__category'),
       contents: this.el.querySelectorAll('.js-project__content'),
       date: this.el.querySelector('.js-project__date'),
       visitText: this.el.querySelector('.js-project__clientVisitText'),
-      pitchDescription: this.el.querySelector('.js-project__pitchDescription'),
       teamDescription: this.el.querySelector('.js-project_teamDescription'),
-      roleDescription: this.el.querySelector('.js-project__roleDescription'),
       secondContainer: this.el.querySelector('.js-project__secondContainer'),
       medias: this.el.querySelector('.js-project__medias'),
       scaleElements: this.el.querySelectorAll('.js-project__scale'),
@@ -88,7 +86,6 @@ export default class ProjectView {
     this._ui.close.addEventListener('click', this._onCloseClick);
     this._ui.visit.addEventListener('mouseenter', this._onVisitEnter);
     this._ui.visit.addEventListener('click', this._onVisitClick);
-    this._ui.titleContainer.addEventListener('mousemove', this._onTitleContainerMousemove);
 
     if (States.TABLET) {
       this._ui.titleContainer.addEventListener('touchstart', this._onTitleContainerTouchstart);
@@ -122,18 +119,6 @@ export default class ProjectView {
       },
     );
 
-    // TweenLite.set(
-    //   this.el,
-    //   {
-    //     delay: delay + 0.05,
-    //     opacity: 1,
-    //     ease: 'Power4.easeOut',
-    //     onComplete: () => {
-    //       this._showAnimationDone = true;
-    //     },
-    //   },
-    // );
-
     TweenLite.to(
       this.el,
       1,
@@ -144,20 +129,6 @@ export default class ProjectView {
         onComplete: () => {
           this._showAnimationDone = true;
         },
-      },
-    );
-
-    TweenLite.fromTo(
-      this._ui.title,
-      1.1,
-      {
-        x: '-50%',
-        y: 50,
-      },
-      {
-        delay: delay + 0.05,
-        y: 0,
-        ease: 'Power2.easeOut',
       },
     );
 
@@ -222,9 +193,11 @@ export default class ProjectView {
     TweenLite.set( this.el, { clearProps: 'transform' });
     TweenLite.set( this.el, { display: 'none', opacity: 0 } );
     TweenLite.set( this._ui.titleContainer, { y: '0%', force3D: true } );
+    TweenLite.set(this._ui.previewContainer, { y: 0 })
     TweenLite.set( this._ui.scaleElements, { scaleX: 1, scaleY: 1, scaleZ: 1, force3D: true } );
     TweenLite.set( this._ui.subtitle, { opacity: 0 });
-    TweenLite.set( this._ui.description, { opacity: 0 });
+    TweenLite.set(this._ui.resume, { opacity: 0 });
+    TweenLite.set(this._ui.description, { opacity: 0 });
     TweenLite.set( this._ui.categories, { opacity: 0 });
     TweenLite.set( this._ui.contents, { opacity: 0 });
     TweenLite.set( this._ui.secondContainer, { opacity: 0 });
@@ -276,9 +249,6 @@ export default class ProjectView {
 
       if (this._project.id === lastRouteResolved.params.id) {
 
-        // Title
-        this._ui.titleOffset.innerHTML = this._project.title;
-
         // Preview
         const preview = States.resources.getImage(`${this._project.id}-preview`).media;
         while (this._ui.preview.firstChild) {
@@ -301,18 +271,12 @@ export default class ProjectView {
         this._ui.date.innerHTML = this._project.date;
 
         // Visit url;
-        this._ui.visit.style.display = this._project.url === '' ? 'none' : 'block';
+        this._ui.visit.style.display = this._project.url === '' ? 'none' : 'inline';
         this._ui.visitText.querySelector('a').setAttribute('href', this._project.url);
         this._ui.visitText.querySelector('a').innerHTML = this._project.urlText;
 
-        // Pitch
-        this._ui.pitchDescription.innerHTML = this._project.pitch;
-
         // Team
         this._ui.teamDescription.innerHTML = this._project.team;
-
-        // Role
-        this._ui.roleDescription.innerHTML = this._project.role;
 
         while (this._ui.medias.firstChild) {
           this._ui.medias.removeChild(this._ui.medias.firstChild);
@@ -380,13 +344,26 @@ export default class ProjectView {
     );
 
     TweenLite.fromTo(
+      this._ui.resume,
+      1,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        delay: 0.1,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    TweenLite.fromTo(
       this._ui.description,
       1,
       {
         opacity: 0,
       },
       {
-        delay: 0.1,
+        delay: 0.2,
         opacity: 1,
         ease: 'Power4.easeOut',
         onComplete: () => {
@@ -474,6 +451,7 @@ export default class ProjectView {
       y = window.innerWidth > window.innerHeight ? window.screen.width * -1 + 50 : window.screen.height * -1 + 50;
     }
 
+    TweenLite.to(this._ui.previewContainer, 1, { y: window.innerHeight * -0.01, ease: 'Power4.easeOut' })
     TweenLite.to(
       this._ui.titleContainer,
       1,
@@ -588,12 +566,6 @@ export default class ProjectView {
   @autobind
   _onCloseClick() {
     States.router.navigateTo( pages.HOME );
-  }
-
-  @autobind
-  _onTitleContainerMousemove(event) {
-    this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    this._mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
   }
 
   @autobind
@@ -753,7 +725,6 @@ export default class ProjectView {
 
   update() {
     if (this._needsUpdate) {
-      this._updateTitleContainer();
       this._updateScaleElements();
       this._updateScrollState();
       if (!States.TABLET && !States.IS_EDGE) {
@@ -762,30 +733,6 @@ export default class ProjectView {
       this._checkViewport();
     }
   }
-
-  _updateTitleContainer() {
-    const x = this._mouse.x * 10;
-    const y = this._mouse.y * -10;
-
-    this._titleOffset.x += ( (x) - this._titleOffset.x ) * 0.1;
-    this._titleOffset.y += ( (y) - this._titleOffset.y ) * 0.1;
-
-    this._previewOffset.x += ( (x * -1) - this._previewOffset.x ) * 0.15;
-    this._previewOffset.y += ( (y * -1) - this._previewOffset.y ) * 0.15;
-
-    this._ui.titleOffset.style.webkitTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.MozTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.msTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.OTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.transform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-
-    this._ui.previewOffset.style.webkitTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.MozTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.msTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.OTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.transform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-  }
-
   _updateScaleElements() {
 
     const delta = Math.min( 20, Math.max( -20, this._delta ) );

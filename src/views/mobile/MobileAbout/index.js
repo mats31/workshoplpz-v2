@@ -19,6 +19,7 @@ export default class AboutView {
       twitter: this.el.querySelector('.js-about__twitter'),
       instagram: this.el.querySelector('.js-about__instagram'),
       vimeo: this.el.querySelector('.js-about__vimeo'),
+      behance: this.el.querySelector('.js-about__behance'),
       description: this.el.querySelector('.js-about__description'),
       mathis: this.el.querySelector('.js-about__mathis'),
       firstLines: this.el.querySelectorAll('.js-about__lines .js-about__line:first-child'),
@@ -31,6 +32,7 @@ export default class AboutView {
     this._ui.twitter.addEventListener('mouseenter', this._onTwitterMouseenter);
     this._ui.instagram.addEventListener('mouseenter', this._onInstagramMouseenter);
     this._ui.vimeo.addEventListener('mouseenter', this._onVimeoMouseenter);
+    this._ui.behance.addEventListener('mouseenter', this._onBehanceMouseenter);
   }
 
   // State ---------------------------------------------------------------------
@@ -105,6 +107,22 @@ export default class AboutView {
 
     TweenLite.fromTo(
       this._ui.vimeo,
+      1,
+      {
+        y: 10,
+        scaleY: 1.5,
+      },
+      {
+        delay: delay + 0.25,
+        y: 0,
+        scaleY: 1,
+        opacity: 1,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    TweenLite.fromTo(
+      this._ui.behance,
       1,
       {
         y: 10,
@@ -218,6 +236,16 @@ export default class AboutView {
 
     TweenLite.to(
       this._ui.vimeo,
+      1,
+      {
+        delay,
+        opacity: 0,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    TweenLite.to(
+      this._ui.behance,
       1,
       {
         delay,
@@ -345,6 +373,12 @@ export default class AboutView {
   @autobind
   _onVimeoMouseenter() {
     const line = this._ui.vimeo.parentNode.querySelector('.js-about__lines');
+    this._hover(line);
+  }
+
+  @autobind
+  _onBehanceMouseenter() {
+    const line = this._ui.behance.parentNode.querySelector('.js-about__lines');
     this._hover(line);
   }
 }

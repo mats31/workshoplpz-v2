@@ -65,38 +65,26 @@
 }
 
 .project__previewContainer {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  min-width: 450px;
-  width: 48.671875%;
-
-  html.tablet & {
-    top: 40%;
-  }
-}
-
-.project__title {
-  @include font-title();
-  text-align: center;
-  position: relative;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
-  display: inline-block;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }
 
 .project__preview {
+  height: 100%;
   // width: 48.671875%;
   // transform: translate3d(-50%, 0, 0);
-  margin-top: -9rem;
   position: relative;
   z-index: $zindex-1;
 }
 
   .project__preview img {
     display: block;
-    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate3d(-50%, -50%, 0);
   }
 
 .project__titleLayer {
@@ -112,6 +100,7 @@
   left: 50%;
   bottom: 60px;
   transform: translateX(-50%);
+  z-index: 100;
 
   html.tablet & {
     bottom: 100px;
@@ -154,18 +143,90 @@
   margin-bottom: 9.5rem;
 }
 
-.project__subtitle {
-  @include font-title();
-  margin-bottom: 5rem;
-  opacity: 0;
+  .project__subtitle {
+    @include font-about();
+    font-size: 36.1rem;
+    line-height: 1;
+    margin-bottom: 17rem;
+    opacity: 0;
+    white-space: nowrap;
+
+    @media screen and (max-width: 1300px) {
+      font-size: 30rem;
+    }
+
+    @media screen and (max-width: 1100px) {
+      font-size: 20rem;
+    }
+  }
+
+.project__textContainer {
+  display: flex;
+  padding: 0 5.46875%;
+  margin-bottom: 9.5rem;
+  align-items: flex-end;
 }
 
-.project__description {
-  @include font-description();
-  opacity: 0;
-  line-height: 2.6rem;
-  width: 50%;
-}
+  .project__textContainer-left {
+    padding-right: 3rem;
+    width: 70%;
+  }
+
+    .project__resume {
+      opacity: 0;
+      font-weight: bold;
+      font-size: 4rem;
+      margin-bottom: 7rem;
+
+      @media screen and (max-width: 1100px) {
+        font-size: 2rem;
+      }
+    }
+
+  .project__textContainer-right {
+    @include font-subtitle();
+    font-size: 3.71rem;
+    text-align: right;
+    line-height: 1;
+    width: 30%;
+
+    @media screen and (max-width: 1100px) {
+      font-size: 1.71rem;
+    }
+  }
+
+    .project__clientVisit {
+      font-size: 2.5rem;
+      margin: 0;
+      padding-bottom: 1rem;
+      opacity: 0;
+      position: relative;
+
+      @media screen and (max-width: 1100px) {
+        font-size: 1.5rem;
+      }
+    }
+
+      .project__clientVisitText {
+        display: inline;
+        position: relative;
+      }
+
+        .project__clientVisit a {
+          text-decoration: none;
+          color: white;
+        }
+
+  .project__description {
+    @include font-subtitle();
+    opacity: 0;
+    font-size: 4rem;
+    line-height: 1.2;
+
+    @media screen and (max-width: 1100px) {
+      font-size: 2rem;
+    }
+  }
 
 .project__firstContainer {
   // height: 100vh;
@@ -173,17 +234,6 @@
   margin-bottom: 7rem;
   position: relative;
   width: 100%
-}
-
-.project__flexContainer {
-  box-sizing: border-box;
-  display: flex;
-  width: 100%;
-  position: relative;
-}
-
-.project__firstFlex {
-  padding-top: 4.5rem;
 }
 
 // .project__firstFlex::before {
@@ -215,21 +265,15 @@
   width: 21.09375%;
 }
 
-.project__category {
-  margin: 0 0 6rem 0;
-  @include font-subtitle();
-  opacity: 0;
-}
-
-.project__divider {
-  float: right;
-  width: 50%;
-}
 
 .project__date {
-  @include font-body();
+  font-size: 3.71rem;
   margin: 0;
-  margin-bottom: 7rem;
+  margin-bottom: 5rem;
+
+  @media screen and (max-width: 1100px) {
+    font-size: 1.71rem;
+  }
 }
 
 .project__content {
@@ -241,21 +285,13 @@
   opacity: 0;
 }
 
-.project__clientVisit {
-  // @include font-subtitle();
-  @include font-body();
-  display: inline-block;
-  margin: 0;
-  padding-bottom: 1rem;
-  opacity: 0;
-}
-
 .about__lines {
   overflow: hidden;
   height: 0.1rem;
   width: 5.5rem;
-  position: relative;
-  top: 11px;
+  position: absolute;
+  bottom: -4px  ;
+  left: 0;
   transform-origin: left center;
 }
 
@@ -269,16 +305,7 @@
   transform-origin: left center;
 }
 
-.project__role {
-  margin-bottom: 9rem;
-}
-
-.project__clientVisit a {
-  text-decoration: none;
-  color: white;
-}
-
-.project_team a, {
+a {
   text-decoration: none;
   color: white;
   opacity: 0.7;
@@ -287,14 +314,6 @@
   &:hover {
     opacity: 1;
   }
-}
-
-.project__roleDescription {
-  opacity: 0;
-}
-
-.project__pitchDescription {
-  opacity: 0;
 }
 
 .project__secondContainer {
@@ -334,6 +353,10 @@
 .project__previewOffset
  {
    will-change: transform;
+}
+
+.project__previewOffset {
+  height: 100%;
 }
 
 // .project__scale, .project__scale img {

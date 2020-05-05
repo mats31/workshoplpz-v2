@@ -18,8 +18,9 @@ export default class AboutView {
       mail: this.el.querySelector('.js-about__mail'),
       twitter: this.el.querySelector('.js-about__twitter'),
       instagram: this.el.querySelector('.js-about__instagram'),
-      vimeo: this.el.querySelector('.js-about__vimeo'),
-      description: this.el.querySelector('.js-about__description'),
+      behance: this.el.querySelector('.js-about__behance'),
+      shop: this.el.querySelector('.js-about__shop'),
+      patreon: this.el.querySelector('.js-about__patreon'),
       mathis: this.el.querySelector('.js-about__mathis'),
       firstLines: this.el.querySelectorAll('.js-about__lines .js-about__line:first-child'),
       secondLines: this.el.querySelectorAll('.js-about__lines .js-about__line:last-child'),
@@ -30,14 +31,18 @@ export default class AboutView {
     this._ui.mail.addEventListener('mouseenter', this._onMailMouseenter);
     this._ui.twitter.addEventListener('mouseenter', this._onTwitterMouseenter);
     this._ui.instagram.addEventListener('mouseenter', this._onInstagramMouseenter);
-    this._ui.vimeo.addEventListener('mouseenter', this._onVimeoMouseenter);
+    this._ui.behance.addEventListener('mouseenter', this._onBehanceMouseenter);
+    this._ui.shop.addEventListener('mouseenter', this._onShopMouseenter);
+    this._ui.patreon.addEventListener('mouseenter', this._onPatreonMouseenter);
   }
 
   _removeEvents() {
     this._ui.mail.removeEventListener('mouseenter', this._onMailMouseenter);
     this._ui.twitter.removeEventListener('mouseenter', this._onTwitterMouseenter);
     this._ui.instagram.removeEventListener('mouseenter', this._onInstagramMouseenter);
-    this._ui.vimeo.removeEventListener('mouseenter', this._onVimeoMouseenter);
+    this._ui.behance.removeEventListener('mouseenter', this._onBehanceMouseenter);
+    this._ui.shop.removeEventListener('mouseenter', this._onShopMouseenter);
+    this._ui.patreon.removeEventListener('mouseenter', this._onPatreonMouseenter);
   }
 
   // State ---------------------------------------------------------------------
@@ -46,7 +51,7 @@ export default class AboutView {
     this._setupEvents();
     this.el.style.display = 'block';
 
-    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.vimeo, this._ui.description, this._ui.mathis, this._ui.firstLines, this._ui.secondLines]);
+    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.behance, this._ui.shop, this._ui.mathis, this._ui.firstLines, this._ui.secondLines]);
 
     TweenLite.fromTo(
       this._ui.title,
@@ -111,7 +116,7 @@ export default class AboutView {
     );
 
     TweenLite.fromTo(
-      this._ui.vimeo,
+      this._ui.behance,
       1,
       {
         y: 10,
@@ -127,7 +132,23 @@ export default class AboutView {
     );
 
     TweenLite.fromTo(
-      this._ui.description,
+      this._ui.shop,
+      1,
+      {
+        y: 10,
+        scaleY: 1.5,
+      },
+      {
+        delay: delay + 0.25,
+        y: 0,
+        scaleY: 1,
+        opacity: 1,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    TweenLite.fromTo(
+      this._ui.patreon,
       1,
       {
         y: 10,
@@ -183,7 +204,7 @@ export default class AboutView {
   hide({ delay = 0 } = {}) {
     this._removeEvents();
 
-    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.vimeo, this._ui.description, this._ui.mathis, this._ui.firstLines, this._ui.secondLines]);
+    TweenLite.killTweensOf([this._ui.title, this._ui.mail, this._ui.twitter, this._ui.instagram, this._ui.behance, this._ui.mathis, this._ui.firstLines, this._ui.secondLines]);
     TweenLite.to(
       this._ui.title,
       1,
@@ -225,7 +246,7 @@ export default class AboutView {
     );
 
     TweenLite.to(
-      this._ui.vimeo,
+      this._ui.behance,
       1,
       {
         delay,
@@ -235,7 +256,17 @@ export default class AboutView {
     );
 
     TweenLite.to(
-      this._ui.description,
+      this._ui.shop,
+      1,
+      {
+        delay,
+        opacity: 0,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    TweenLite.to(
+      this._ui.patreon,
       1,
       {
         delay,
@@ -351,8 +382,20 @@ export default class AboutView {
   }
 
   @autobind
-  _onVimeoMouseenter() {
-    const line = this._ui.vimeo.parentNode.querySelector('.js-about__lines');
+  _onBehanceMouseenter() {
+    const line = this._ui.behance.parentNode.querySelector('.js-about__lines');
+    this._hover(line);
+  }
+
+  @autobind
+  _onShopMouseenter() {
+    const line = this._ui.shop.parentNode.querySelector('.js-about__lines');
+    this._hover(line);
+  }
+
+  @autobind
+  _onPatreonMouseenter() {
+    const line = this._ui.patreon.parentNode.querySelector('.js-about__lines');
     this._hover(line);
   }
 }

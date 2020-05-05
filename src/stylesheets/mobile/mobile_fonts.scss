@@ -11,6 +11,12 @@
 
 $fallbackFonts: Helvetica, Arial, sans-serif;
 
+@mixin font-about() {
+    font-family: 'hatton', $fallbackFonts;
+    font-weight: 100;
+    @include fontSmoothing();
+}
+
 @mixin font-bold() {
     font-family: 'soleil', $fallbackFonts;
     font-weight: 600;

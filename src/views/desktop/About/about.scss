@@ -10,28 +10,53 @@
   margin-bottom: 10rem;
 
   .about__title {
-    @include font-title();
-    font-style: italic;
-    font-size: 11.6rem;
-    line-height: 11.6rem;
+    @include font-about();
+    font-size: 10rem;
+    line-height: 11rem;
     margin-bottom: 7rem;
 
-    @media screen and (min-width: 1560px) {
-      font-size: 16rem;
-      line-height: 15.8rem;
-    }
-
-    @media screen and (max-width: 1125px) {
+    @media screen and (max-width: 1450px) {
       font-size: 8rem;
-      line-height: 8rem;
+      line-height: 9rem;
     }
   }
+
+    .about__title-mention {
+      @include font-description();
+      display: block;
+      line-height: 1;
+      margin-top: 1rem;
+      font-size: 10rem;
+      position: relative;
+      padding-left: 13.4rem;
+
+      @media screen and (max-width: 1500px) {
+        font-size: 8rem;
+      }
+
+      @media screen and (max-width: 1200px) {
+        font-size: 6rem;
+      }
+
+      &::before {
+        content: "";
+        display: inline-block;
+        background: white;
+        width: 13.4rem;
+        height: 0.2rem;
+        position: absolute;
+        top: 50%;
+        transform: translate3d(-13.4rem, -50%, 0);
+      }
+    }
 
   .about__title,
   .about__mail,
   .about__twitter,
   .about__instagram,
-  .about__vimeo,
+  .about__behance,
+  .about__shop,
+  .about__patreon,
   .about__description {
     opacity: 0;
     transform-origin: center top;
@@ -44,7 +69,7 @@
 
   .about__contact,
   .about__description {
-    width: 50%;
+    width: 100%;
   }
 
     .about__description a {
@@ -62,13 +87,26 @@
     display: flex;
   }
 
-  .about__mailContainer,
+  .about__mailContainer {
+    width: 25%;
+  }
+
   .about__networks {
-    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    width: 75%;
   }
 
   .about__network {
-    margin-bottom: 1.9rem;
+    margin-bottom: 2.5rem;
+
+    &:nth-child(odd) {
+      width: 25%;
+    }
+
+    &:nth-child(even) {
+      width: 75%;
+    }
   }
 
   .about__network:last-child {

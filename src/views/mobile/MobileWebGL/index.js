@@ -169,7 +169,6 @@ export default class MobileWebGL {
   }
 
   _setupEvents() {
-    this._el.addEventListener('click', this._onWebGLClick);
     this._el.addEventListener('touchstart', this._onWebGLMousedown);
     this._el.addEventListener('touchend', this._onWebGLMouseup);
     this._el.addEventListener('touchmove', this._onWeblGLMousemove);
@@ -496,6 +495,15 @@ export default class MobileWebGL {
 
   @autobind
   _onWebGLMouseup() {
+
+    if (!this._drag) {
+
+      for (let i = 0; i < this._projectContainers.length; i++) {
+
+        this._projectContainers[i].onClick();
+      }
+    }
+
     this._clicked = false;
     this._translationDelta = 0;
     this._mouse = new THREE.Vector2( 1, 1 );

@@ -10,10 +10,11 @@ html.mobile {
     padding: 7.7rem 5rem 12rem 5rem;
 
     .about__title {
-      @include font-title();
+      @include font-about();
+      font-size: 3rem;
       opacity: 0;
       transform-origin: center top;
-      font-style: italic;
+      line-height: 1.4;
       margin-bottom: 4rem;
     }
 
@@ -21,10 +22,10 @@ html.mobile {
     .about__twitter,
     .about__instagram,
     .about__vimeo,
+    .about__behance,
     .about__description {
       opacity: 0;
       transform-origin: center top;
-      @include font-body();
     }
 
     .about__description {

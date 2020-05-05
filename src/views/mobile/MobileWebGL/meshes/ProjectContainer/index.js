@@ -79,7 +79,7 @@ class ProjectContainer extends THREE.Object3D {
   }
 
   _setupPreview() {
-    this._previewTexture = States.resources.getTexture('orange-preview').media;
+    this._previewTexture = States.resources.getTexture('daphne-preview').media;
 
     this._preview = new Preview({
       texture: this._previewTexture,

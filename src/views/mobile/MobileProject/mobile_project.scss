@@ -142,13 +142,29 @@ html.mobile {
   }
 
   .project__subtitle {
-    @include font-title();
+    @include font-about();
+    font-size: 4rem;
     margin-bottom: 5rem;
     opacity: 0;
   }
 
+  .project__resume {
+    opacity: 0;
+    font-weight: bold;
+    font-size: 1.8rem;
+    margin-bottom: 3.5rem;
+  }
+
+    .project__textContainer-right {
+      @include font-subtitle();
+      font-size: 1.4rem;
+      line-height: 1;
+      margin-top: 2rem;
+    }
+
   .project__description {
-    @include font-description();
+    @include font-subtitle();
+    font-size: 1.6rem;
     opacity: 0;
     line-height: 2.6rem;
   }
@@ -212,9 +228,10 @@ html.mobile {
   }
 
   .project__date {
-    @include font-body();
+    font-size: 1.4rem;
     margin: 0;
-    margin-bottom: 7.4rem;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
   }
 
   .project__content {
@@ -228,7 +245,6 @@ html.mobile {
 
   .project__clientVisit {
     // @include font-subtitle();
-    @include font-body();
     display: inline-block;
     margin: 0;
     padding-bottom: 0.5rem;

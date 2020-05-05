@@ -25,13 +25,13 @@ export default class ProjectView {
       close: this.el.querySelector('.js-project__closeContainer'),
       firstContainer: this.el.querySelector('.js-project__firstContainer'),
       titleContainer: this.el.querySelector('.js-project__titleContainer'),
-      title: this.el.querySelector('.js-project__title'),
-      titleOffset: this.el.querySelector('.js-project__titleOffset'),
+      previewContainer: this.el.querySelector('.js-project__previewContainer'),
       preview: this.el.querySelector('.js-project__preview'),
       layer: this.el.querySelector('.js-project__titleLayer'),
       sections: this.el.querySelector('.js-project__sections'),
       subtitle: this.el.querySelector('.js-project__subtitle'),
       description: this.el.querySelector('.js-project__description'),
+      resume: this.el.querySelector('.js-project__resume'),
       categories: this.el.querySelectorAll('.js-project__category'),
       contents: this.el.querySelectorAll('.js-project__content'),
       date: this.el.querySelector('.js-project__date'),
@@ -127,20 +127,6 @@ export default class ProjectView {
     );
 
     TweenLite.fromTo(
-      this._ui.title,
-      1.1,
-      {
-        x: '-50%',
-        y: 50,
-      },
-      {
-        delay: delay + 0.05,
-        y: 0,
-        ease: 'Power2.easeOut',
-      },
-    );
-
-    TweenLite.fromTo(
       this._ui.preview,
       1,
       {
@@ -191,8 +177,10 @@ export default class ProjectView {
     TweenLite.set( this.el, { clearProps: 'transform' });
     TweenLite.set( this.el, { display: 'none', opacity: 0 } );
     TweenLite.set( this._ui.titleContainer, { y: '0%', force3D: true } );
+    TweenLite.set(this._ui.previewContainer, { y: 0 })
     TweenLite.set( this._ui.scaleElements, { scaleX: 1, scaleY: 1, scaleZ: 1, force3D: true } );
-    TweenLite.set( this._ui.subtitle, { opacity: 0 });
+    TweenLite.set(this._ui.subtitle, { opacity: 0 });
+    TweenLite.set(this._ui.resume, { opacity: 0 });
     TweenLite.set( this._ui.description, { opacity: 0 });
     TweenLite.set( this._ui.categories, { opacity: 0 });
     TweenLite.set( this._ui.contents, { opacity: 0 });
@@ -232,9 +220,6 @@ export default class ProjectView {
 
       if (this._project.id === lastRouteResolved.params.id) {
 
-        // Title
-        this._ui.titleOffset.innerHTML = this._project.title;
-
         // Preview
         const preview = States.resources.getImage(`${this._project.id}-preview`).media;
         while (this._ui.preview.firstChild) {
@@ -260,14 +245,8 @@ export default class ProjectView {
         this._ui.visitText.querySelector('a').setAttribute('href', this._project.url);
         this._ui.visitText.querySelector('a').innerHTML = this._project.urlText;
 
-        // Pitch
-        this._ui.pitchDescription.innerHTML = this._project.pitch;
-
         // Team
         this._ui.teamDescription.innerHTML = this._project.team;
-
-        // Role
-        this._ui.roleDescription.innerHTML = this._project.role;
 
         while (this._ui.medias.firstChild) {
           this._ui.medias.removeChild(this._ui.medias.firstChild);
@@ -336,13 +315,26 @@ export default class ProjectView {
     );
 
     TweenLite.fromTo(
-      this._ui.description,
+      this._ui.resume,
       1,
       {
         opacity: 0,
       },
       {
         delay: 0.1,
+        opacity: 1,
+        ease: 'Power4.easeOut',
+      },
+    );
+
+    TweenLite.fromTo(
+      this._ui.description,
+      1,
+      {
+        opacity: 0,
+      },
+      {
+        delay: 0.2,
         opacity: 1,
         ease: 'Power4.easeOut',
         onComplete: () => {
@@ -415,6 +407,7 @@ export default class ProjectView {
     // console.log(window.screen.height);
     // console.log(window.screen);
 
+    TweenLite.to(this._ui.previewContainer, 1, { y: window.innerHeight * -0.01, ease: 'Power4.easeOut' })
     TweenLite.to(
       this._ui.titleContainer,
       1,
@@ -546,34 +539,10 @@ export default class ProjectView {
 
   update() {
     if (this._needsUpdate) {
-      this._updateTitleContainer();
       this._updateScaleElements();
       this._updateScrollState();
       this._checkViewport();
     }
-  }
-
-  _updateTitleContainer() {
-    const x = this._gamma * 0.2;
-    const y = this._beta * -0.2;
-
-    this._titleOffset.x += ( (x) - this._titleOffset.x ) * 0.1;
-    this._titleOffset.y += ( (y) - this._titleOffset.y ) * 0.1;
-
-    this._previewOffset.x += ( (x * -1) - this._previewOffset.x ) * 0.15;
-    this._previewOffset.y += ( (y * -1) - this._previewOffset.y ) * 0.15;
-
-    this._ui.titleOffset.style.webkitTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.MozTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.msTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.OTransform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-    this._ui.titleOffset.style.transform = `translate3d(${this._titleOffset.x}px, ${this._titleOffset.y}px, 1px)`;
-
-    this._ui.previewOffset.style.webkitTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.MozTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.msTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.OTransform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
-    this._ui.previewOffset.style.transform = `translate3d(${this._previewOffset.x}px, ${this._previewOffset.y}px, 1px)`;
   }
 
   _updateScaleElements() {
