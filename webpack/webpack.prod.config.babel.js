@@ -15,7 +15,7 @@ export default {
   },
   output: {
     path: path.join(__dirname, '..', 'build'),
-    filename: '[name]-[hash].min.js',
+    filename: '[name].min.js',
   },
   resolve: {
     modules: [
@@ -109,7 +109,7 @@ export default {
       { from: 'static' },
     ],
     { ignore: ['.DS_Store', '.keep'] }),
-    new ExtractTextPlugin('[name]-[hash].min.css', { allChunks: true }),
+    new ExtractTextPlugin('[name].min.css', { allChunks: true }),
     new CleanWebpackPlugin(['build'], { root: path.resolve(__dirname, '..') }),
     new UglifyJsPlugin(),
     // new WebpackClearConsole(),
